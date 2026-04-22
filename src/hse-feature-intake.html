@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSE Feature Intake</title>
+<style>
+:root {
+  --c-dark: #003D35;
+  --c-primary: #005C4E;
+  --c-accent: #007A6A;
+  --c-light: #EDF6F4;
+  --c-mid: #B8DDD7;
+  --c-white: #FFFFFF;
+  --c-text: #1C2B2A;
+  --c-muted: #527570;
+  --c-border: #C5DEDA;
+  --c-warn-bg: #FFF8E6;
+  --c-warn: #8A6200;
+  --c-err-bg: #FFF0F0;
+  --c-err: #C0392B;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-light); color: var(--c-text); min-height: 100vh; }
+.app { max-width: 740px; margin: 0 auto; padding: 2rem 1.25rem; }
+
+.header { display: flex; align-items: center; gap: 14px; margin-bottom: 2.25rem; }
+.hse-mark { width: 40px; height: 40px; background: var(--c-primary); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.hse-mark svg { fill: white; }
+.header h1 { font-size: 18px; font-weight: 600; color: var(--c-dark); line-height: 1.2; }
+.header p { font-size: 13px; color: var(--c-muted); margin-top: 2px; }
+
+/* Stepper */
+.stepper { display: flex; margin-bottom: 2rem; }
+.step { flex: 1; position: relative; }
+.step-line { position: absolute; top: 13px; left: 50%; width: 100%; height: 2px; background: var(--c-border); z-index: 0; transition: background .3s; }
+.step:last-child .step-line { display: none; }
+.step.done > .step-line { background: var(--c-accent); }
+.step-inner { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.step-dot { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--c-border); background: var(--c-white); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--c-muted); z-index: 1; position: relative; transition: all .2s; }
+.step.active .step-dot { background: var(--c-primary); border-color: var(--c-primary); color: white; }
+.step.done .step-dot { background: var(--c-accent); border-color: var(--c-accent); color: white; }
+.step-label { font-size: 11px; color: var(--c-muted); text-align: center; max-width: 80px; line-height: 1.3; }
+.step.active .step-label { color: var(--c-primary); font-weight: 500; }
+
+/* Card */
+.card { background: var(--c-white); border-radius: var(--r-lg); padding: 1.5rem; border: 1px solid var(--c-border); margin-bottom: 1rem; }
+.card h2 { font-size: 16px; font-weight: 600; color: var(--c-dark); margin-bottom: 3px; }
+.card .subtitle { font-size: 13px; color: var(--c-muted); margin-bottom: 1.5rem; line-height: 1.5; }
+
+/* Fields */
+.field { margin-bottom: 1.1rem; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 9px 12px; border: 1px solid var(--c-border); border-radius: var(--r-sm);
+  font-size: 14px; color: var(--c-text); background: var(--c-white); outline: none; font-family: inherit;
+  transition: border-color .15s;
+}
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--c-accent); }
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+
+.outcomes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.cb-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm); cursor: pointer; font-size: 13px; transition: all .15s; }
+.cb-item:hover { background: var(--c-light); }
+.cb-item input[type=checkbox] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--c-accent); }
+
+.pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.pillar-btn { padding: 9px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-white); font-size: 12px; color: var(--c-text); cursor: pointer; text-align: left; line-height: 1.4; font-family: inherit; transition: all .15s; }
+.pillar-btn:hover { background: var(--c-light); }
+.pillar-btn.on { background: var(--c-primary); border-color: var(--c-primary); color: white; }
+
+/* Buttons */
+.btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1.25rem; }
+.btn { padding: 9px 22px; border-radius: var(--r-sm); font-size: 14px; font-weight: 500; cursor: pointer; font-family: inherit; border: none; transition: all .15s; }
+.btn-primary { background: var(--c-primary); color: white; }
+.btn-primary:hover { background: var(--c-dark); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+.btn-ghost { background: transparent; color: var(--c-muted); border: 1px solid var(--c-border); }
+.btn-ghost:hover { background: var(--c-light); }
+
+/* Results */
+.persona-card { background: var(--c-light); border-radius: var(--r-md); padding: 1rem 1.1rem; margin-bottom: .75rem; border-left: 3px solid var(--c-accent); }
+.persona-card h3 { font-size: 14px; font-weight: 600; color: var(--c-dark); margin-bottom: 4px; }
+.persona-card p { font-size: 13px; color: var(--c-text); line-height: 1.55; }
+.badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 600; vertical-align: middle; }
+.badge-p { background: #C8EAE4; color: var(--c-primary); }
+.badge-s { background: #FFF0D0; color: #7A5200; }
+
+.rice-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: .875rem 0; }
+.rice-cell { background: var(--c-light); border-radius: var(--r-md); padding: .875rem; border: 1px solid var(--c-border); text-align: center; }
+.rl { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--c-muted); font-weight: 700; margin-bottom: 5px; }
+.rv { font-size: 22px; font-weight: 700; color: var(--c-dark); margin-bottom: 3px; }
+.rn { font-size: 11px; color: var(--c-muted); line-height: 1.35; }
+.rice-total { background: var(--c-primary); border-radius: var(--r-lg); padding: 1.25rem; text-align: center; color: white; }
+.rt-label { font-size: 12px; opacity: .75; margin-bottom: 4px; }
+.rt-score { font-size: 38px; font-weight: 700; }
+.summary-note { background: var(--c-light); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-text); line-height: 1.55; margin-top: .75rem; }
+.acc-box { background: var(--c-warn-bg); border: 1px solid #EDD97A; border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-warn); margin-top: .75rem; line-height: 1.55; }
+
+/* Wireframe */
+.wf-screens-wrap { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: flex-start; }
+.wf-screen { background: #F3F3F3; border: 2px dashed #D8DDE0; border-radius: 20px; padding: 0; margin-bottom: 0; width: 375px; flex-shrink: 0; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+.wf-screen-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #768692; margin: .75rem 1rem .5rem; display: flex; align-items: center; gap: 8px; }
+.wf-screen-title::after { content: ''; flex: 1; height: 1px; background: #D8DDE0; }
+.wf-el { border-radius: 0; margin-bottom: 1px; padding: 10px 16px; font-size: 13px; }
+.wf-header { background: #02594C; color: white; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px; letter-spacing: -0.3px; padding: 14px 16px; }
+.wf-header::before { content: '←'; opacity: .6; }
+.wf-nav { background: #FFFFFF; border-top: 1px solid #D8DDE0; border-bottom: none; display: flex; gap: 0; padding: 0; overflow: hidden; margin-top: 1px; }
+.wf-nav span { flex: 1; text-align: center; padding: 10px 4px; font-size: 11px; color: #768692; border-right: 1px solid #D8DDE0; }
+.wf-nav span:last-child { border-right: none; }
+.wf-nav span.active { color: #02594C; font-weight: 700; border-bottom: 2px solid #02A78B; }
+.wf-card { background: #FFFFFF; border-bottom: 1px solid #D8DDE0; color: #212B32; }
+.wf-list-item { background: #FFFFFF; border-bottom: 1px solid #D8DDE0; color: #212B32; display: flex; align-items: center; gap: 10px; }
+.wf-list-item::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #02A78B; flex-shrink: 0; }
+.wf-cta { background: #02A78B; color: white; font-weight: 700; text-align: center; font-size: 14px; padding: 14px 16px; letter-spacing: -0.2px; margin: 12px 16px; border-radius: 6px; }
+.wf-text-block { background: #ECFBF6; color: #455C68; font-size: 12px; line-height: 1.7; border-bottom: 1px solid #CEF5F1; }
+.wf-badge-row { background: #FFFFFF; padding: 8px 16px !important; border-bottom: 1px solid #D8DDE0; }
+.wf-badge { display: inline-block; background: #ECFBF6; border: 1px solid #8FEBE0; border-radius: 20px; font-size: 11px; padding: 3px 9px; color: #02594C; margin: 2px 3px 2px 0; font-weight: 700; }
+.wf-notes { background: #FFF8CF; border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: #212B32; line-height: 1.6; margin-top: .75rem; border: 1px solid #FFDE0E; }
+.md-output { background: #F5F9F8; border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 1.1rem 1.25rem; font-family: 'Menlo', 'Consolas', monospace; font-size: 12.5px; line-height: 1.75; color: var(--c-text); white-space: pre-wrap; word-break: break-word; margin-top: .875rem; max-height: 480px; overflow-y: auto; }
+.copy-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.copy-bar span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-muted); }
+.btn-copy { padding: 6px 14px; font-size: 12px; font-weight: 600; background: var(--c-primary); color: white; border: none; border-radius: var(--r-sm); cursor: pointer; font-family: inherit; }
+.btn-copy:hover { background: var(--c-dark); }
+.btn-copy.copied { background: var(--c-accent); }
+
+/* Loading & error */
+.loading { display: flex; align-items: center; gap: 10px; padding: 1rem 0; color: var(--c-muted); font-size: 13px; }
+.dots { display: flex; gap: 4px; }
+.dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--c-accent); animation: blink 1.1s infinite; }
+.dots span:nth-child(2) { animation-delay: .22s; }
+.dots span:nth-child(3) { animation-delay: .44s; }
+@keyframes blink { 0%,100%{opacity:.2}50%{opacity:1} }
+.error { background: var(--c-err-bg); border: 1px solid #FFCCCC; border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-err); margin-top: .5rem; line-height: 1.5; }
+
+.panel { display: none; }
+.panel.active { display: block; animation: fadeIn .2s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+.section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--c-muted); margin: 1.5rem 0 .75rem; }
+
+/* Header right side (gear icon) */
+.header-spacer { flex: 1; }
+.icon-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: 1px solid var(--c-border); border-radius: var(--r-sm); cursor: pointer; color: var(--c-muted); transition: all .15s; padding: 0; }
+.icon-btn:hover { background: var(--c-white); color: var(--c-primary); border-color: var(--c-accent); }
+.icon-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+/* Config loading/error */
+.config-status { background: var(--c-light); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 1rem 1.1rem; margin-bottom: 1rem; font-size: 13px; color: var(--c-muted); display: flex; align-items: center; gap: 10px; }
+.config-status.err { background: var(--c-err-bg); border-color: #FFCCCC; color: var(--c-err); }
+
+/* Mode indicator */
+.mode-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--c-muted); background: var(--c-light); border: 1px solid var(--c-border); border-radius: 20px; padding: 3px 10px; text-transform: uppercase; letter-spacing: .04em; }
+.mode-pill.ai { background: #EEF3FC; border-color: #C0D3F0; color: #1E4A91; }
+.mode-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-muted); }
+.mode-pill.ai .dot { background: #1E4A91; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div class="hse-mark">
+      <svg width="22" height="16" viewBox="0 0 22 16">
+        <rect x="0" y="0" width="9" height="7"/>
+        <rect x="11" y="0" width="11" height="2.5"/>
+        <rect x="11" y="4.5" width="11" height="2.5"/>
+        <rect x="0" y="9" width="22" height="7"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Feature intake & analysis</h1>
+      <p>HSE Health App — persona matching, RICE scoring, JPD summary</p>
+    </div>
+    <div class="header-spacer"></div>
+    <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
+    <a class="icon-btn" id="adminBtn" href="/admin" title="Edit config" aria-label="Edit config">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+    </a>
+  </div>
+
+  <div class="config-status" id="configStatus" style="display:none">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <span id="configStatusMsg">Loading config...</span>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step active" id="s0">
+      <div class="step-line"></div>
+      <div class="step-inner">
+        <div class="step-dot">1</div>
+        <div class="step-label">Understanding the problem</div>
+      </div>
+    </div>
+    <div class="step" id="s1">
+      <div class="step-line"></div>
+      <div class="step-inner">
+        <div class="step-dot">2</div>
+        <div class="step-label">Who it's for</div>
+      </div>
+    </div>
+    <div class="step" id="s2">
+      <div class="step-line"></div>
+      <div class="step-inner">
+        <div class="step-dot">3</div>
+        <div class="step-label">RICE score</div>
+      </div>
+    </div>
+    <div class="step" id="s3">
+      <div class="step-inner">
+        <div class="step-dot">4</div>
+        <div class="step-label">JPD summary</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Problem -->
+  <div class="panel active" id="p0">
+    <div class="card">
+      <h2>Understanding the problem</h2>
+      <p class="subtitle">Complete each section to generate a formatted JPD ticket, persona match, RICE score, and indicative wireframe.</p>
+
+      <div class="field">
+        <label>Feature title</label>
+        <input type="text" id="f-title" placeholder="e.g. Test result notifications for CDM patients">
+      </div>
+      <div class="field">
+        <label>Feature overview</label>
+        <textarea id="f-overview" placeholder="What does this feature do? What will a user be able to do that they cannot do today?"></textarea>
+      </div>
+      <div class="field">
+        <label>Problem being solved</label>
+        <textarea id="f-problem" placeholder="What happens today without this feature? What is the impact of that? Approximately how many people are affected?"></textarea>
+      </div>
+      <div class="field">
+        <label>Primary user</label>
+        <select id="f-audience">
+          <option value="">Select...</option>
+          <option>Patient / App user</option>
+          <option>Carer / Family member</option>
+          <option>Clinical staff</option>
+          <option>Administrative staff</option>
+          <option>HSE service / programme</option>
+          <option>Multiple</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Also affects</label>
+        <input type="text" id="f-also-affects" placeholder="e.g. Clinical staff, carers — leave blank if not applicable">
+      </div>
+      <div class="field">
+        <label>How was this need identified?</label>
+        <select id="f-identified">
+          <option value="">Select...</option>
+          <option value="Patient feedback / complaint">Patient feedback / complaint</option>
+          <option value="User research">User research</option>
+          <option value="Policy driver">Policy driver</option>
+          <option value="Regulatory / compliance obligation">Regulatory / compliance obligation</option>
+          <option value="Clinical need">Clinical need</option>
+          <option value="Programme milestone">Programme milestone</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Supporting evidence</label>
+        <textarea id="f-evidence-detail" placeholder="Link to research, complaints data, clinical guidelines, volume of patients affected, quotes from users or staff. If no formal evidence, describe where the need came from." style="min-height:64px"></textarea>
+      </div>
+      <div class="field">
+        <label>Evidence confidence</label>
+        <select id="f-evidence">
+          <option value="">Select confidence level...</option>
+          <option value="100">User research backed (100%)</option>
+          <option value="80">Mixed — some research, some inference (80%)</option>
+          <option value="60">Clinical or policy need, limited user evidence (60%)</option>
+          <option value="50">Informed hypothesis (50%)</option>
+          <option value="30">Gut feel (30%)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Is there a deadline or dependency?</label>
+        <select id="f-deadline">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="field" id="f-deadline-detail-wrap" style="display:none">
+        <label>Deadline / dependency detail</label>
+        <input type="text" id="f-deadline-detail" placeholder="Obligation type and date or detail e.g. GDPR compliance, Q3 2026">
+      </div>
+      <div class="field">
+        <label>Data / integration needs</label>
+        <textarea id="f-data" placeholder="Does this require new or additional data? Any known technical dependencies? If a clinical programme, is it defined and ready?" style="min-height:64px"></textarea>
+      </div>
+      <div class="field">
+        <label>Regulatory / compliance considerations</label>
+        <input type="text" id="f-compliance" placeholder="e.g. GDPR, HIQA, EHDS...">
+      </div>
+      <div class="field">
+        <label>Requestor name and role</label>
+        <input type="text" id="f-requestor" placeholder="e.g. Jane Smith, Product Manager">
+      </div>
+      <div class="field">
+        <label>Clinical or service owner sponsor</label>
+        <input type="text" id="f-sponsor" placeholder="Clinical lead or programme owner championing this feature — leave blank if unsure">
+      </div>
+    </div>
+    <div class="btn-row">
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" onclick="loadSample()">Load sample idea</button>
+        <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+      </div>
+      <button class="btn btn-primary" onclick="goTo(1)">Next: who it's for →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Personas -->
+  <div class="panel" id="p1">
+    <div class="card">
+      <h2>Who it's for</h2>
+      <p class="subtitle">Matching the feature against the HSE Health App personas to identify who is primarily affected and why.</p>
+      <div id="persona-results">
+        <div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goTo(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Next: RICE score →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: RICE -->
+  <div class="panel" id="p2">
+    <div class="card">
+      <h2>RICE score</h2>
+      <p class="subtitle">Select expected outcomes, confirm the relevant pillar, set your effort estimate, and get a suggested RICE score with reasoning for each dimension.</p>
+
+      <div class="field">
+        <label>Expected outcomes — select all that apply</label>
+        <div class="outcomes-grid">
+          <label class="cb-item"><input type="checkbox" value="Improved patient experience"> Patient experience</label>
+          <label class="cb-item"><input type="checkbox" value="Improved patient safety"> Patient safety</label>
+          <label class="cb-item"><input type="checkbox" value="Patient privacy & security"> Privacy & security</label>
+          <label class="cb-item"><input type="checkbox" value="Improved health outcomes"> Health outcomes</label>
+          <label class="cb-item"><input type="checkbox" value="Increase app registrations"> Increase registrations</label>
+          <label class="cb-item"><input type="checkbox" value="Cost saving"> Cost saving</label>
+          <label class="cb-item"><input type="checkbox" value="Time saving for staff"> Time saving (staff)</label>
+          <label class="cb-item"><input type="checkbox" value="Time saving for patients"> Time saving (patients)</label>
+          <label class="cb-item"><input type="checkbox" value="More efficient health service"> More efficient service</label>
+          <label class="cb-item"><input type="checkbox" value="EU / regulatory compliance"> Regulatory compliance</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Digital for Care 2030 pillar</label>
+        <div class="pillar-grid">
+          <button class="pillar-btn" onclick="togglePillar(this,'1')">1. Patient as empowered partner</button>
+          <button class="pillar-btn" onclick="togglePillar(this,'2')">2. Digitally connected care</button>
+          <button class="pillar-btn" onclick="togglePillar(this,'3')">3. Digital health ecosystem</button>
+          <button class="pillar-btn" onclick="togglePillar(this,'4')">4. Digitally enabled staff</button>
+          <button class="pillar-btn" onclick="togglePillar(this,'5')">5. Secure foundations</button>
+          <button class="pillar-btn" onclick="togglePillar(this,'6')">6. Data driven services</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Effort estimate (person-months to design, build, test, release)</label>
+        <input type="number" id="f-effort" value="2" min="0.5" max="24" step="0.5" style="width:100px">
+      </div>
+
+      <div id="rice-results"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+      <button class="btn btn-primary" id="rice-btn" onclick="calcRice()">Calculate RICE →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: JPD Summary -->
+  <div class="panel" id="p3">
+    <div class="card">
+      <h2>JPD summary</h2>
+      <p class="subtitle">A ready-to-paste markdown summary for Jira Product Discovery, compiled from everything entered across the previous steps.</p>
+      <div id="wf-results">
+        <div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>
+      </div>
+    </div>
+
+    <div class="card" id="wf-card" style="margin-top:.75rem">
+      <h2>Indicative wireframe</h2>
+      <p class="subtitle">A rough sketch of the feature to attach to the JPD ticket or use in playback. Optional — generates on demand.</p>
+      <div id="wf-sketch-results"></div>
+      <div style="margin-top:1rem">
+        <button class="btn btn-ghost" id="wfSketchBtn" onclick="runSketch()">Generate wireframe sketch →</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
+      <button class="btn btn-primary" onclick="regenWf()">Regenerate summary →</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="/src/engines.js"></script>
+<script>
+const LLM_URL = '/api/llm';
+
+const CONFIG_FILES = [
+  { key: 'personas',     file: 'personas.md' },
+  { key: 'riceConfig',   file: 'rice-config.md' },
+  { key: 'jpdTemplate',  file: 'jpd-template.md' },
+  { key: 'formFields',   file: 'form-fields.md' },
+  { key: 'designTokens', file: 'hse-design-tokens.md' }
+];
+const CONFIG = {};
+let configReady = false;
+let configPromise = null;
+
+let selectedPillars = [];
+let state = {
+  personaDone: false, riceDone: false, wfDone: false,
+  personaData: null, riceData: null, mdOutput: null,
+  aiAssist: false, providerConfigured: false, provider: null, model: null
+};
+
+function loadSample() {
+  document.getElementById('f-title').value = 'Test result notifications for chronic disease patients';
+  document.getElementById('f-overview').value = 'This feature will send in-app push notifications to patients when new test results are available in their health record. Today, patients with chronic conditions have no way to know when results have been filed — this would give them timely visibility and reduce reliance on letters or GP calls.';
+  document.getElementById('f-problem').value = 'Patients with chronic conditions such as Type 2 diabetes and cardiovascular disease currently have no way to know when new test results are available in the app. They find out through a letter or a GP call — sometimes days later. This causes anxiety, unnecessary GP contact, and delays in understanding changes to their care plan. An estimated 45,000 CDM patients are affected by this gap.';
+  document.getElementById('f-audience').value = 'Patient / App user';
+  document.getElementById('f-also-affects').value = 'Clinical staff — reduced inbound calls about result availability';
+  document.getElementById('f-identified').value = 'User research';
+  document.getElementById('f-evidence-detail').value = 'Evaluative testing round 3.0 (Oct 2025) — users with chronic conditions cited lack of proactive updates as a key pain point. CDM programme team have also flagged this as a frequent source of GP contact.';
+  document.getElementById('f-evidence').value = '80';
+  document.getElementById('f-deadline').value = 'No';
+  document.getElementById('f-deadline-detail-wrap').style.display = 'none';
+  document.getElementById('f-deadline-detail').value = '';
+  document.getElementById('f-compliance').value = 'GDPR — notification preferences and consent required. HIQA data access standards apply.';
+  document.getElementById('f-data').value = 'Integration with Healthlink and IPMS to detect when a new result is filed against a patient record. Push notification infrastructure already in place via existing app notification system.';
+  document.getElementById('f-requestor').value = 'Kevin Devine, Design Lead — Nearform';
+  document.getElementById('f-sponsor').value = 'CDM Programme team — to be confirmed';
+  document.getElementById('f-effort').value = '3';
+
+  const outcomesToCheck = ['Improved patient experience', 'Improved health outcomes', 'Time saving for patients', 'More efficient health service'];
+  document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => {
+    cb.checked = outcomesToCheck.includes(cb.value);
+  });
+
+  selectedPillars = ['1', '2'];
+  document.querySelectorAll('.pillar-btn').forEach(btn => {
+    const match = btn.getAttribute('onclick').match(/'(\d+)'/);
+    if (match) btn.classList.toggle('on', selectedPillars.includes(match[1]));
+  });
+
+  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null };
+  document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
+  document.getElementById('rice-results').innerHTML = '';
+  document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
+  document.getElementById('wf-sketch-results').innerHTML = '';
+  const sketchBtn = document.getElementById('wfSketchBtn');
+  if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+}
+
+function clearForm() {
+  ['f-title','f-overview','f-problem','f-also-affects','f-evidence-detail','f-deadline-detail','f-compliance','f-data','f-requestor','f-sponsor'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('f-audience').value = '';
+  document.getElementById('f-identified').value = '';
+  document.getElementById('f-evidence').value = '';
+  document.getElementById('f-deadline').value = 'No';
+  document.getElementById('f-deadline-detail-wrap').style.display = 'none';
+  document.getElementById('f-effort').value = '2';
+  document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => cb.checked = false);
+  selectedPillars = [];
+  document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
+  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null };
+  document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
+  document.getElementById('rice-results').innerHTML = '';
+  document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
+  document.getElementById('wf-sketch-results').innerHTML = '';
+  const sketchBtn = document.getElementById('wfSketchBtn');
+  if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+}
+
+async function loadConfigs() {
+  const statusEl = document.getElementById('configStatus');
+  const msgEl = document.getElementById('configStatusMsg');
+  statusEl.style.display = 'flex';
+  statusEl.classList.remove('err');
+  msgEl.textContent = 'Loading config...';
+
+  try {
+    const results = await Promise.all(CONFIG_FILES.map(async c => {
+      const r = await fetch(`/config/${c.file}`, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`${c.file} (${r.status})`);
+      return { key: c.key, text: await r.text() };
+    }));
+    results.forEach(r => { CONFIG[r.key] = r.text; });
+    configReady = true;
+    statusEl.style.display = 'none';
+  } catch (e) {
+    configReady = false;
+    statusEl.classList.add('err');
+    msgEl.textContent = `Could not load config: ${e.message}. Start the Node server with "npm start" and reload.`;
+    throw e;
+  }
+
+  try {
+    const r = await fetch('/api/status', { cache: 'no-store' });
+    if (r.ok) {
+      const s = await r.json();
+      state.aiAssist = !!s.aiAssist;
+      state.providerConfigured = !!s.providerConfigured;
+      state.provider = s.provider || null;
+      state.model = s.model || null;
+    }
+  } catch (_) { /* non-fatal — stays in deterministic mode */ }
+
+  updateModePill();
+}
+
+function activeMode() {
+  return (state.aiAssist && state.providerConfigured) ? 'ai' : 'deterministic';
+}
+
+function updateModePill() {
+  const pill = document.getElementById('modePill');
+  if (!pill) return;
+  if (activeMode() === 'ai') {
+    pill.className = 'mode-pill ai';
+    pill.innerHTML = `<span class="dot"></span>AI assist on · ${escHtml(state.provider || 'llm')}`;
+    pill.title = `AI assist is enabled. Model: ${state.model || 'unknown'}. Change this in the admin panel.`;
+  } else {
+    pill.className = 'mode-pill';
+    const reason = state.aiAssist && !state.providerConfigured
+      ? 'AI assist is on in admin, but no LLM provider is configured on the server — falling back to deterministic mode.'
+      : 'Deterministic mode: results come from the rules in your config files. Turn on AI assist in the admin panel to use a language model instead.';
+    pill.innerHTML = '<span class="dot"></span>Deterministic mode';
+    pill.title = reason;
+  }
+}
+
+function goTo(n) {
+  document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === n));
+  document.querySelectorAll('.step').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i < n) s.classList.add('done');
+    if (i === n) s.classList.add('active');
+  });
+  if (n === 1) {
+    const el = document.getElementById('persona-results');
+    const needsRun = !state.personaDone || (el && el.querySelector('.loading'));
+    if (needsRun) runPersonas();
+  }
+  if (n === 2) {
+    const riceBtn = document.getElementById('rice-btn');
+    if (riceBtn && !state.riceDone) { riceBtn.textContent = 'Calculate RICE →'; riceBtn.onclick = calcRice; }
+  }
+  if (n === 3 && !state.wfDone) runWireframe();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function togglePillar(btn, p) {
+  if (selectedPillars.includes(p)) {
+    selectedPillars = selectedPillars.filter(x => x !== p);
+    btn.classList.remove('on');
+  } else {
+    selectedPillars.push(p);
+    btn.classList.add('on');
+  }
+}
+
+function getForm() {
+  return {
+    title: document.getElementById('f-title').value.trim(),
+    overview: document.getElementById('f-overview').value.trim(),
+    problem: document.getElementById('f-problem').value.trim(),
+    audience: document.getElementById('f-audience').value,
+    alsoAffects: document.getElementById('f-also-affects').value.trim(),
+    identified: document.getElementById('f-identified').value,
+    evidenceDetail: document.getElementById('f-evidence-detail').value.trim(),
+    evidence: document.getElementById('f-evidence').value,
+    deadline: document.getElementById('f-deadline').value,
+    deadlineDetail: document.getElementById('f-deadline-detail').value.trim(),
+    compliance: document.getElementById('f-compliance').value.trim(),
+    data: document.getElementById('f-data').value.trim(),
+    requestor: document.getElementById('f-requestor').value.trim(),
+    sponsor: document.getElementById('f-sponsor').value.trim(),
+    outcomes: [...document.querySelectorAll('.outcomes-grid input:checked')].map(x => x.value),
+    pillars: [...selectedPillars],
+    effort: parseFloat(document.getElementById('f-effort').value) || 2
+  };
+}
+
+document.getElementById('f-deadline').addEventListener('change', function() {
+  document.getElementById('f-deadline-detail-wrap').style.display = this.value === 'Yes' ? 'block' : 'none';
+});
+
+async function callLLM(prompt, opts = {}) {
+  const res = await fetch(LLM_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      prompt,
+      max_tokens: opts.max_tokens || 1400,
+      ...(opts.system ? { system: opts.system } : {})
+    })
+  });
+  if (!res.ok) {
+    let err = '';
+    try { err = (await res.json()).error || ''; } catch { err = await res.text(); }
+    throw new Error(`${res.status} ${String(err).slice(0, 300)}`);
+  }
+  const d = await res.json();
+  return d.text || '';
+}
+
+async function callLLMJson(prompt, opts) {
+  const text = await callLLM(prompt, opts);
+  const clean = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  try { return JSON.parse(clean); }
+  catch (e) { throw new Error('Could not parse LLM response as JSON: ' + e.message); }
+}
+
+async function runPersonas() {
+  const el = document.getElementById('persona-results');
+  el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
+  try { await configPromise; } catch { el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>'; return; }
+  const f = getForm();
+
+  try {
+    const r = (activeMode() === 'ai')
+      ? await runPersonasAi(f)
+      : Engines.matchPersonas(f, CONFIG.personas || '');
+    state.personaDone = true;
+    state.personaData = r;
+    renderPersonas(el, r);
+  } catch (e) {
+    el.innerHTML = `<div class="error"><strong>Persona matching failed.</strong> ${escHtml(e.message)}<br><br>Check the feature title and problem have enough detail, then go back and try again. You can also turn off AI assist in the admin panel to use deterministic matching.</div>`;
+  }
+}
+
+function renderPersonas(el, r) {
+  const modeTag = activeMode() === 'ai'
+    ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
+    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+  let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:8px">${modeTag}</div>`;
+  html += (r.matches || []).map(m => `
+    <div class="persona-card">
+      <h3>${escHtml(m.name)}<span class="badge ${m.rank === 'primary' ? 'badge-p' : 'badge-s'}">${escHtml(m.rank)}</span></h3>
+      <p>${escHtml(m.reason)}</p>
+    </div>`).join('');
+  if (r.accessibility_flag) {
+    html += `<div class="acc-box"><strong>Accessibility consideration:</strong> ${escHtml(r.accessibility_flag)}</div>`;
+  }
+  el.innerHTML = html;
+}
+
+async function runPersonasAi(f) {
+  const prompt = `You are a UX analyst for the HSE Health App. Analyse this feature and identify the most relevant user personas. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+
+PERSONAS:
+${CONFIG.personas || ''}
+
+FEATURE:
+Title: ${f.title || 'Not provided'}
+Problem: ${f.problem || 'Not provided'}
+Audience: ${f.audience || 'Not specified'}
+Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
+Compliance: ${f.compliance || 'none'}
+Data needs: ${f.data || 'none'}
+
+Return exactly this structure:
+{"matches":[{"name":"persona name","rank":"primary","reason":"2-3 sentences on why this persona is directly impacted by this feature"},{"name":"persona name","rank":"secondary","reason":"2-3 sentences on why this persona is secondarily relevant"}],"accessibility_flag":"1-2 sentences on accessibility considerations for this feature — reference Shane or other personas if relevant, or note low risk if applicable"}
+
+Include 2-4 matches total, ranked primary or secondary. Only include genuinely relevant personas.`;
+  return await callLLMJson(prompt);
+}
+
+async function calcRice() {
+  const el = document.getElementById('rice-results');
+  const f = getForm();
+
+  if (!f.outcomes.length) {
+    el.innerHTML = '<div class="error">Please select at least one expected outcome before calculating.</div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Calculating RICE score...</div>';
+  try { await configPromise; } catch { el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>'; return; }
+
+  try {
+    const r = (activeMode() === 'ai')
+      ? await runRiceAi(f)
+      : Engines.computeRice(f, CONFIG.riceConfig || '');
+    // Recompute total from components to avoid LLM arithmetic drift
+    const total = Math.round((r.reach.score * r.impact.score * (r.confidence.score / 100)) / f.effort * 10) / 10;
+    r.total = total;
+    state.riceDone = true;
+    state.riceData = r;
+    renderRice(el, r, f);
+    const btn = document.getElementById('rice-btn');
+    btn.textContent = 'Next: JPD summary →';
+    btn.onclick = () => goTo(3);
+  } catch (e) {
+    el.innerHTML = `<div class="error"><strong>RICE calculation failed.</strong> ${escHtml(e.message)}</div>`;
+  }
+}
+
+function renderRice(el, r, f) {
+  const modeTag = activeMode() === 'ai'
+    ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
+    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+  el.innerHTML = `
+    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">${modeTag}</div>
+    <div class="rice-grid">
+      <div class="rice-cell"><div class="rl">Reach</div><div class="rv">${Math.round(r.reach.score).toLocaleString()}</div><div class="rn">${escHtml(r.reach.note)}</div></div>
+      <div class="rice-cell"><div class="rl">Impact</div><div class="rv">${r.impact.score}×</div><div class="rn">${escHtml(r.impact.note)}</div></div>
+      <div class="rice-cell"><div class="rl">Confidence</div><div class="rv">${r.confidence.score}%</div><div class="rn">${escHtml(r.confidence.note)}</div></div>
+      <div class="rice-cell"><div class="rl">Effort</div><div class="rv">${f.effort}mo</div><div class="rn">${escHtml(r.effort.note)}</div></div>
+    </div>
+    <div class="rice-total">
+      <div class="rt-label">RICE score</div>
+      <div class="rt-score">${r.total}</div>
+    </div>
+    ${r.summary ? `<div class="summary-note">${escHtml(r.summary)}</div>` : ''}`;
+}
+
+async function runRiceAi(f) {
+  const prompt = `You are a product analyst for the HSE Health App (approximately 300,000 registered users in Ireland). Calculate a RICE score for this feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+
+FEATURE:
+Title: ${f.title || 'Not provided'}
+Problem: ${f.problem || 'Not provided'}
+Audience: ${f.audience || 'Not specified'}
+Expected outcomes: ${f.outcomes.join(', ') || 'none selected'}
+Digital for Care pillars: ${f.pillars.join(', ') || 'none selected'}
+Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
+Data / integration needs: ${f.data || 'none'}
+Compliance: ${f.compliance || 'none'}
+Effort estimate: ${f.effort} person-months
+
+RICE scoring guide:
+${CONFIG.riceConfig || ''}
+
+Return exactly this structure:
+{"reach":{"score":number,"note":"brief rationale based on feature scope and user base"},"impact":{"score":number,"note":"brief rationale referencing outcome categories selected"},"confidence":{"score":number,"note":"brief rationale based on evidence provided"},"effort":{"score":${f.effort},"note":"as provided — confirm if this seems reasonable"},"total":number,"summary":"1 sentence on what this RICE score suggests for prioritisation relative to a typical feature"}`;
+  return await callLLMJson(prompt);
+}
+
+async function runWireframe() {
+  const el = document.getElementById('wf-results');
+  el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
+  try { await configPromise; } catch { el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>'; return; }
+  const f = getForm();
+
+  try {
+    const md = (activeMode() === 'ai')
+      ? await runJpdAi(f)
+      : Engines.buildJpdSummary(f, state.personaData, state.riceData, CONFIG.jpdTemplate || '');
+    state.wfDone = true;
+    state.mdOutput = md;
+
+    const modeTag = activeMode() === 'ai'
+      ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
+      : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+    el.innerHTML = `
+      <div class="copy-bar">
+        <span>Ready to paste into JPD ${modeTag}</span>
+        <button class="btn-copy" id="copyBtn" onclick="copyMd()">Copy markdown</button>
+      </div>
+      <div class="md-output" id="mdOut">${escHtml(md)}</div>`;
+  } catch (e) {
+    el.innerHTML = `<div class="error"><strong>Summary generation failed.</strong> ${escHtml(e.message)}</div>`;
+  }
+}
+
+async function runJpdAi(f) {
+  const personaCtx = state.personaData
+    ? state.personaData.matches.map(m => `${m.name} (${m.rank})`).join(', ')
+    : (f.audience || 'not specified');
+  const accessibilityNote = state.personaData && state.personaData.accessibility_flag
+    ? state.personaData.accessibility_flag : 'Not assessed';
+  const riceCtx = state.riceData
+    ? `Reach: ${Math.round(state.riceData.reach.score).toLocaleString()} users/quarter | Impact: ${state.riceData.impact.score}x | Confidence: ${state.riceData.confidence.score}% | Effort: ${f.effort} person-months | Score: ${state.riceData.total}`
+    : 'Not yet calculated — complete the RICE score step first.';
+  const riceSummary = state.riceData && state.riceData.summary ? state.riceData.summary : '';
+
+  const prompt = `You are a product analyst writing a feature submission for the HSE Health App Jira Product Discovery (JPD) system. Write a clean markdown document that follows the exact JPD template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
+
+FEATURE DATA:
+Title: ${f.title || 'Not provided'}
+Feature overview: ${f.overview || 'Not provided'}
+Problem being solved: ${f.problem || 'Not provided'}
+Primary user: ${f.audience || 'Not specified'}
+Also affects: ${f.alsoAffects || 'Not specified'}
+How need was identified: ${f.identified || 'Not specified'}
+Supporting evidence: ${f.evidenceDetail || 'Not provided'}
+Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
+Deadline or dependency: ${f.deadline || 'No'}${f.deadlineDetail ? ' — ' + f.deadlineDetail : ''}
+Data / integration needs: ${f.data || 'None noted'}
+Regulatory / compliance: ${f.compliance || 'None noted'}
+Expected outcomes: ${f.outcomes.join(', ') || 'None selected'}
+Digital for Care pillars: ${f.pillars.join(', ') || 'None selected'}
+Persona matches: ${personaCtx}
+Accessibility consideration: ${accessibilityNote}
+RICE: ${riceCtx}
+RICE summary: ${riceSummary}
+Requestor: ${f.requestor || 'Not provided'}
+Clinical / service owner sponsor: ${f.sponsor || 'Not provided'}
+
+Write the JPD ticket using this exact structure. Use plain English. Keep each section tight and factual. Use hyphens for list items. Where information was not provided, write 'Not provided' rather than leaving blank or inventing detail.
+
+${CONFIG.jpdTemplate || ''}
+
+---
+*Generated: ${new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}*`;
+  const text = await callLLM(prompt, { max_tokens: 2000 });
+  return text.replace(/```markdown\s*/gi, '').replace(/```\s*/g, '').trim();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyMd() {
+  if (!state.mdOutput) return;
+  navigator.clipboard.writeText(state.mdOutput).then(() => {
+    const btn = document.getElementById('copyBtn');
+    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy markdown'; btn.classList.remove('copied'); }, 2000); }
+  });
+}
+
+function regenWf() {
+  state.wfDone = false;
+  runWireframe();
+}
+
+async function runSketch() {
+  const el = document.getElementById('wf-sketch-results');
+  const btn = document.getElementById('wfSketchBtn');
+
+  if (activeMode() !== 'ai') {
+    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="/admin">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
+    btn.disabled = true;
+    btn.textContent = 'AI assist required';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Generating wireframe sketch...</div>';
+  try { await configPromise; } catch {
+    el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>';
+    btn.textContent = 'Generate wireframe sketch →';
+    btn.disabled = false;
+    return;
+  }
+  const f = getForm();
+
+  const personaCtx = state.personaData
+    ? state.personaData.matches.map(m => m.name).join(', ')
+    : (f.audience || 'general user');
+
+  const prompt = `You are a UX designer for the HSE Health App — a mobile-first health app used in Ireland with tab navigation (Home, My Health, Services, Messages). Generate a rough wireframe sketch for a proposed feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+
+HSE DESIGN SYSTEM TOKENS — use these when describing visual elements in the wireframe notes:
+${CONFIG.designTokens || ''}
+
+FEATURE:
+Title: ${f.title || 'Not provided'}
+Problem: ${f.problem || 'Not provided'}
+Primary users: ${personaCtx}
+Audience: ${f.audience || 'Not specified'}
+
+Return exactly this structure:
+{"screens":[{"title":"screen name","elements":[{"type":"header","label":"page title"},{"type":"nav","label":"active tab name"},{"type":"card","label":"card content description"},{"type":"list_item","label":"list row description"},{"type":"cta","label":"primary button label"},{"type":"text_block","label":"supporting text description"},{"type":"badge_row","label":"tag1, tag2, tag3"}]}],"notes":"2-3 sentences on key design considerations — reference specific HSE tokens where relevant e.g. use hse-green-500 for the CTA, hse-grey-50 card backgrounds, hse-heading-xs for section labels. Also note any content or accessibility considerations."}
+
+Include 1-3 screens. Use only these element types: header, nav, card, list_item, cta, text_block, badge_row. Keep labels concise. Follow HSE conventions — accessible, plain English, Arial typography.`;
+
+  try {
+    const r = await callLLMJson(prompt);
+    const typeMap = { header:'wf-header', nav:'wf-nav', card:'wf-card', list_item:'wf-list-item', cta:'wf-cta', text_block:'wf-text-block', badge_row:'wf-badge-row' };
+
+    let html = r.screens.map(s => {
+      const els = s.elements.map(e => {
+        if (e.type === 'nav') {
+          const tabs = ['Home', 'My health', e.label, 'Messages'];
+          return `<div class="wf-el wf-nav">${tabs.map((t,i) => `<span${i===2?' class="active"':''}>${t}</span>`).join('')}</div>`;
+        }
+        if (e.type === 'badge_row') {
+          const badges = e.label.split(',').map(b => `<span class="wf-badge">${b.trim()}</span>`).join('');
+          return `<div class="wf-el wf-badge-row">${badges}</div>`;
+        }
+        return `<div class="wf-el ${typeMap[e.type]||'wf-card'}">${e.label}</div>`;
+      }).join('');
+      return `<div class="wf-screen"><div class="wf-screen-title">${s.title}</div>${els}</div>`;
+    }).join('');
+
+    if (r.notes) html += `<div class="wf-notes"><strong>Design notes:</strong> ${r.notes}</div>`;
+    el.innerHTML = `<div class="wf-screens-wrap">${html}</div>`;
+    btn.textContent = 'Regenerate sketch →';
+    btn.disabled = false;
+  } catch(e) {
+    el.innerHTML = `<div class="error"><strong>Sketch generation failed.</strong> ${e.message}</div>`;
+    btn.textContent = 'Generate wireframe sketch →';
+    btn.disabled = false;
+  }
+}
+
+/* ----- Bootstrap ----- */
+
+document.addEventListener('DOMContentLoaded', () => {
+  configPromise = loadConfigs();
+  configPromise.catch(() => {});
+});
+</script>
+</body>
+</html>
