@@ -6,6 +6,11 @@
 (function () {
   'use strict';
 
+  /** Paths from site root (config/, api/) — works on localhost and GitHub project Pages. */
+  function siteUrl(path) {
+    return new URL(path, new URL('..', document.baseURI)).toString();
+  }
+
   /* =========================================================================
    * Config file descriptors
    * ========================================================================= */
@@ -273,7 +278,7 @@
     const boot = document.getElementById('bootStatus');
     try {
       const results = await Promise.all(CONFIG_FILES.map(async c => {
-        const r = await fetch('/config/' + c.file, { cache: 'no-store' });
+        const r = await fetch(siteUrl('config/' + c.file), { cache: 'no-store' });
         if (!r.ok) throw new Error(c.file + ' (' + r.status + ')');
         const text = await r.text();
         return { key: c.key, text };
@@ -301,7 +306,7 @@
     }
     // Fetch AI assist status (non-fatal — defaults are safe)
     try {
-      const r = await fetch('/api/status', { cache: 'no-store' });
+      const r = await fetch(siteUrl('api/status'), { cache: 'no-store' });
       if (r.ok) {
         const s = await r.json();
         state.ai.aiAssist = !!s.aiAssist;
@@ -603,7 +608,7 @@
     state.ai.statusType = '';
     if (statusSpan) updateAiStatusSpan(statusSpan);
     try {
-      const r = await fetch('/api/admin-settings', {
+      const r = await fetch(siteUrl('api/admin-settings'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ aiAssist: !!enabled })
@@ -636,7 +641,7 @@
     result.textContent = 'Sending test prompt…';
     if (btn) btn.disabled = true;
     try {
-      const r = await fetch('/api/llm', {
+      const r = await fetch(siteUrl('api/llm'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -743,7 +748,7 @@
     f.statusType = '';
     updateSaveBar(cfg.key);
     try {
-      const res = await fetch('/config/' + cfg.file, {
+      const res = await fetch(siteUrl('config/' + cfg.file), {
         method: 'POST',
         headers: { 'Content-Type': 'text/markdown; charset=utf-8' },
         body: out

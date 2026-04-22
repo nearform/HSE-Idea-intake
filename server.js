@@ -392,6 +392,11 @@ const server = http.createServer((req, res) => {
     sendFile(res, ADMIN_FILE, STATIC_MIME['.html']); return;
   }
 
+  if (pathname === '/engines.js') {
+    if (req.method !== 'GET') { res.writeHead(405, { 'Allow': 'GET' }); res.end(); return; }
+    sendFile(res, path.join(SRC_DIR, 'engines.js'), STATIC_MIME['.js']); return;
+  }
+
   if (pathname === '/api/llm') {
     if (req.method !== 'POST') { res.writeHead(405, { 'Allow': 'POST' }); res.end(); return; }
     handleLlmProxy(req, res); return;
