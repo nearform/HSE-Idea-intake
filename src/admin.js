@@ -6,6 +6,10 @@
 (function () {
   'use strict';
 
+  function configFileUrl(filename) {
+    return new URL('../config/' + filename, window.location.href).href;
+  }
+
   /* =========================================================================
    * Config file descriptors
    * ========================================================================= */
@@ -273,7 +277,7 @@
     const boot = document.getElementById('bootStatus');
     try {
       const results = await Promise.all(CONFIG_FILES.map(async c => {
-        const r = await fetch('/config/' + c.file, { cache: 'no-store' });
+        const r = await fetch(configFileUrl(c.file), { cache: 'no-store' });
         if (!r.ok) throw new Error(c.file + ' (' + r.status + ')');
         const text = await r.text();
         return { key: c.key, text };
@@ -743,7 +747,7 @@
     f.statusType = '';
     updateSaveBar(cfg.key);
     try {
-      const res = await fetch('/config/' + cfg.file, {
+      const res = await fetch(configFileUrl(cfg.file), {
         method: 'POST',
         headers: { 'Content-Type': 'text/markdown; charset=utf-8' },
         body: out

@@ -382,7 +382,15 @@ const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = decodeURIComponent(url.pathname);
 
-  if (pathname === '/' || pathname === '/index.html' || pathname === '/hse-feature-intake.html') {
+  // Serve the tool only under /src/hse-feature-intake.html so relative URLs (../config/, engines.js) match GitHub Pages.
+  if (pathname === '/' || pathname === '/index.html') {
+    if (req.method !== 'GET') { res.writeHead(405, { 'Allow': 'GET' }); res.end(); return; }
+    res.writeHead(302, { Location: '/src/hse-feature-intake.html' });
+    res.end();
+    return;
+  }
+
+  if (pathname === '/hse-feature-intake.html') {
     if (req.method !== 'GET') { res.writeHead(405, { 'Allow': 'GET' }); res.end(); return; }
     sendFile(res, INDEX_FILE, STATIC_MIME['.html']); return;
   }

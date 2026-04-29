@@ -190,7 +190,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     </div>
     <div class="header-spacer"></div>
     <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
-    <a class="icon-btn" id="adminBtn" href="/admin" title="Edit config" aria-label="Edit config">
+    <a class="icon-btn" id="adminBtn" href="../admin" title="Edit config" aria-label="Edit config">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
     </a>
   </div>
@@ -456,9 +456,14 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 
 </div>
 
-<script src="/src/engines.js"></script>
+<script src="engines.js"></script>
 <script>
 const LLM_URL = '/api/llm';
+
+/** Config markdown URLs — must work on GitHub Pages project sites (subpath) and local Node; use ../config/ from /src/. */
+function configFileUrl(filename) {
+  return new URL('../config/' + filename, window.location.href).href;
+}
 
 const CONFIG_FILES = [
   { key: 'personas',     file: 'personas.md' },
@@ -850,7 +855,7 @@ async function loadConfigs() {
 
   try {
     const results = await Promise.all(CONFIG_FILES.map(async c => {
-      const r = await fetch(`/config/${c.file}`, { cache: 'no-store' });
+      const r = await fetch(configFileUrl(c.file), { cache: 'no-store' });
       if (!r.ok) throw new Error(`${c.file} (${r.status})`);
       return { key: c.key, text: await r.text() };
     }));
@@ -1250,7 +1255,7 @@ async function runSketch() {
   const btn = document.getElementById('wfSketchBtn');
 
   if (activeMode() !== 'ai') {
-    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="/admin">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
+    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="../admin">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
     btn.disabled = true;
     btn.textContent = 'AI assist required';
     return;
