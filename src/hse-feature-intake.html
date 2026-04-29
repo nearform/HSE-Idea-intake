@@ -45,6 +45,8 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .step.done .step-dot { background: var(--c-accent); border-color: var(--c-accent); color: white; }
 .step-label { font-size: 11px; color: var(--c-muted); text-align: center; max-width: 80px; line-height: 1.3; }
 .step.active .step-label { color: var(--c-primary); font-weight: 500; }
+.step { cursor: pointer; user-select: none; -webkit-user-select: none; }
+.step:focus-visible .step-inner { outline: 2px solid var(--c-accent); outline-offset: 4px; border-radius: var(--r-md); }
 
 /* Card */
 .card { background: var(--c-white); border-radius: var(--r-lg); padding: 1.5rem; border: 1px solid var(--c-border); margin-bottom: 1rem; }
@@ -61,6 +63,8 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 }
 .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--c-accent); }
 .field textarea { resize: vertical; min-height: 80px; line-height: 1.55; }
+.field-hint { margin-top: 6px; font-size: 12px; color: var(--c-muted); line-height: 1.45; }
+.field-hint.recommended { font-style: italic; }
 
 .outcomes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
 .cb-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm); cursor: pointer; font-size: 13px; transition: all .15s; }
@@ -135,6 +139,14 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .dots span:nth-child(3) { animation-delay: .44s; }
 @keyframes blink { 0%,100%{opacity:.2}50%{opacity:1} }
 .error { background: var(--c-err-bg); border: 1px solid #FFCCCC; border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-err); margin-top: .5rem; line-height: 1.5; }
+.import-note { font-size: 12px; color: var(--c-muted); margin-top: .5rem; line-height: 1.45; }
+.import-msg { margin-top: .5rem; border-radius: var(--r-sm); padding: .55rem .75rem; font-size: 12px; line-height: 1.4; }
+.import-msg.ok { background: #ECFBF6; border: 1px solid #8FEBE0; color: var(--c-primary); }
+.import-msg.warn { background: var(--c-warn-bg); border: 1px solid #EDD97A; color: var(--c-warn); }
+.import-picker { margin-top: .75rem; padding: .75rem; border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-light); }
+.import-picker label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--c-muted); margin-bottom: 6px; }
+.import-picker-row { display: flex; gap: 8px; align-items: center; }
+.import-picker-row select { flex: 1; }
 
 .panel { display: none; }
 .panel.active { display: block; animation: fadeIn .2s ease; }
@@ -174,11 +186,11 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     </div>
     <div>
       <h1>Feature intake & analysis</h1>
-      <p>HSE Health App — persona matching, RICE scoring, JPD summary</p>
+      <p>Internal design tool — idea to JPD in minutes</p>
     </div>
     <div class="header-spacer"></div>
     <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
-    <a class="icon-btn" id="adminBtn" href="admin.html" title="Edit config" aria-label="Edit config">
+    <a class="icon-btn" id="adminBtn" href="/admin" title="Edit config" aria-label="Edit config">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
     </a>
   </div>
@@ -189,29 +201,29 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
   </div>
 
   <!-- Stepper -->
-  <div class="stepper">
-    <div class="step active" id="s0">
-      <div class="step-line"></div>
+  <div class="stepper" aria-label="Intake steps">
+    <div class="step active" id="s0" role="button" tabindex="0" aria-label="Step 1: Understanding the problem" aria-current="step">
+      <div class="step-line" aria-hidden="true"></div>
       <div class="step-inner">
         <div class="step-dot">1</div>
         <div class="step-label">Understanding the problem</div>
       </div>
     </div>
-    <div class="step" id="s1">
-      <div class="step-line"></div>
+    <div class="step" id="s1" role="button" tabindex="0" aria-label="Step 2: Who it's for">
+      <div class="step-line" aria-hidden="true"></div>
       <div class="step-inner">
         <div class="step-dot">2</div>
         <div class="step-label">Who it's for</div>
       </div>
     </div>
-    <div class="step" id="s2">
-      <div class="step-line"></div>
+    <div class="step" id="s2" role="button" tabindex="0" aria-label="Step 3: RICE score">
+      <div class="step-line" aria-hidden="true"></div>
       <div class="step-inner">
         <div class="step-dot">3</div>
         <div class="step-label">RICE score</div>
       </div>
     </div>
-    <div class="step" id="s3">
+    <div class="step" id="s3" role="button" tabindex="0" aria-label="Step 4: JPD summary">
       <div class="step-inner">
         <div class="step-dot">4</div>
         <div class="step-label">JPD summary</div>
@@ -223,7 +235,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
   <div class="panel active" id="p0">
     <div class="card">
       <h2>Understanding the problem</h2>
-      <p class="subtitle">Complete each section to generate a formatted JPD ticket, persona match, RICE score, and indicative wireframe.</p>
+      <p class="subtitle">For the team's internal use. Angela Knight's Microsoft Form and Word template handle public-facing intake for external and HSE stakeholders. Use this tool to go deeper for internal evaluation, then move quickly from an idea or incoming JPD item to a persona match, guide RICE score, and formatted summary.</p>
 
       <div class="field">
         <label>Feature title</label>
@@ -273,11 +285,11 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
         <label>Evidence confidence</label>
         <select id="f-evidence">
           <option value="">Select confidence level...</option>
-          <option value="100">User research backed (100%)</option>
-          <option value="80">Mixed — some research, some inference (80%)</option>
-          <option value="60">Clinical or policy need, limited user evidence (60%)</option>
-          <option value="50">Informed hypothesis (50%)</option>
-          <option value="30">Gut feel (30%)</option>
+          <option value="100">All three pillars satisfied — data, user research, technical review (100%)</option>
+          <option value="80">Two pillars satisfied (80%)</option>
+          <option value="60">One pillar satisfied, or strong clinical / policy justification (60%)</option>
+          <option value="50">Informed hypothesis — team experience, no formal evidence (50%)</option>
+          <option value="30">Gut feel — no supporting evidence yet (30%)</option>
         </select>
       </div>
       <div class="field">
@@ -300,6 +312,20 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
         <input type="text" id="f-compliance" placeholder="e.g. GDPR, HIQA, EHDS...">
       </div>
       <div class="field">
+        <label>External dependency</label>
+        <select id="f-external-dependency">
+          <option value="No external dependency">No external dependency</option>
+          <option value="Yes — third party system or integration required">Yes — third party system or integration required</option>
+          <option value="Yes — clinical programme or service needs to be confirmed">Yes — clinical programme or service needs to be confirmed</option>
+          <option value="Yes — regulatory or government body sign-off required">Yes — regulatory or government body sign-off required</option>
+          <option value="Yes — other">Yes — other</option>
+        </select>
+      </div>
+      <div class="field" id="f-external-dependency-detail-wrap" style="display:none">
+        <label>Dependency detail</label>
+        <input type="text" id="f-external-dependency-detail" placeholder="Name the dependency and describe what needs to happen before this feature can be built">
+      </div>
+      <div class="field">
         <label>Requestor name and role</label>
         <input type="text" id="f-requestor" placeholder="e.g. Jane Smith, Product Manager">
       </div>
@@ -307,14 +333,28 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
         <label>Clinical or service owner sponsor</label>
         <input type="text" id="f-sponsor" placeholder="Clinical lead or programme owner championing this feature — leave blank if unsure">
       </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="f-email" placeholder="your.name@organisation.ie">
+      </div>
+      <div class="field">
+        <label>Team / Unit / Area / Group</label>
+        <input type="text" id="f-team-unit" placeholder="e.g. Screening Services, Regional Digital Team, Nearform">
+      </div>
     </div>
     <div class="btn-row">
       <div style="display:flex;gap:8px">
         <button class="btn btn-ghost" onclick="loadSample()">Load sample idea</button>
         <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+        <button class="btn btn-ghost" type="button" onclick="triggerCsvImport()">Import from CSV</button>
       </div>
       <button class="btn btn-primary" onclick="goTo(1)">Next: who it's for →</button>
     </div>
+    <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none">
+    <div class="import-note">Accepts CSV exports from Angela's Microsoft Form or any spreadsheet with matching column headers.</div>
+    <div id="csv-import-picker" class="import-picker" style="display:none"></div>
+    <div id="csv-import-warning" class="import-msg warn" style="display:none"></div>
+    <div id="csv-import-success" class="import-msg ok" style="display:none"></div>
   </div>
 
   <!-- Step 2: Personas -->
@@ -367,8 +407,18 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       </div>
 
       <div class="field">
-        <label>Effort estimate (person-months to design, build, test, release)</label>
-        <input type="number" id="f-effort" value="2" min="0.5" max="24" step="0.5" style="width:100px">
+        <label>Effort estimate (person-months across design, content, research, product, and delivery)</label>
+        <input type="number" id="f-effort" value="2" min="0.5" max="24" step="0.5" placeholder="Total effort across design, content, research, product, and delivery" style="width:100%">
+      </div>
+      <div class="field">
+        <label>Estimated monthly reach (users)</label>
+        <input type="number" id="f-reach" min="1" step="1" placeholder="e.g. 7750 — see sources below">
+        <div class="field-hint">Divide total affected population by 12 to get monthly reach. Sources: CSO (cso.ie), HSE programme data, Health Research Board. Examples: Type 1 diabetes 2,500/mo · Proxy care 102,500/mo · Polish speakers 7,750/mo · Prescribed medicines 208,000/mo</div>
+      </div>
+      <div class="field">
+        <label>Source or basis for this figure</label>
+        <input type="text" id="f-reach-source" placeholder="e.g. CSO 2022 health statistics and HSE programme estimates">
+        <div class="field-hint recommended">Recommended (optional).</div>
       </div>
 
       <div id="rice-results"></div>
@@ -406,13 +456,9 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 
 </div>
 
-<script src="engines.js"></script>
+<script src="/src/engines.js"></script>
 <script>
-/** Resolves a path from site root (config/, api/) for both / and /repo/src/... URLs. */
-function siteUrl(path) {
-  return new URL(path, new URL('..', document.baseURI)).toString();
-}
-const LLM_URL = siteUrl('api/llm');
+const LLM_URL = '/api/llm';
 
 const CONFIG_FILES = [
   { key: 'personas',     file: 'personas.md' },
@@ -426,6 +472,7 @@ let configReady = false;
 let configPromise = null;
 
 let selectedPillars = [];
+let importedCsvRows = [];
 let state = {
   personaDone: false, riceDone: false, wfDone: false,
   personaData: null, riceData: null, mdOutput: null,
@@ -445,10 +492,17 @@ function loadSample() {
   document.getElementById('f-deadline-detail-wrap').style.display = 'none';
   document.getElementById('f-deadline-detail').value = '';
   document.getElementById('f-compliance').value = 'GDPR — notification preferences and consent required. HIQA data access standards apply.';
+  document.getElementById('f-external-dependency').value = 'No external dependency';
+  document.getElementById('f-external-dependency-detail-wrap').style.display = 'none';
+  document.getElementById('f-external-dependency-detail').value = '';
   document.getElementById('f-data').value = 'Integration with Healthlink and IPMS to detect when a new result is filed against a patient record. Push notification infrastructure already in place via existing app notification system.';
   document.getElementById('f-requestor').value = 'Kevin Devine, Design Lead — Nearform';
   document.getElementById('f-sponsor').value = 'CDM Programme team — to be confirmed';
+  document.getElementById('f-email').value = 'kevin.devine@organisation.ie';
+  document.getElementById('f-team-unit').value = 'Nearform';
   document.getElementById('f-effort').value = '3';
+  document.getElementById('f-reach').value = '2500';
+  document.getElementById('f-reach-source').value = 'Estimated from HSE CDM programme enrolment and test-result volume';
 
   const outcomesToCheck = ['Improved patient experience', 'Improved health outcomes', 'Time saving for patients', 'More efficient health service'];
   document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => {
@@ -468,10 +522,11 @@ function loadSample() {
   document.getElementById('wf-sketch-results').innerHTML = '';
   const sketchBtn = document.getElementById('wfSketchBtn');
   if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+  clearCsvMessages();
 }
 
 function clearForm() {
-  ['f-title','f-overview','f-problem','f-also-affects','f-evidence-detail','f-deadline-detail','f-compliance','f-data','f-requestor','f-sponsor'].forEach(id => {
+  ['f-title','f-overview','f-problem','f-also-affects','f-evidence-detail','f-deadline-detail','f-compliance','f-external-dependency-detail','f-data','f-requestor','f-sponsor','f-email','f-team-unit','f-reach-source'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   document.getElementById('f-audience').value = '';
@@ -479,7 +534,10 @@ function clearForm() {
   document.getElementById('f-evidence').value = '';
   document.getElementById('f-deadline').value = 'No';
   document.getElementById('f-deadline-detail-wrap').style.display = 'none';
+  document.getElementById('f-external-dependency').value = 'No external dependency';
+  document.getElementById('f-external-dependency-detail-wrap').style.display = 'none';
   document.getElementById('f-effort').value = '2';
+  document.getElementById('f-reach').value = '';
   document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => cb.checked = false);
   selectedPillars = [];
   document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
@@ -490,6 +548,297 @@ function clearForm() {
   document.getElementById('wf-sketch-results').innerHTML = '';
   const sketchBtn = document.getElementById('wfSketchBtn');
   if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+  clearCsvMessages();
+}
+
+function normalizeHeader(v) {
+  return String(v || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseCsvText(text) {
+  const rows = [];
+  let current = '';
+  let row = [];
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (ch === '"') {
+      if (inQuotes && text[i + 1] === '"') {
+        current += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (ch === ',' && !inQuotes) {
+      row.push(current);
+      current = '';
+    } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      row.push(current);
+      const hasData = row.some(cell => String(cell || '').trim() !== '');
+      if (hasData) rows.push(row);
+      row = [];
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  if (current.length || row.length) {
+    row.push(current);
+    const hasData = row.some(cell => String(cell || '').trim() !== '');
+    if (hasData) rows.push(row);
+  }
+  if (!rows.length) return { headers: [], records: [] };
+  const headers = rows[0].map(h => String(h || '').trim());
+  const records = rows.slice(1).map(cells => {
+    const rec = {};
+    headers.forEach((h, idx) => { rec[h] = String(cells[idx] || '').trim(); });
+    return rec;
+  });
+  return { headers, records };
+}
+
+const CSV_FIELD_ALIASES = [
+  { target: 'f-title', labels: ['Feature Title & Summary'] },
+  { target: 'f-overview', labels: ['Feature Title & Summary'] },
+  { target: 'f-problem', labels: ['Problem being solved'] },
+  { target: 'f-audience-base', labels: ['Who is this for'] },
+  { target: 'f-audience-primary', labels: ['Primary User'] },
+  { target: 'f-also-affects', labels: ['Also affects'] },
+  { target: 'f-identified', labels: ['How was this need identified'] },
+  { target: 'f-evidence-detail', labels: ['Supporting Evidence'] },
+  { target: 'f-data', labels: ['Data/ integration needs'] },
+  { target: 'f-requestor-name', labels: ['Name'] },
+  { target: 'f-requestor-role', labels: ['Role'] },
+  { target: 'f-email', labels: ['Email address', 'Emal address'] },
+  { target: 'f-team-unit', labels: ['Team/ Unit/ Area/ Group'] },
+  { target: 'f-impact-combined', labels: ['Expected Impact Outcome'] }
+];
+
+const OUTCOME_MATCHERS = [
+  { value: 'Improved patient experience', aliases: ['Improved patient experience', 'Patient experience'] },
+  { value: 'Improved patient safety', aliases: ['Improved patient safety', 'Patient safety'] },
+  { value: 'Patient privacy & security', aliases: ['Patient privacy & security', 'Patient privacy and security', 'Privacy and security'] },
+  { value: 'Improved health outcomes', aliases: ['Improved health outcomes', 'Health outcomes'] },
+  { value: 'Increase app registrations', aliases: ['Increase app registrations', 'App registrations', 'Increase registrations'] },
+  { value: 'Cost saving', aliases: ['Cost saving', 'Cost savings'] },
+  { value: 'Time saving for staff', aliases: ['Time saving for staff', 'Time saving staff'] },
+  { value: 'Time saving for patients', aliases: ['Time saving for patients', 'Time saving patients'] },
+  { value: 'More efficient health service', aliases: ['More efficient health service', 'Efficient health service'] },
+  { value: 'EU / regulatory compliance', aliases: ['EU / regulatory compliance', 'Regulatory compliance', 'EU compliance'] }
+];
+
+function getCsvMapping(headers) {
+  const normalizedHeaders = headers.map(h => ({ raw: h, norm: normalizeHeader(h) }));
+  const mapping = {};
+  for (const field of CSV_FIELD_ALIASES) {
+    const aliasNorms = field.labels.map(normalizeHeader);
+    const hit = normalizedHeaders.find(h => aliasNorms.includes(h.norm));
+    if (hit) {
+      mapping[field.target] = hit.raw;
+    }
+  }
+  const optionalTargets = new Set(['f-audience-primary', 'f-impact-combined']);
+  const missingExpectedHeaders = CSV_FIELD_ALIASES
+    .filter(field => !optionalTargets.has(field.target) && !mapping[field.target])
+    .map(field => field.labels[0]);
+  const allAliasNorms = CSV_FIELD_ALIASES.flatMap(field => field.labels.map(normalizeHeader));
+  const unmappedSourceHeaders = headers.filter(h => {
+    const normalized = normalizeHeader(h);
+    return normalized && !allAliasNorms.includes(normalized);
+  });
+  return { mapping, missingMappings: missingExpectedHeaders, unmappedSourceHeaders };
+}
+
+function outcomeFromText(text) {
+  const token = normalizeHeader(text);
+  if (!token) return null;
+  for (const outcome of OUTCOME_MATCHERS) {
+    const aliases = outcome.aliases.map(normalizeHeader);
+    if (aliases.some(alias => alias === token || token.includes(alias) || alias.includes(token))) return outcome.value;
+  }
+  return null;
+}
+
+function splitOutcomeTokens(raw) {
+  return String(raw || '')
+    .split(/[,;\n]/)
+    .map(v => v.trim())
+    .filter(Boolean);
+}
+
+function isTruthyOutcomeValue(raw) {
+  const v = normalizeHeader(raw);
+  return ['yes', 'true', '1', 'y', 'x', 'selected', 'checked'].includes(v);
+}
+
+function applyCsvOutcomes(rowObj, mapping) {
+  const selected = new Set();
+  const combinedHeader = mapping['f-impact-combined'];
+  if (combinedHeader) {
+    splitOutcomeTokens(rowObj[combinedHeader]).forEach(token => {
+      const match = outcomeFromText(token);
+      if (match) selected.add(match);
+    });
+  }
+  Object.keys(rowObj).forEach(header => {
+    if (header === '__mapping') return;
+    const val = String(rowObj[header] || '').trim();
+    if (!val) return;
+    const outcomeFromHeader = outcomeFromText(header);
+    const outcomeFromValue = outcomeFromText(val);
+    if (outcomeFromHeader && (isTruthyOutcomeValue(val) || outcomeFromValue === outcomeFromHeader)) {
+      selected.add(outcomeFromHeader);
+      return;
+    }
+    if (!outcomeFromHeader && outcomeFromValue) selected.add(outcomeFromValue);
+  });
+  document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => {
+    cb.checked = selected.has(cb.value);
+  });
+}
+
+function clearCsvMessages() {
+  const warningEl = document.getElementById('csv-import-warning');
+  const successEl = document.getElementById('csv-import-success');
+  const pickerEl = document.getElementById('csv-import-picker');
+  if (warningEl) { warningEl.style.display = 'none'; warningEl.textContent = ''; }
+  if (successEl) { successEl.style.display = 'none'; successEl.textContent = ''; }
+  if (pickerEl) { pickerEl.style.display = 'none'; pickerEl.innerHTML = ''; }
+}
+
+function setSelectByOptionText(selectEl, value) {
+  if (!selectEl) return;
+  const normalized = normalizeHeader(value);
+  if (!normalized) {
+    selectEl.value = '';
+    return;
+  }
+  const exact = [...selectEl.options].find(o => normalizeHeader(o.value || o.textContent) === normalized);
+  if (exact) {
+    selectEl.value = exact.value;
+    return;
+  }
+  if (selectEl.id === 'f-external-dependency') {
+    if (normalized.startsWith('no')) {
+      selectEl.value = 'No external dependency';
+      return;
+    }
+    selectEl.value = 'Yes — other';
+    document.getElementById('f-external-dependency-detail-wrap').style.display = 'block';
+    document.getElementById('f-external-dependency-detail').value = value;
+    return;
+  }
+  selectEl.value = '';
+}
+
+function applyCsvRowToForm(rowObj, mapping) {
+  const valueFor = (fieldId) => {
+    const sourceHeader = mapping[fieldId];
+    return sourceHeader ? String(rowObj[sourceHeader] || '').trim() : '';
+  };
+
+  const audiencePrimary = valueFor('f-audience-primary');
+  const audienceBase = valueFor('f-audience-base');
+  const requestorName = valueFor('f-requestor-name');
+  const requestorRole = valueFor('f-requestor-role');
+  const requestor = [requestorName, requestorRole].filter(Boolean).join(', ');
+
+  document.getElementById('f-title').value = valueFor('f-title');
+  document.getElementById('f-overview').value = valueFor('f-overview');
+  document.getElementById('f-problem').value = valueFor('f-problem');
+  document.getElementById('f-also-affects').value = valueFor('f-also-affects');
+  document.getElementById('f-evidence-detail').value = valueFor('f-evidence-detail');
+  document.getElementById('f-data').value = valueFor('f-data');
+  document.getElementById('f-requestor').value = requestor;
+  document.getElementById('f-email').value = valueFor('f-email');
+  document.getElementById('f-team-unit').value = valueFor('f-team-unit');
+
+  setSelectByOptionText(document.getElementById('f-audience'), audiencePrimary || audienceBase);
+  setSelectByOptionText(document.getElementById('f-identified'), valueFor('f-identified'));
+  document.getElementById('f-external-dependency').value = 'No external dependency';
+  document.getElementById('f-external-dependency').dispatchEvent(new Event('change'));
+  applyCsvOutcomes(rowObj, mapping);
+}
+
+function showCsvPicker(records, mapping) {
+  const pickerEl = document.getElementById('csv-import-picker');
+  importedCsvRows = records;
+  const options = records.map((row, idx) => {
+    const titleHeader = mapping['f-title'];
+    const label = titleHeader && row[titleHeader] ? row[titleHeader] : `Row ${idx + 1}`;
+    return `<option value="${idx}">${escHtml(label)}</option>`;
+  }).join('');
+  pickerEl.innerHTML = `
+    <label>Select idea row to import</label>
+    <div class="import-picker-row">
+      <select id="csv-row-select">${options}</select>
+      <button type="button" class="btn btn-ghost" onclick="importSelectedCsvRow()">Load row</button>
+    </div>`;
+  pickerEl.style.display = 'block';
+}
+
+function importSelectedCsvRow() {
+  const rowSelect = document.getElementById('csv-row-select');
+  if (!rowSelect || !importedCsvRows.length) return;
+  const idx = parseInt(rowSelect.value, 10);
+  const row = importedCsvRows[idx];
+  if (!row) return;
+  const mapping = row.__mapping || {};
+  applyCsvRowToForm(row, mapping);
+  const successEl = document.getElementById('csv-import-success');
+  const titleHeader = mapping['f-title'];
+  const title = titleHeader && row[titleHeader] ? row[titleHeader] : `Row ${idx + 1}`;
+  successEl.textContent = `Imported: ${title}`;
+  successEl.style.display = 'block';
+}
+
+function triggerCsvImport() {
+  const fileInput = document.getElementById('csv-file-input');
+  if (!fileInput) return;
+  fileInput.click();
+}
+
+function handleCsvImport(file) {
+  if (!file) return;
+  clearCsvMessages();
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = parseCsvText(String(reader.result || ''));
+      if (!parsed.headers.length || !parsed.records.length) throw new Error('CSV appears to be empty.');
+      const { mapping, missingMappings, unmappedSourceHeaders } = getCsvMapping(parsed.headers);
+      parsed.records.forEach(r => { r.__mapping = mapping; });
+      if (parsed.records.length > 1) {
+        showCsvPicker(parsed.records, mapping);
+      } else {
+        importedCsvRows = parsed.records;
+      }
+      if (parsed.records.length === 1) {
+        applyCsvRowToForm(parsed.records[0], mapping);
+        const titleHeader = mapping['f-title'];
+        const title = titleHeader && parsed.records[0][titleHeader] ? parsed.records[0][titleHeader] : 'Untitled idea';
+        const successEl = document.getElementById('csv-import-success');
+        successEl.textContent = `Imported: ${title}`;
+        successEl.style.display = 'block';
+      }
+      const warningItems = missingMappings;
+      if (warningItems.length) {
+        const warningEl = document.getElementById('csv-import-warning');
+        warningEl.textContent = `Could not map: ${warningItems.join(', ')} — please fill these in manually.`;
+        warningEl.style.display = 'block';
+      }
+    } catch (err) {
+      const warningEl = document.getElementById('csv-import-warning');
+      warningEl.textContent = `CSV import failed: ${err.message}`;
+      warningEl.style.display = 'block';
+    }
+  };
+  reader.readAsText(file);
 }
 
 async function loadConfigs() {
@@ -501,7 +850,7 @@ async function loadConfigs() {
 
   try {
     const results = await Promise.all(CONFIG_FILES.map(async c => {
-      const r = await fetch(siteUrl('config/' + c.file), { cache: 'no-store' });
+      const r = await fetch(`/config/${c.file}`, { cache: 'no-store' });
       if (!r.ok) throw new Error(`${c.file} (${r.status})`);
       return { key: c.key, text: await r.text() };
     }));
@@ -516,7 +865,7 @@ async function loadConfigs() {
   }
 
   try {
-    const r = await fetch(siteUrl('api/status'), { cache: 'no-store' });
+    const r = await fetch('/api/status', { cache: 'no-store' });
     if (r.ok) {
       const s = await r.json();
       state.aiAssist = !!s.aiAssist;
@@ -556,6 +905,8 @@ function goTo(n) {
     s.classList.remove('active', 'done');
     if (i < n) s.classList.add('done');
     if (i === n) s.classList.add('active');
+    if (i === n) s.setAttribute('aria-current', 'step');
+    else s.removeAttribute('aria-current');
   });
   if (n === 1) {
     const el = document.getElementById('persona-results');
@@ -593,9 +944,15 @@ function getForm() {
     deadline: document.getElementById('f-deadline').value,
     deadlineDetail: document.getElementById('f-deadline-detail').value.trim(),
     compliance: document.getElementById('f-compliance').value.trim(),
+    externalDependency: document.getElementById('f-external-dependency').value,
+    externalDependencyDetail: document.getElementById('f-external-dependency-detail').value.trim(),
     data: document.getElementById('f-data').value.trim(),
     requestor: document.getElementById('f-requestor').value.trim(),
     sponsor: document.getElementById('f-sponsor').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    teamUnit: document.getElementById('f-team-unit').value.trim(),
+    reach: parseFloat(document.getElementById('f-reach').value),
+    reachSource: document.getElementById('f-reach-source').value.trim(),
     outcomes: [...document.querySelectorAll('.outcomes-grid input:checked')].map(x => x.value),
     pillars: [...selectedPillars],
     effort: parseFloat(document.getElementById('f-effort').value) || 2
@@ -604,6 +961,12 @@ function getForm() {
 
 document.getElementById('f-deadline').addEventListener('change', function() {
   document.getElementById('f-deadline-detail-wrap').style.display = this.value === 'Yes' ? 'block' : 'none';
+});
+
+document.getElementById('f-external-dependency').addEventListener('change', function() {
+  const showDetail = this.value.startsWith('Yes');
+  document.getElementById('f-external-dependency-detail-wrap').style.display = showDetail ? 'block' : 'none';
+  if (!showDetail) document.getElementById('f-external-dependency-detail').value = '';
 });
 
 async function callLLM(prompt, opts = {}) {
@@ -695,6 +1058,10 @@ async function calcRice() {
     el.innerHTML = '<div class="error">Please select at least one expected outcome before calculating.</div>';
     return;
   }
+  if (!Number.isFinite(f.reach) || f.reach <= 0) {
+    el.innerHTML = '<div class="error">Please enter an estimated monthly reach before calculating.</div>';
+    return;
+  }
 
   el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Calculating RICE score...</div>';
   try { await configPromise; } catch { el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>'; return; }
@@ -703,8 +1070,14 @@ async function calcRice() {
     const r = (activeMode() === 'ai')
       ? await runRiceAi(f)
       : Engines.computeRice(f, CONFIG.riceConfig || '');
+    const manualReach = Math.round(f.reach);
+    const reachSourceText = f.reachSource || 'Not provided';
+    r.reach = {
+      score: manualReach,
+      note: `Manual estimate entered by team. Source: ${reachSourceText}`
+    };
     // Recompute total from components to avoid LLM arithmetic drift
-    const total = Math.round((r.reach.score * r.impact.score * (r.confidence.score / 100)) / f.effort * 10) / 10;
+    const total = Math.round((manualReach * r.impact.score * (r.confidence.score / 100)) / f.effort * 10) / 10;
     r.total = total;
     state.riceDone = true;
     state.riceData = r;
@@ -724,37 +1097,50 @@ function renderRice(el, r, f) {
   el.innerHTML = `
     <div style="display:flex;justify-content:flex-end;margin-bottom:8px">${modeTag}</div>
     <div class="rice-grid">
-      <div class="rice-cell"><div class="rl">Reach</div><div class="rv">${Math.round(r.reach.score).toLocaleString()}</div><div class="rn">${escHtml(r.reach.note)}</div></div>
+      <div class="rice-cell"><div class="rl">Reach</div><div class="rv">${Math.round(r.reach.score).toLocaleString()}</div><div class="rn">Source: ${escHtml(f.reachSource || 'Not provided')}</div></div>
       <div class="rice-cell"><div class="rl">Impact</div><div class="rv">${r.impact.score}×</div><div class="rn">${escHtml(r.impact.note)}</div></div>
       <div class="rice-cell"><div class="rl">Confidence</div><div class="rv">${r.confidence.score}%</div><div class="rn">${escHtml(r.confidence.note)}</div></div>
       <div class="rice-cell"><div class="rl">Effort</div><div class="rv">${f.effort}mo</div><div class="rn">${escHtml(r.effort.note)}</div></div>
     </div>
     <div class="rice-total">
-      <div class="rt-label">RICE score</div>
+      <div class="rt-label">Guide RICE score</div>
       <div class="rt-score">${r.total}</div>
     </div>
+    <div class="summary-note">This is a starting point for discussion. Reach and effort figures should be verified with the relevant teams before final scoring.</div>
     ${r.summary ? `<div class="summary-note">${escHtml(r.summary)}</div>` : ''}`;
 }
 
 async function runRiceAi(f) {
-  const prompt = `You are a product analyst for the HSE Health App (approximately 300,000 registered users in Ireland). Calculate a RICE score for this feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+  const outcomesCount = f.outcomes.length;
+  const prompt = `You are a product analyst for the HSE Health App. Calculate a RICE score for this feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
 
 FEATURE:
 Title: ${f.title || 'Not provided'}
 Problem: ${f.problem || 'Not provided'}
 Audience: ${f.audience || 'Not specified'}
+Manual reach estimate (users per month): ${Number.isFinite(f.reach) && f.reach > 0 ? Math.round(f.reach).toLocaleString() : 'not provided'}
+Reach source: ${f.reachSource || 'not provided'}
 Expected outcomes: ${f.outcomes.join(', ') || 'none selected'}
+Expected outcomes count: ${outcomesCount}
 Digital for Care pillars: ${f.pillars.join(', ') || 'none selected'}
 Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
 Data / integration needs: ${f.data || 'none'}
 Compliance: ${f.compliance || 'none'}
+External dependency: ${f.externalDependency || 'No external dependency'}${f.externalDependencyDetail ? ' — ' + f.externalDependencyDetail : ''}
 Effort estimate: ${f.effort} person-months
 
 RICE scoring guide:
 ${CONFIG.riceConfig || ''}
 
+Impact scoring rule (apply exactly from outcomes count, do not infer):
+- 8 to 10 outcomes = 3
+- 5 to 7 outcomes = 2
+- 3 to 4 outcomes = 1
+- 2 outcomes = 0.5
+- 1 outcome = 0.25
+
 Return exactly this structure:
-{"reach":{"score":number,"note":"brief rationale based on feature scope and user base"},"impact":{"score":number,"note":"brief rationale referencing outcome categories selected"},"confidence":{"score":number,"note":"brief rationale based on evidence provided"},"effort":{"score":${f.effort},"note":"as provided — confirm if this seems reasonable"},"total":number,"summary":"1 sentence on what this RICE score suggests for prioritisation relative to a typical feature"}`;
+{"impact":{"score":number,"note":"must reference outcomes count and the exact applied scale"},"confidence":{"score":number,"note":"brief rationale based on evidence provided"},"effort":{"score":${f.effort},"note":"as provided — confirm if this seems reasonable"},"total":number,"summary":"1 sentence on what this RICE score suggests for prioritisation relative to a typical feature"}`;
   return await callLLMJson(prompt);
 }
 
@@ -792,9 +1178,10 @@ async function runJpdAi(f) {
   const accessibilityNote = state.personaData && state.personaData.accessibility_flag
     ? state.personaData.accessibility_flag : 'Not assessed';
   const riceCtx = state.riceData
-    ? `Reach: ${Math.round(state.riceData.reach.score).toLocaleString()} users/quarter | Impact: ${state.riceData.impact.score}x | Confidence: ${state.riceData.confidence.score}% | Effort: ${f.effort} person-months | Score: ${state.riceData.total}`
+    ? `Reach: ${Math.round(state.riceData.reach.score).toLocaleString()} users/month (source: ${f.reachSource || 'not provided'}) | Impact: ${state.riceData.impact.score}x | Confidence: ${state.riceData.confidence.score}% | Effort: ${f.effort} person-months | Score: ${state.riceData.total}`
     : 'Not yet calculated — complete the RICE score step first.';
   const riceSummary = state.riceData && state.riceData.summary ? state.riceData.summary : '';
+  const confidencePct = state.riceData && state.riceData.confidence ? Number(state.riceData.confidence.score) : Number(f.evidence || 0);
 
   const prompt = `You are a product analyst writing a feature submission for the HSE Health App Jira Product Discovery (JPD) system. Write a clean markdown document that follows the exact JPD template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
 
@@ -809,7 +1196,9 @@ Supporting evidence: ${f.evidenceDetail || 'Not provided'}
 Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
 Deadline or dependency: ${f.deadline || 'No'}${f.deadlineDetail ? ' — ' + f.deadlineDetail : ''}
 Data / integration needs: ${f.data || 'None noted'}
+External dependency: ${f.externalDependency || 'No external dependency'}${f.externalDependencyDetail ? ' — ' + f.externalDependencyDetail : ''}
 Regulatory / compliance: ${f.compliance || 'None noted'}
+Manual reach source: ${f.reachSource || 'Not provided'}
 Expected outcomes: ${f.outcomes.join(', ') || 'None selected'}
 Digital for Care pillars: ${f.pillars.join(', ') || 'None selected'}
 Persona matches: ${personaCtx}
@@ -818,8 +1207,18 @@ RICE: ${riceCtx}
 RICE summary: ${riceSummary}
 Requestor: ${f.requestor || 'Not provided'}
 Clinical / service owner sponsor: ${f.sponsor || 'Not provided'}
+Email address: ${f.email || 'Not provided'}
+Team / Unit / Area / Group: ${f.teamUnit || 'Not provided'}
+Confidence for recommendation logic: ${confidencePct || 0}%
 
 Write the JPD ticket using this exact structure. Use plain English. Keep each section tight and factual. Use hyphens for list items. Where information was not provided, write 'Not provided' rather than leaving blank or inventing detail.
+Use the heading "RICE score (guide)" and format that section as a markdown table with rows for Reach, Impact, Confidence, Effort, Total score, and a final Notes row.
+The Notes row must follow exactly this structure: "Reach: [reach source]. Confidence based on [confidence level selected]. Effort to be confirmed with delivery team."
+
+Important recommendation rule:
+- If confidence is 60% or below, append a final paragraph at the end of the output:
+"Confidence is currently [X%]. Recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness."
+- If confidence is above 60%, do not append this recommendation.
 
 ${CONFIG.jpdTemplate || ''}
 
@@ -851,7 +1250,7 @@ async function runSketch() {
   const btn = document.getElementById('wfSketchBtn');
 
   if (activeMode() !== 'ai') {
-    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="admin.html">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
+    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="/admin">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
     btn.disabled = true;
     btn.textContent = 'AI assist required';
     return;
@@ -923,6 +1322,23 @@ Include 1-3 screens. Use only these element types: header, nav, card, list_item,
 document.addEventListener('DOMContentLoaded', () => {
   configPromise = loadConfigs();
   configPromise.catch(() => {});
+  const fileInput = document.getElementById('csv-file-input');
+  if (fileInput) {
+    fileInput.addEventListener('change', (ev) => {
+      const file = ev.target.files && ev.target.files[0];
+      handleCsvImport(file);
+      ev.target.value = '';
+    });
+  }
+  document.querySelectorAll('.stepper .step').forEach((stepEl, i) => {
+    stepEl.addEventListener('click', () => goTo(i));
+    stepEl.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        goTo(i);
+      }
+    });
+  });
 });
 </script>
 </body>

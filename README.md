@@ -41,6 +41,32 @@ On navigation to this step the JPD summary is generated automatically, pulling e
 
 ---
 
+## CSV import
+
+Angela Knight manages external idea intake through Microsoft Forms. This intake tool is for the internal design team workflow, and Step 1 supports direct CSV import so incoming submissions can be reviewed and refined quickly.
+
+- CSV exports from Angela's Microsoft Form can be imported via **Import from CSV** in Step 1.
+- Manual field entry remains available for ideas that originate internally.
+
+### Column mapping
+
+| CSV column | Form field |
+|---|---|
+| Feature title / Title / Name | `f-title` |
+| Feature overview / Overview / Description | `f-overview` |
+| Problem / Problem being solved | `f-problem` |
+| Primary user / Who is this for / Audience | `f-audience` |
+| Also affects / Secondary user | `f-also-affects` |
+| How identified / Evidence source | `f-identified` |
+| Supporting evidence / Evidence | `f-evidence-detail` |
+| Compliance / Regulatory | `f-compliance` |
+| Data needs / Integration / Technical | `f-data` |
+| External dependency / Dependency | `f-external-dependency` |
+| Requestor / Submitted by / Name | `f-requestor` |
+| Sponsor / Clinical sponsor | `f-sponsor` |
+
+---
+
 ## Running locally
 
 The Claude API calls require HTTP context. Opening the file directly as `file://` will be blocked by the browser.

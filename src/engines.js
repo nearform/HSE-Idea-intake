@@ -272,8 +272,12 @@ function parseRiceConfig(md) {
   const out = { reachRanges: [], interpretation: [], totalUsers: null };
   if (!md) return out;
 
-  const tu = /Total registered users:\s*\*\*([\d,]+)\*\*/i.exec(md);
-  if (tu) out.totalUsers = parseInt(tu[1].replace(/,/g, ''), 10);
+  const tu = /(Total registered users|Total population of Ireland[^\n]*):\s*\*\*[^0-9]*([\d,.]+)\s*(million)?\*\*/i.exec(md);
+  if (tu) {
+    const numeric = tu[2].replace(/,/g, '');
+    const base = tu[3] ? Math.round(parseFloat(numeric) * 1000000) : parseInt(numeric, 10);
+    out.totalUsers = Number.isFinite(base) ? base : null;
+  }
 
   // Reach reference ranges table
   const reachSect = /###\s*Reach reference ranges[\s\S]*?(?=\n---|\n##\s)/i.exec(md);
@@ -328,7 +332,7 @@ function pickReachRange(ranges, form) {
   }
   if (role === 'carer') {
     return ranges.find(r => /carer|proxy/i.test(r.audience))
-        || ranges.find(r => /all app users/i.test(r.audience))
+        || ranges.find(r => /broad general health feature|all app users/i.test(r.audience))
         || ranges[0];
   }
 
@@ -339,50 +343,31 @@ function pickReachRange(ranges, form) {
     const row = ranges.find(r => p.match.test(r.audience));
     if (row && p.re.test(text)) return row;
   }
-  return ranges.find(r => /all app users/i.test(r.audience)) || ranges[0];
+  return ranges.find(r => /broad general health feature|all app users/i.test(r.audience)) || ranges[0];
 }
 
-const OUTCOME_IMPACT = {
-  'Improved patient safety':      3,
-  'Improved health outcomes':     3,
-  'Patient privacy & security':   2,
-  'EU / regulatory compliance':   2,
-  'Improved patient experience':  2,
-  'Time saving for patients':     1,
-  'Time saving for staff':        1,
-  'More efficient health service':1,
-  'Cost saving':                  1,
-  'Increase app registrations':   0.5
-};
-
 function computeImpact(outcomes) {
-  if (!outcomes || !outcomes.length) {
-    return { score: 0.5, note: 'No outcomes selected — defaulted to low (0.5). Select one or more expected outcomes on the RICE step to refine this score.' };
+  const count = outcomes && outcomes.length ? outcomes.length : 0;
+  if (count <= 0) {
+    return { score: 0.25, note: 'No outcomes selected. Using minimal impact (0.25) by default.' };
   }
-  let best = 0.25;
-  const rationale = [];
-  for (const o of outcomes) {
-    const w = OUTCOME_IMPACT[o];
-    if (w == null) continue;
-    rationale.push(`${o} (${w})`);
-    if (w > best) best = w;
-  }
-  // Small multi-outcome bump: if three or more distinct moderate+ outcomes, round up one step
-  const impactLadder = [0.25, 0.5, 1, 2, 3];
-  const moderatePlus = outcomes.filter(o => (OUTCOME_IMPACT[o] || 0) >= 1).length;
-  if (moderatePlus >= 3) {
-    const idx = impactLadder.indexOf(best);
-    if (idx >= 0 && idx < impactLadder.length - 1) best = impactLadder[idx + 1];
-  }
-  const label = best === 3 ? 'massive' : best === 2 ? 'high' : best === 1 ? 'medium' : best === 0.5 ? 'low' : 'minimal';
-  const note = `Impact set to ${best} (${label}) based on selected outcomes: ${rationale.join(', ')}${moderatePlus >= 3 ? '. Bumped one step up because three or more moderate-plus outcomes were selected.' : '.'}`;
-  return { score: best, note };
+  if (count >= 8) return { score: 3, note: `Impact set to 3 (massive) because ${count} outcomes were selected (8 to 10 outcomes rule).` };
+  if (count >= 5) return { score: 2, note: `Impact set to 2 (high) because ${count} outcomes were selected (5 to 7 outcomes rule).` };
+  if (count >= 3) return { score: 1, note: `Impact set to 1 (medium) because ${count} outcomes were selected (3 to 4 outcomes rule).` };
+  if (count === 2) return { score: 0.5, note: 'Impact set to 0.5 (low) because 2 outcomes were selected.' };
+  return { score: 0.25, note: 'Impact set to 0.25 (minimal) because 1 outcome was selected.' };
 }
 
 function computeConfidence(form) {
   const raw = parseFloat(form.evidence);
   if (!raw) return { score: 50, note: 'No evidence confidence selected — defaulted to 50% (informed hypothesis). Select a confidence level on the problem step to refine.' };
-  const labels = { 100: 'user research backed', 80: 'mixed evidence', 60: 'clinical or policy need', 50: 'informed hypothesis', 30: 'gut feel' };
+  const labels = {
+    100: 'all three pillars satisfied (data quality, user validation, technical readiness)',
+    80: 'two pillars satisfied',
+    60: 'one pillar satisfied, or strong clinical/policy justification',
+    50: 'informed hypothesis',
+    30: 'gut feel'
+  };
   const label = labels[raw] || '';
   const extra = form.evidenceDetail ? ` Evidence detail provided: "${form.evidenceDetail.slice(0, 120)}${form.evidenceDetail.length > 120 ? '…' : ''}"` : '';
   return { score: raw, note: `Confidence set to ${raw}% (${label}) from the submitter's selection.${extra}` };
@@ -415,19 +400,17 @@ function interpretScore(total, interpretation) {
 
 function computeRice(form, riceMd) {
   const cfg = parseRiceConfig(riceMd);
-  const range = pickReachRange(cfg.reachRanges, form);
-  const reachScore = range ? Math.round((range.low + range.high) / 2) : 25000;
-  const reachNote = range
-    ? `Estimated quarterly reach based on matching audience scope "${range.audience}" (${range.low.toLocaleString()}–${range.high.toLocaleString()} per quarter). Midpoint used.`
-    : 'No reach ranges found in config; defaulted to 25,000. Check config/rice-config.md.';
+  const reachScore = Number.isFinite(form.reach) && form.reach > 0 ? Math.round(form.reach) : 25000;
+  const reachSource = form.reachSource ? form.reachSource.trim() : '';
+  const reachNote = `Manual estimate entered by team.${reachSource ? ` Source: ${reachSource}` : ' Source not provided.'}`;
 
   const impact = computeImpact(form.outcomes || []);
   const confidence = computeConfidence(form);
   const effort = parseFloat(form.effort) || 2;
-  const effortNote = effort <= 2 ? 'Small — notification tweaks, content or minor UI changes.'
-    : effort <= 5 ? 'Medium — new screen or flow within an existing feature.'
-    : effort <= 10 ? 'Large — new feature area with multiple screens and integrations.'
-    : 'Very large — programme integration, major data dependency, or cross-system work.';
+  const effortNote = effort <= 2 ? 'Small — includes design, content, research, product, and delivery effort for lighter changes.'
+    : effort <= 5 ? 'Medium — includes all disciplines across a new screen or flow within an existing feature.'
+    : effort <= 10 ? 'Large — includes all disciplines across a new feature area with multiple screens and integrations.'
+    : 'Very large — includes all disciplines for programme integration, major data dependency, or cross-system work.';
 
   const total = Math.round((reachScore * impact.score * (confidence.score / 100)) / effort * 10) / 10;
   const summary = interpretScore(total, cfg.interpretation) ||
@@ -489,15 +472,28 @@ function buildJpdSummary(form, personaData, riceData, jpdTemplateMd) {
     ? form.outcomes.map(o => `- ${o}`).join('\n')
     : '- None selected';
 
+  const confidenceLabelByScore = {
+    100: 'All three pillars satisfied — data, user research, technical review',
+    80: 'Two pillars satisfied',
+    60: 'One pillar satisfied, or strong clinical / policy justification',
+    50: 'Informed hypothesis — team experience, no formal evidence',
+    30: 'Gut feel — no supporting evidence yet'
+  };
+  const confidenceSelected = confidenceLabelByScore[Number(form.evidence)] || `${Number(form.evidence) || 0}% confidence selection`;
+  const notesLine = `Reach: ${na(form.reachSource, 'Not provided')}. Confidence based on ${confidenceSelected}. Effort to be confirmed with delivery team.`;
+
   const riceText = riceData ? [
-    `- Reach: ${Math.round(riceData.reach.score).toLocaleString()} users/quarter — ${riceData.reach.note}`,
-    `- Impact: ${riceData.impact.score}x — ${riceData.impact.note}`,
-    `- Confidence: ${riceData.confidence.score}% — ${riceData.confidence.note}`,
-    `- Effort: ${riceData.effort.score} person-months — ${riceData.effort.note}`,
-    `- **Total RICE score: ${riceData.total}**`,
+    '| Metric | Value |',
+    '|---|---|',
+    `| Reach | ${Math.round(riceData.reach.score).toLocaleString()} users/quarter |`,
+    `| Impact | ${riceData.impact.score}x |`,
+    `| Confidence | ${riceData.confidence.score}% |`,
+    `| Effort | ${riceData.effort.score} person-months |`,
+    `| **Total score** | **${riceData.total}** |`,
+    `| **Notes** | ${notesLine} |`,
     '',
     riceData.summary
-  ].join('\n') : 'RICE score has not been calculated yet. Complete the RICE step to populate.';
+  ].join('\n') : 'RICE score (guide) has not been calculated yet. Complete the RICE step to populate.';
 
   const deadlineText = form.deadline === 'Yes'
     ? `Yes — ${na(form.deadlineDetail, 'detail not provided')}`
@@ -507,15 +503,22 @@ function buildJpdSummary(form, personaData, riceData, jpdTemplateMd) {
     ? `Evidence confidence: ${form.evidence}%`
     : 'Evidence confidence: not specified';
 
+  const technicalAndData = [
+    `- Data / integration needs: ${na(form.data, 'Not provided')}`,
+    `- Regulatory / compliance: ${na(form.compliance, 'Not provided')}`,
+    `- External dependency: ${na(form.externalDependency, 'No external dependency')}${form.externalDependencyDetail ? ' — ' + form.externalDependencyDetail : ''}`
+  ].join('\n');
+
   const bodyByHeading = {
     'Feature overview': na(form.overview),
     'Who is this for': `- Primary user: ${na(form.audience, 'Not specified')}\n- Also affects: ${na(form.alsoAffects, 'Not specified')}`,
     'What is the problem being solved': na(form.problem),
-    'Technical and data considerations': na(form.data, 'No specific technical or data considerations noted.'),
+    'Technical and data considerations': technicalAndData,
     'How was this need identified': na(form.identified, 'Not specified'),
     'Is there a deadline or dependency driving this': deadlineText,
     'Supporting evidence': `${na(form.evidenceDetail, 'No formal supporting evidence provided.')}\n\n${confidenceLine}`,
     'RICE score': riceText,
+    'RICE score (guide)': riceText,
     'Strategic alignment': `**Digital for Care 2030 pillars**\n\n${pillarsText}\n\n**Expected outcomes**\n\n${outcomesText}`,
     'Accessibility considerations': accLine + '\n\n**Persona matches**\n\n' + personaList,
     'Requestor and sponsor': `- Requestor: ${na(form.requestor, 'Not provided')}\n- Clinical / service owner sponsor: ${na(form.sponsor, 'Not provided')}`,
@@ -525,7 +528,8 @@ function buildJpdSummary(form, personaData, riceData, jpdTemplateMd) {
   const out = [`# ${title}`, ''];
   if (headings.length) {
     for (const h of headings) {
-      out.push(`## ${h}`, '');
+      const sectionHeading = h === 'RICE score' ? 'RICE score (guide)' : h;
+      out.push(`## ${sectionHeading}`, '');
       out.push(bodyByHeading[h] != null ? bodyByHeading[h] : 'Not provided');
       out.push('');
     }
@@ -539,6 +543,11 @@ function buildJpdSummary(form, personaData, riceData, jpdTemplateMd) {
   // Regulatory/compliance often isn't in the template as its own heading; append if the user provided one and it wasn't emitted.
   if (form.compliance && !headings.some(h => /regulator|complian/i.test(h))) {
     out.push('## Regulatory and compliance', '', form.compliance, '');
+  }
+
+  const confidenceScore = riceData && riceData.confidence ? Number(riceData.confidence.score) : Number(form.evidence || 0);
+  if (confidenceScore > 0 && confidenceScore <= 60) {
+    out.push(`Confidence is currently ${confidenceScore}%. Recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness.`, '');
   }
 
   out.push('---', `*Generated: ${now}*`);
