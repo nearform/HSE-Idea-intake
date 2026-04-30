@@ -25,7 +25,7 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-light); color: var(--c-text); min-height: 100vh; }
-.app { max-width: 740px; margin: 0 auto; padding: 2rem 1.25rem; }
+.app { max-width: 1040px; margin: 0 auto; padding: 2rem 1.25rem; }
 
 .header { display: flex; align-items: center; gap: 14px; margin-bottom: 2.25rem; }
 .hse-mark { width: 40px; height: 40px; background: var(--c-primary); border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -93,15 +93,52 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .badge-p { background: #C8EAE4; color: var(--c-primary); }
 .badge-s { background: #FFF0D0; color: #7A5200; }
 
-.rice-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: .875rem 0; }
+.rice-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: .875rem 0; }
 .rice-cell { background: var(--c-light); border-radius: var(--r-md); padding: .875rem; border: 1px solid var(--c-border); text-align: center; }
-.rl { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--c-muted); font-weight: 700; margin-bottom: 5px; }
+.rice-cell-total { background: var(--c-primary); border: 1px solid var(--c-primary); color: white; }
+.rl { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--c-muted); font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; justify-content: center; gap: 5px; }
+.rice-cell-total .rl { color: rgba(255,255,255,.65); }
 .rv { font-size: 22px; font-weight: 700; color: var(--c-dark); margin-bottom: 3px; }
+.rice-cell-total .rv { color: white; font-size: 28px; }
 .rn { font-size: 11px; color: var(--c-muted); line-height: 1.35; }
-.rice-total { background: var(--c-primary); border-radius: var(--r-lg); padding: 1.25rem; text-align: center; color: white; }
-.rt-label { font-size: 12px; opacity: .75; margin-bottom: 4px; }
-.rt-score { font-size: 38px; font-weight: 700; }
+.rice-cell-total .rn { color: rgba(255,255,255,.65); }
+/* RICE letter badge */
+.rice-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+.rice-badge-r { background: #02A78B; }
+.rice-badge-i { background: #0B55B7; }
+.rice-badge-c { background: #782CC3; }
+.rice-badge-e { background: #455C68; }
+/* Sidebar pill letter badge (smaller) */
+.sb-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-right: 3px;
+}
 .summary-note { background: var(--c-light); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-text); line-height: 1.55; margin-top: .75rem; }
+.rice-formula-notice { background: var(--c-light); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: .75rem 1rem; margin-top: .75rem; display: flex; flex-direction: column; gap: 4px; }
+.rice-formula-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--c-muted); }
+.rice-formula-expr { font-size: 13px; color: var(--c-muted); font-family: 'Menlo', 'Consolas', monospace; }
+.rice-formula-expr strong { color: var(--c-dark); }
 .acc-box { background: var(--c-warn-bg); border: 1px solid #EDD97A; border-radius: var(--r-md); padding: .875rem; font-size: 13px; color: var(--c-warn); margin-top: .75rem; line-height: 1.55; }
 
 /* Wireframe */
@@ -181,9 +218,6 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 #effort-custom:focus { border-color: var(--c-accent); }
 
 /* Reach inline row */
-.reach-row { display: flex; gap: 14px; align-items: flex-end; }
-.reach-col-main { flex: 0 0 60%; min-width: 0; }
-.reach-col-source { flex: 1; min-width: 0; }
 .reach-inline { display: flex; align-items: center; gap: 7px; flex-wrap: nowrap; }
 .reach-prefix { font-size: 13px; color: var(--c-text); white-space: nowrap; padding-bottom: 1px; }
 .reach-input { width: 140px !important; max-width: 140px !important; flex-shrink: 0; }
@@ -208,6 +242,139 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 }
 .context-bar .ctxbar-title { font-weight: 600; }
 .context-bar .ctxbar-sep { margin: 0 6px; opacity: 0.5; }
+
+/* Two-column layout */
+.app-columns { display: flex; gap: 28px; align-items: flex-start; }
+.app-main { flex: 1; min-width: 0; max-width: 640px; }
+
+/* JPD Sidebar */
+.jpd-sidebar { width: 260px; flex-shrink: 0; }
+.jpd-sidebar-card {
+  background: #FFFFFF;
+  border: 1px solid #D8DDE0;
+  border-radius: 14px;
+  padding: 1rem;
+  position: sticky;
+  top: 1.5rem;
+}
+.jpd-sidebar-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  font-weight: 700;
+  color: #768692;
+  margin-bottom: .875rem;
+}
+.jpd-sidebar-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #02A78B;
+  flex-shrink: 0;
+}
+@keyframes sbDotPulse {
+  0%   { transform: scale(1); opacity: 1; }
+  50%  { transform: scale(2.2); opacity: .7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.jpd-sidebar-dot.pulse { animation: sbDotPulse .55s ease-out; }
+
+/* Sidebar inner content pieces */
+.sb-title { font-size: 14px; font-weight: 700; color: #212B32; line-height: 1.35; margin-bottom: .75rem; }
+.sb-section { padding-top: .625rem; border-top: 1px solid #D8DDE0; margin-bottom: .625rem; }
+.sb-section-label {
+  font-size: 11px;
+  color: #768692;
+  font-weight: 600;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.sb-persona-name {
+  font-size: 13px;
+  color: #212B32;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+.sb-persona-reason {
+  font-size: 12px;
+  color: #768692;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sb-persona-placeholder { font-size: 13px; color: #768692; font-style: italic; }
+.sb-rice-score { font-size: 28px; font-weight: 700; color: #02594C; line-height: 1; margin-bottom: .5rem; }
+.sb-rice-pending {
+  background: #D8DDE0;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #768692;
+  display: inline-block;
+}
+.sb-rice-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+.sb-rice-pill {
+  font-size: 11px;
+  background: #F8FAFB;
+  border: 1px solid #D8DDE0;
+  border-radius: 20px;
+  padding: 2px 7px;
+  color: #455C68;
+  white-space: nowrap;
+}
+
+/* Step 4 compact + ready state */
+.sb-compact-header { margin-bottom: .75rem; }
+.sb-compact-title { font-size: 12px; font-weight: 600; color: #212B32; line-height: 1.3; margin-bottom: 2px; }
+.sb-compact-meta { font-size: 11px; color: #768692; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-ready { border-top: 1px solid #D8DDE0; padding-top: .75rem; }
+.sb-ready-row { display: flex; align-items: center; gap: 8px; margin-bottom: .5rem; }
+.sb-ready-icon {
+  width: 20px;
+  height: 20px;
+  background: #02A78B;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.sb-ready-label { font-size: 13px; font-weight: 600; color: #02594C; }
+.sb-copy-btn {
+  width: 100%;
+  text-align: center;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--c-primary);
+  color: white;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.sb-copy-btn:hover { background: var(--c-dark); }
+.sb-copy-btn.copied { background: var(--c-accent); }
+
+@media (max-width: 800px) {
+  .app-columns { display: block; }
+  .app-main { max-width: none; }
+  .jpd-sidebar { display: none !important; }
+}
 </style>
 </head>
 <body>
@@ -237,6 +404,9 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     <div class="dots"><span></span><span></span><span></span></div>
     <span id="configStatusMsg">Loading config...</span>
   </div>
+
+  <div class="app-columns">
+  <div class="app-main">
 
   <!-- Stepper -->
   <div class="stepper" aria-label="Intake steps">
@@ -420,7 +590,18 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       <p class="subtitle">Select expected outcomes, confirm the relevant pillar, set your effort estimate, and get a suggested RICE score with reasoning for each dimension.</p>
 
       <div class="field">
-        <label>Expected outcomes — select all that apply</label>
+        <div class="reach-inline" style="margin-bottom:8px">
+          <span class="reach-prefix" style="display:inline-flex;align-items:center;gap:6px"><span class="rice-badge rice-badge-r">R</span>Monthly reach:</span>
+          <input type="number" id="f-reach" min="1" step="1" placeholder="e.g. 7750" class="reach-input">
+          <span class="reach-suffix">users/month</span>
+        </div>
+        <label class="reach-source-lbl" for="f-reach-source">Source</label>
+        <input type="text" id="f-reach-source" placeholder="e.g. CSO 2022, evaluative testing round 3.0">
+        <div class="field-hint reach-hint">Divide total affected population by 12 to get monthly reach. Examples: Type 1 diabetes 2,500/mo · Proxy care 102,500/mo · Polish speakers 7,750/mo · Prescribed medicines 208,000/mo</div>
+      </div>
+
+      <div class="field">
+        <label style="display:flex;align-items:center;gap:6px"><span class="rice-badge rice-badge-i">I</span>Expected outcomes — select all that apply</label>
         <div class="outcomes-grid">
           <label class="cb-item"><input type="checkbox" value="Improved patient experience"> Patient experience</label>
           <label class="cb-item"><input type="checkbox" value="Improved patient safety"> Patient safety</label>
@@ -436,7 +617,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       </div>
 
       <div class="field">
-        <label>Digital for Care 2030 pillar</label>
+        <label style="display:flex;align-items:center;gap:6px"><span class="rice-badge rice-badge-c">C</span>Digital for Care 2030 pillar</label>
         <div class="pillar-grid">
           <button class="pillar-btn" onclick="togglePillar(this,'1')">1. Patient as empowered partner</button>
           <button class="pillar-btn" onclick="togglePillar(this,'2')">2. Digitally connected care</button>
@@ -448,7 +629,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       </div>
 
       <div class="field">
-        <label>Effort estimate (person-months)</label>
+        <label style="display:flex;align-items:center;gap:6px"><span class="rice-badge rice-badge-e">E</span>Effort estimate (person-months)</label>
         <div class="effort-btns" id="effort-btns">
           <button type="button" class="effort-btn" data-val="1" onclick="setEffort(1)">1</button>
           <button type="button" class="effort-btn" data-val="2" onclick="setEffort(2)">2</button>
@@ -460,28 +641,12 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
         <input type="hidden" id="f-effort" value="2">
         <div class="field-hint">Across design, content, research, product, and delivery</div>
       </div>
-      <div class="field">
-        <div class="reach-row">
-          <div class="reach-col-main">
-            <div class="reach-inline">
-              <span class="reach-prefix">Monthly reach:</span>
-              <input type="number" id="f-reach" min="1" step="1" placeholder="e.g. 7750" class="reach-input">
-              <span class="reach-suffix">users/month</span>
-            </div>
-          </div>
-          <div class="reach-col-source">
-            <label class="reach-source-lbl" for="f-reach-source">Source</label>
-            <input type="text" id="f-reach-source" placeholder="e.g. CSO 2022">
-          </div>
-        </div>
-        <div class="field-hint reach-hint">Divide total affected population by 12 to get monthly reach. Examples: Type 1 diabetes 2,500/mo · Proxy care 102,500/mo · Polish speakers 7,750/mo · Prescribed medicines 208,000/mo</div>
-      </div>
 
       <div id="rice-results"></div>
     </div>
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
-      <button class="btn btn-primary" id="rice-btn" onclick="calcRice()">Calculate RICE →</button>
+      <button class="btn btn-primary" id="rice-btn" onclick="goTo(3)">Next: JPD summary →</button>
     </div>
   </div>
 
@@ -510,9 +675,23 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     </div>
   </div>
 
+  </div><!-- /.app-main -->
+
+  <aside id="jpd-sidebar" class="jpd-sidebar" style="display:none">
+    <div class="jpd-sidebar-card">
+      <div class="jpd-sidebar-label">
+        <span class="jpd-sidebar-dot" id="sidebarDot"></span>
+        JPD preview
+      </div>
+      <div id="sidebarInner"></div>
+    </div>
+  </aside>
+
+  </div><!-- /.app-columns -->
+
 </div>
 
-<script src="engines.js"></script>
+<script src="/src/engines.js"></script>
 <script>
 const LLM_URL = '/api/llm';
 
@@ -540,6 +719,14 @@ let state = {
   aiAssist: false, providerConfigured: false, provider: null, model: null,
   primaryPersonaName: null, primaryPersonaReason: null
 };
+
+let sidebarState = {
+  title: '', audience: '',
+  personaName: null, personaReason: null, personaBadge: null,
+  riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
+  jpdReady: false
+};
+let _sidebarTitleTimer = null;
 
 /** Session draft — survives step changes, refresh, and back/forward within the tab */
 const INTAKE_DRAFT_KEY = 'hse-intake-draft-v1';
@@ -585,6 +772,14 @@ function loadSample() {
 
   state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
             primaryPersonaName: null, primaryPersonaReason: null };
+  sidebarState = {
+    title: document.getElementById('f-title').value.trim(),
+    audience: document.getElementById('f-audience').value,
+    personaName: null, personaReason: null, personaBadge: null,
+    riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
+    jpdReady: false
+  };
+  renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
@@ -614,6 +809,13 @@ function clearForm() {
   document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
   state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
             primaryPersonaName: null, primaryPersonaReason: null };
+  sidebarState = {
+    title: '', audience: '',
+    personaName: null, personaReason: null, personaBadge: null,
+    riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
+    jpdReady: false
+  };
+  renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
@@ -1005,8 +1207,7 @@ function goTo(n) {
     if (needsRun) runPersonas();
   }
   if (n === 2) {
-    const riceBtn = document.getElementById('rice-btn');
-    if (riceBtn && !state.riceDone) { riceBtn.textContent = 'Calculate RICE →'; riceBtn.onclick = calcRice; }
+    calcRice();
   }
   if (n === 3 && !state.wfDone) runWireframe();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1156,6 +1357,11 @@ async function runPersonas() {
         : '';
     }
     updateContextBar(1);
+    sidebarState.personaName = _primary ? _primary.name : null;
+    sidebarState.personaReason = _primary ? (_primary.reason ? _primary.reason.split(/\.\s+/)[0].replace(/\.$/, '') : '') : null;
+    sidebarState.personaBadge = _primary ? (_primary.rank || 'primary') : null;
+    renderSidebar();
+    pulseSidebarDot();
     renderPersonas(el, r);
     saveIntakeDraft();
   } catch (e) {
@@ -1231,14 +1437,36 @@ async function calcRice() {
     r.total = total;
     state.riceDone = true;
     state.riceData = r;
+    sidebarState.riceScore = r.total;
+    sidebarState.riceReach = manualReach;
+    sidebarState.riceImpact = r.impact ? r.impact.score : null;
+    sidebarState.riceConfidence = r.confidence ? r.confidence.score : null;
+    sidebarState.riceEffort = f.effort;
+    renderSidebar();
+    pulseSidebarDot();
     renderRice(el, r, f);
-    const btn = document.getElementById('rice-btn');
-    btn.textContent = 'Next: JPD summary →';
-    btn.onclick = () => goTo(3);
     saveIntakeDraft();
   } catch (e) {
     el.innerHTML = `<div class="error"><strong>RICE calculation failed.</strong> ${escHtml(e.message)}</div>`;
   }
+}
+
+function shortNote(note, type) {
+  if (!note) return '';
+  if (type === 'confidence') {
+    const m = /\(([^)]+)\)/.exec(note);
+    return m ? m[1].charAt(0).toUpperCase() + m[1].slice(1) : note.split('.')[0];
+  }
+  if (type === 'impact') {
+    const m = /\((\w+)\)[^(]*?(\d+)\s*outcome/i.exec(note);
+    if (m) return `${m[1].charAt(0).toUpperCase() + m[1].slice(1)} · ${m[2]} outcomes`;
+    const m2 = /\(([^)]+)\)/.exec(note);
+    return m2 ? m2[1].charAt(0).toUpperCase() + m2[1].slice(1) : note.split('.')[0];
+  }
+  if (type === 'effort') {
+    return note.split(/\s*[—–-]/)[0].trim();
+  }
+  return note;
 }
 
 function renderRice(el, r, f) {
@@ -1246,16 +1474,43 @@ function renderRice(el, r, f) {
     ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
     : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
   el.innerHTML = `
-    <div style="display:flex;justify-content:flex-end;margin-bottom:8px">${modeTag}</div>
-    <div class="rice-grid">
-      <div class="rice-cell"><div class="rl">Reach</div><div class="rv">${Math.round(r.reach.score).toLocaleString()}</div><div class="rn">Source: ${escHtml(f.reachSource || 'Not provided')}</div></div>
-      <div class="rice-cell"><div class="rl">Impact</div><div class="rv">${r.impact.score}×</div><div class="rn">${escHtml(r.impact.note)}</div></div>
-      <div class="rice-cell"><div class="rl">Confidence</div><div class="rv">${r.confidence.score}%</div><div class="rn">${escHtml(r.confidence.note)}</div></div>
-      <div class="rice-cell"><div class="rl">Effort</div><div class="rv">${f.effort}mo</div><div class="rn">${escHtml(r.effort.note)}</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      ${modeTag}
+      <button class="btn btn-ghost" style="font-size:12px;padding:5px 12px" onclick="calcRice()">↺ Recalculate</button>
     </div>
-    <div class="rice-total">
-      <div class="rt-label">Guide RICE score</div>
-      <div class="rt-score">${r.total}</div>
+    <div class="rice-grid">
+      <div class="rice-cell">
+        <div class="rl"><span class="rice-badge rice-badge-r">R</span>Reach</div>
+        <div class="rv">${Math.round(r.reach.score).toLocaleString()}</div>
+        <div class="rn">users / month</div>
+      </div>
+      <div class="rice-cell">
+        <div class="rl"><span class="rice-badge rice-badge-i">I</span>Impact</div>
+        <div class="rv">${r.impact.score}×</div>
+        <div class="rn">${escHtml(shortNote(r.impact.note, 'impact'))}</div>
+      </div>
+      <div class="rice-cell">
+        <div class="rl"><span class="rice-badge rice-badge-c">C</span>Confidence</div>
+        <div class="rv">${r.confidence.score}%</div>
+        <div class="rn">${escHtml(shortNote(r.confidence.note, 'confidence'))}</div>
+      </div>
+      <div class="rice-cell">
+        <div class="rl"><span class="rice-badge rice-badge-e">E</span>Effort</div>
+        <div class="rv">${f.effort}mo</div>
+        <div class="rn">${escHtml(shortNote(r.effort.note, 'effort'))}</div>
+      </div>
+      <div class="rice-cell rice-cell-total">
+        <div class="rl">
+          <span style="color:#4DDFC7">R</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#7EB3FF">I</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#C98EF5">C</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#A8C0CB">E</span>
+        </div>
+        <div class="rv">${r.total}</div>
+        <div class="rn">Guide score</div>
+      </div>
+    </div>
+    <div class="rice-formula-notice">
+      <div class="rice-formula-label">How this score was calculated</div>
+      <div class="rice-formula-expr">(Reach × Impact × Confidence) ÷ Effort = Score</div>
+      <div class="rice-formula-expr">(<strong>${Math.round(r.reach.score).toLocaleString()}</strong> × <strong>${r.impact.score}</strong> × <strong>${r.confidence.score}%</strong>) ÷ <strong>${f.effort}</strong> = <strong>${r.total}</strong></div>
     </div>
     <div class="summary-note">This is a starting point for discussion. Reach and effort figures should be verified with the relevant teams before final scoring.</div>
     ${r.summary ? `<div class="summary-note">${escHtml(r.summary)}</div>` : ''}`;
@@ -1307,6 +1562,9 @@ async function runWireframe() {
       : Engines.buildJpdSummary(f, state.personaData, state.riceData, CONFIG.jpdTemplate || '');
     state.wfDone = true;
     state.mdOutput = md;
+    sidebarState.jpdReady = true;
+    renderSidebar();
+    pulseSidebarDot();
 
     const modeTag = activeMode() === 'ai'
       ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
@@ -1469,6 +1727,92 @@ Include 1-3 screens. Use only these element types: header, nav, card, list_item,
   }
 }
 
+/* ----- JPD preview sidebar ----- */
+
+function pulseSidebarDot() {
+  const dot = document.getElementById('sidebarDot');
+  if (!dot) return;
+  dot.classList.remove('pulse');
+  void dot.offsetWidth; // force reflow to restart animation
+  dot.classList.add('pulse');
+  dot.addEventListener('animationend', () => dot.classList.remove('pulse'), { once: true });
+}
+
+function renderSidebar() {
+  const sidebar = document.getElementById('jpd-sidebar');
+  if (!sidebar) return;
+  const { title, audience, personaName, personaReason, personaBadge,
+          riceScore, riceReach, riceImpact, riceConfidence, jpdReady } = sidebarState;
+
+  if (!title) { sidebar.style.display = 'none'; return; }
+  sidebar.style.display = 'block';
+
+  const inner = document.getElementById('sidebarInner');
+  if (!inner) return;
+
+  if (jpdReady) {
+    const riceStr = riceScore !== null ? ' · RICE: ' + riceScore : '';
+    const personaStr = personaName || audience || '';
+    inner.innerHTML = `
+      <div class="sb-compact-header">
+        <div class="sb-compact-title">${escHtml(title)}</div>
+        <div class="sb-compact-meta">${escHtml(personaStr + riceStr)}</div>
+      </div>
+      <div class="sb-ready">
+        <div class="sb-ready-row">
+          <div class="sb-ready-icon">✓</div>
+          <span class="sb-ready-label">Ready to copy</span>
+        </div>
+        <button class="sb-copy-btn" id="sbCopyBtn" onclick="sbCopyMd()">Copy markdown</button>
+      </div>`;
+    return;
+  }
+
+  let html = `<div class="sb-title">${escHtml(title)}</div>`;
+
+  if (personaName) {
+    const bc = personaBadge === 'primary' ? 'badge-p' : 'badge-s';
+    html += `<div class="sb-section">
+      <div class="sb-section-label">For</div>
+      <div class="sb-persona-name">${escHtml(personaName)}<span class="badge ${bc}">${escHtml(personaBadge || 'primary')}</span></div>
+      ${personaReason ? `<div class="sb-persona-reason">${escHtml(personaReason)}</div>` : ''}
+    </div>`;
+  } else if (audience) {
+    html += `<div class="sb-section">
+      <div class="sb-section-label">For</div>
+      <div class="sb-persona-placeholder">${escHtml(audience)}</div>
+    </div>`;
+  }
+
+  html += `<div class="sb-section"><div class="sb-section-label">RICE</div>`;
+  if (riceScore !== null) {
+    const reachStr = riceReach != null ? Math.round(riceReach).toLocaleString() + '/mo' : '—';
+    const impactStr = riceImpact != null ? riceImpact + '×' : '—';
+    const confStr  = riceConfidence != null ? riceConfidence + '%' : '—';
+    const effortStr = sidebarState.riceEffort != null ? sidebarState.riceEffort + 'mo' : '—';
+    html += `<div class="sb-rice-score">${riceScore}</div>
+      <div class="sb-rice-pills">
+        <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-r">R</span>${escHtml(reachStr)}</span>
+        <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-i">I</span>${escHtml(impactStr)}</span>
+        <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-c">C</span>${escHtml(confStr)}</span>
+        <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-e">E</span>${escHtml(effortStr)}</span>
+      </div>`;
+  } else {
+    html += `<div class="sb-rice-pending">Pending</div>`;
+  }
+  html += `</div>`;
+
+  inner.innerHTML = html;
+}
+
+function sbCopyMd() {
+  if (!state.mdOutput) return;
+  navigator.clipboard.writeText(state.mdOutput).then(() => {
+    const btn = document.getElementById('sbCopyBtn');
+    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy markdown'; btn.classList.remove('copied'); }, 2000); }
+  });
+}
+
 /* ----- Session draft (step navigation + refresh) ----- */
 
 function collectIntakeDraft() {
@@ -1515,7 +1859,8 @@ function scheduleSaveIntakeDraft() {
 
 let _riceRecalcTimer = null;
 function scheduleRiceRecalc() {
-  if (!state.riceDone) return;
+  const ricePanel = document.getElementById('p2');
+  if (!ricePanel || !ricePanel.classList.contains('active')) return;
   if (_riceRecalcTimer) clearTimeout(_riceRecalcTimer);
   _riceRecalcTimer = setTimeout(() => { _riceRecalcTimer = null; calcRice(); }, 500);
 }
@@ -1618,6 +1963,27 @@ function restoreIntakeDraft() {
     if (typeof d.activeStep === 'number' && d.activeStep >= 0 && d.activeStep <= 3) {
       goTo(d.activeStep);
     }
+
+    // Restore sidebar state from draft
+    sidebarState.title = (document.getElementById('f-title') || {}).value ? document.getElementById('f-title').value.trim() : '';
+    sidebarState.audience = (document.getElementById('f-audience') || {}).value || '';
+    if (state.personaData) {
+      const _rp = (state.personaData.matches || []).find(m => m.rank === 'primary') || (state.personaData.matches || [])[0];
+      if (_rp) {
+        sidebarState.personaName = _rp.name;
+        sidebarState.personaReason = _rp.reason ? _rp.reason.split(/\.\s+/)[0].replace(/\.$/, '') : '';
+        sidebarState.personaBadge = _rp.rank || 'primary';
+      }
+    }
+    if (state.riceData) {
+      sidebarState.riceScore = state.riceData.total;
+      sidebarState.riceReach = state.riceData.reach ? state.riceData.reach.score : null;
+      sidebarState.riceImpact = state.riceData.impact ? state.riceData.impact.score : null;
+      sidebarState.riceConfidence = state.riceData.confidence ? state.riceData.confidence.score : null;
+      sidebarState.riceEffort = state.riceData.effort ? state.riceData.effort.score : null;
+    }
+    sidebarState.jpdReady = !!state.wfDone;
+    renderSidebar();
   } finally {
     intakeRestoring = false;
   }
@@ -1662,6 +2028,31 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
+
+  // Sidebar: debounced title update (500ms)
+  const _sbTitleEl = document.getElementById('f-title');
+  if (_sbTitleEl) {
+    _sbTitleEl.addEventListener('input', () => {
+      if (_sidebarTitleTimer) clearTimeout(_sidebarTitleTimer);
+      _sidebarTitleTimer = setTimeout(() => {
+        _sidebarTitleTimer = null;
+        const newTitle = _sbTitleEl.value.trim();
+        const wasSidebarHidden = !sidebarState.title;
+        sidebarState.title = newTitle;
+        renderSidebar();
+        if (!wasSidebarHidden && newTitle) pulseSidebarDot();
+      }, 500);
+    });
+  }
+
+  // Sidebar: audience placeholder updates immediately
+  const _sbAudienceEl = document.getElementById('f-audience');
+  if (_sbAudienceEl) {
+    _sbAudienceEl.addEventListener('change', () => {
+      sidebarState.audience = _sbAudienceEl.value;
+      if (sidebarState.title && !sidebarState.personaName) renderSidebar();
+    });
+  }
 });
 </script>
 </body>
