@@ -555,6 +555,237 @@ function buildJpdSummary(form, personaData, riceData, jpdTemplateMd) {
 }
 
 // ---------------------------------------------------------------------------
+// Design brief (form -> design brief, layered on top of the JPD summary)
+// ---------------------------------------------------------------------------
+
+function splitProblemIntoDesignProblems(problemText) {
+  const text = String(problemText || '').trim();
+  if (!text) {
+    return [
+      'How do we frame this feature so a user understands what is changing and why?',
+      'How do we surface this in the existing app navigation without adding noise?',
+      'How do we measure whether the feature is solving the problem after launch?'
+    ];
+  }
+  // Break into sentences, then turn each one into a "How do we…" prompt.
+  const sentences = text
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map(s => s.trim())
+    .filter(s => s.length > 12);
+
+  const prompts = [];
+  for (const s of sentences) {
+    const lower = s.toLowerCase();
+    let prompt;
+    if (/no way|cannot|can't|don't know|unaware|missing|lack/i.test(lower)) {
+      prompt = `How do we give the user a clear way to ${s.replace(/^.*?(no way|cannot|can't|don't know|unaware|missing|lack)\s*(to|of)?\s*/i, '').replace(/[.?!]+$/, '')} without adding to their cognitive load?`;
+    } else if (/anxiety|worry|frustrat|confus/i.test(lower)) {
+      prompt = `How do we reduce the ${(/anxiety|worry|frustrat|confus/i.exec(lower) || ['concern'])[0]} this currently causes, while still giving people the information they need?`;
+    } else if (/delay|wait|slow/i.test(lower)) {
+      prompt = `How do we shorten the time between the trigger event and the user knowing about it?`;
+    } else if (/staff|gp|clinic|nurse|practitioner/i.test(lower)) {
+      prompt = `How do we serve clinical staff in this flow without adding to their inbox or admin load?`;
+    } else {
+      const trimmed = s.replace(/[.?!]+$/, '');
+      prompt = `How do we address: ${trimmed.charAt(0).toLowerCase() + trimmed.slice(1)}?`;
+    }
+    if (!prompts.includes(prompt)) prompts.push(prompt);
+    if (prompts.length >= 5) break;
+  }
+  if (prompts.length < 3) {
+    if (!prompts.find(p => /opt in|opt out/i.test(p))) {
+      prompts.push('How do we let a user opt in or out of this feature without burying the control?');
+    }
+    if (!prompts.find(p => /measure/i.test(p))) {
+      prompts.push('How do we measure whether this feature is solving the problem post-launch?');
+    }
+  }
+  return prompts.slice(0, 5);
+}
+
+function extractUrls(text) {
+  if (!text) return [];
+  const matches = String(text).match(/https?:\/\/[^\s)]+/g);
+  return matches ? Array.from(new Set(matches)) : [];
+}
+
+function buildDesignBrief(form, personaData, riceData, jpdMarkdown, briefTemplateMd, designTokensMd) {
+  const headings = parseJpdSections(briefTemplateMd);
+  const now = new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' });
+  const title = na(form.title, 'Untitled feature');
+
+  const primary = personaData && Array.isArray(personaData.matches) && personaData.matches.length
+    ? personaData.matches.find(m => m.rank === 'primary') || personaData.matches[0]
+    : null;
+  const allPersonas = personaData && Array.isArray(personaData.matches) ? personaData.matches : [];
+
+  const accLine = personaData && personaData.accessibility_flag
+    ? personaData.accessibility_flag
+    : 'Not yet assessed.';
+
+  const pillarsList = (form.pillars || []).map(p => `${PILLAR_NAMES[p] || ''} (pillar ${p})`).filter(Boolean);
+  const outcomesList = form.outcomes || [];
+
+  const confidenceScore = riceData && riceData.confidence ? Number(riceData.confidence.score) : Number(form.evidence || 0);
+
+  // Section bodies, keyed by H2.
+  const personaForUserValue = primary
+    ? `Primary persona: **${primary.name}**. ${primary.reason || ''}`.trim()
+    : `Primary user: ${na(form.audience, 'Not specified')}.`;
+
+  const userValueBody = [
+    personaForUserValue,
+    '',
+    `What the user gets:`,
+    `- A way to do something they cannot do today: ${na(form.overview, 'see project overview above')}.`,
+    outcomesList.length ? `- Direct outcomes: ${outcomesList.join('; ')}.` : '- Outcomes: to be confirmed once the feature has been validated with users.'
+  ].join('\n');
+
+  const internalValueBody = [
+    pillarsList.length
+      ? `Strategic alignment with Digital for Care 2030:\n${pillarsList.map(p => `- ${p}`).join('\n')}`
+      : 'Strategic alignment: no Digital for Care 2030 pillar selected — confirm with the product team.',
+    '',
+    outcomesList.length ? `Outcomes the team expects:\n${outcomesList.map(o => `- ${o}`).join('\n')}` : 'Outcomes: none selected on the intake form.',
+    '',
+    form.compliance ? `Regulatory / compliance: ${form.compliance}.` : 'No specific regulatory or compliance considerations noted.'
+  ].join('\n');
+
+  const cellOrBlank = v => (v && String(v).trim()) ? String(v).trim() : '';
+  const stakeholdersTable = [
+    '| Role | Name |',
+    '|---|---|',
+    `| Project manager |  |`,
+    `| Requestor | ${cellOrBlank(form.requestor)} |`,
+    `| Clinical / service owner sponsor | ${cellOrBlank(form.sponsor)} |`,
+    `| Team / unit | ${cellOrBlank(form.teamUnit)} |`,
+    form.email ? `| Submitter email | ${form.email} |` : ''
+  ].filter(Boolean).join('\n');
+
+  const designProblems = splitProblemIntoDesignProblems(form.problem);
+  const problemsBody = designProblems.map(p => `- ${p}`).join('\n');
+
+  const dependenciesParts = [];
+  if (form.data) dependenciesParts.push(`- Data / integration: ${form.data}`);
+  if (form.externalDependency && form.externalDependency !== 'No external dependency') {
+    dependenciesParts.push(`- External dependency: ${form.externalDependency}${form.externalDependencyDetail ? ' — ' + form.externalDependencyDetail : ''}`);
+  }
+  if (form.compliance) dependenciesParts.push(`- Regulatory / compliance: ${form.compliance}`);
+  if (form.sponsor) dependenciesParts.push(`- Clinical / service owner sponsor confirmation: ${form.sponsor}`);
+  if (!dependenciesParts.length) dependenciesParts.push('- No external dependencies identified on the intake form. Confirm with the relevant teams during discovery.');
+  const dependenciesBody = ['Teams to involve and what they need to provide:', ...dependenciesParts].join('\n');
+
+  const evidenceUrls = extractUrls(form.evidenceDetail);
+  const referenceLines = [];
+  if (form.evidenceDetail) referenceLines.push(`- Supporting evidence: ${form.evidenceDetail}`);
+  if (form.identified) referenceLines.push(`- How the need was identified: ${form.identified}.`);
+  if (evidenceUrls.length) {
+    for (const u of evidenceUrls) referenceLines.push(`- Link: ${u}`);
+  }
+  if (allPersonas.length) {
+    referenceLines.push(`- Persona research references: see HSE Digital persona deck for ${allPersonas.map(p => p.name).join(', ')}.`);
+  }
+  if (!referenceLines.length) referenceLines.push('- No formal references provided. The submitter described where the need came from in plain language — see the JPD summary.');
+  const referencesBody = referenceLines.join('\n');
+
+  const timelineLines = [];
+  if (form.deadline === 'Yes') {
+    timelineLines.push(`- Deadline / dependency: ${na(form.deadlineDetail, 'detail not provided')}.`);
+  } else {
+    timelineLines.push('- No hard deadline flagged on the intake form.');
+  }
+  timelineLines.push('- Suggested discovery start: after the JPD summary has been reviewed by the product team.');
+  if (confidenceScore > 0 && confidenceScore <= 60) {
+    timelineLines.push(`- Confidence is currently ${confidenceScore}%. Recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness.`);
+  }
+  const timelineBody = timelineLines.join('\n');
+
+  const challengeLines = [];
+  if (form.compliance) challengeLines.push(`- Regulatory / compliance: ${form.compliance}.`);
+  if (form.data) challengeLines.push(`- Technical / data dependency: ${form.data}.`);
+  if (form.externalDependency && form.externalDependency !== 'No external dependency') {
+    challengeLines.push(`- External dependency: ${form.externalDependency}${form.externalDependencyDetail ? ' — ' + form.externalDependencyDetail : ''}.`);
+  }
+  if (accLine) challengeLines.push(`- Accessibility: ${accLine}`);
+  if (confidenceScore > 0 && confidenceScore <= 60) {
+    challengeLines.push(`- Evidence base is light (${confidenceScore}% confidence) — risk of designing the wrong thing without further research.`);
+  }
+  if (!challengeLines.length) challengeLines.push('- No specific challenges flagged. Standard HSE accessibility, content, and clinical-safety requirements still apply.');
+  const challengesBody = challengeLines.join('\n');
+
+  // Indicative wireframe — short text-only sketch using HSE tokens.
+  const audienceLabel = (primary && primary.name) || form.audience || 'app user';
+  const wireframeBody = [
+    `Three indicative screens for ${audienceLabel}, mobile-first, in line with the HSE Health App tab navigation (Home, My Health, Services, Messages):`,
+    '',
+    '**Screen 1 — Entry point (Home or My Health card)**',
+    `- Header: \`hse-heading-xs\` section label "${title}".`,
+    '- Card: short summary of the feature in `hse-grey-50` background, `hse-body-reg-s` body text.',
+    '- Primary CTA: `hse-green-500` button labelled with the action this feature enables.',
+    '',
+    '**Screen 2 — Main feature flow**',
+    `- Header: \`hse-heading-s\` page title "${title}".`,
+    '- Tab nav: active tab depends on placement (My health / Services).',
+    '- Content: list of items or single primary card, `hse-grey-50` backgrounds, `hse-body-reg-m` content, status badges in `hse-aqua-300`.',
+    '- Primary CTA: `hse-green-500`.',
+    '',
+    '**Screen 3 — Confirmation / outcome**',
+    '- Confirmation header in `hse-green-700`, supporting text in `hse-grey-700`.',
+    '- Plain-English next-steps block. Secondary action: "Manage notifications" or "View details".',
+    '',
+    'Notes: this is a sketch to align stakeholders, not a final design. Validate accessibility (WCAG 2.2 AA, plain English, sufficient contrast, screen reader and keyboard support) during detailed design.'
+  ].join('\n');
+
+  const projectOverviewBody = [
+    na(form.overview, 'Not provided'),
+    form.problem ? '' : null,
+    form.problem ? `Problem context: ${form.problem}` : null
+  ].filter(s => s != null).join('\n');
+
+  const whyBody = [
+    form.problem ? `**The problem.** ${form.problem}` : '**The problem.** See the JPD summary for the problem statement.',
+    '',
+    form.evidenceDetail ? `**Evidence.** ${form.evidenceDetail}${form.evidence ? ` (Confidence: ${form.evidence}%.)` : ''}` : '**Evidence.** No formal evidence supplied — the submitter described where the need came from in plain language.',
+    '',
+    pillarsList.length ? `**Strategic alignment.** ${pillarsList.join('; ')}.` : '**Strategic alignment.** No Digital for Care 2030 pillar selected.',
+    '',
+    form.deadline === 'Yes' ? `**Deadline.** ${na(form.deadlineDetail, 'Detail not provided')}.` : '**Deadline.** None flagged.'
+  ].join('\n');
+
+  const bodyByHeading = {
+    'JPD location': 'To be created — paste link once available.',
+    'Project overview': projectOverviewBody || na(form.overview),
+    'Why is this work necessary': whyBody,
+    'Stakeholders and team': stakeholdersTable,
+    'User value': userValueBody,
+    'Internal HSE value': internalValueBody,
+    'Problems to solve': problemsBody,
+    'Team dependencies and involvement': dependenciesBody,
+    'References': referencesBody,
+    'Timeline': timelineBody,
+    'Challenges': challengesBody,
+    'Indicative wireframe': wireframeBody
+  };
+
+  const out = [`# Design brief — ${title}`, ''];
+  if (headings.length) {
+    for (const h of headings) {
+      out.push(`## ${h}`, '');
+      out.push(bodyByHeading[h] != null ? bodyByHeading[h] : 'Not provided.');
+      out.push('');
+    }
+  } else {
+    for (const [h, body] of Object.entries(bodyByHeading)) {
+      out.push(`## ${h}`, '', body, '');
+    }
+  }
+
+  out.push('---', `*Generated: ${now}*`);
+  return out.join('\n').replace(/\n{3,}/g, '\n\n').trim() + '\n';
+}
+
+// ---------------------------------------------------------------------------
 // Export
 // ---------------------------------------------------------------------------
 
@@ -562,6 +793,7 @@ global.Engines = {
   matchPersonas,
   computeRice,
   buildJpdSummary,
+  buildDesignBrief,
   parsePersonas,
   parseRiceConfig,
   escHtml

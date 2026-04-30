@@ -39,11 +39,23 @@
       key: 'jpd',
       file: 'jpd-template.md',
       label: 'JPD template',
-      desc: 'Output ticket structure',
+      desc: 'Intermediate ticket structure',
       icon: '§',
       render: renderJpdEditor,
       parse: parseJpd,
-      serialise: serialiseJpd
+      serialise: serialiseJpd,
+      helpText: 'Each section here maps to a heading in the JPD summary generated on Step 4. The design brief is built on top of this output, so changes here flow through to both. Keep headings and guidance in sync with the Jira Product Discovery form.'
+    },
+    {
+      key: 'designBrief',
+      file: 'design-brief-template.md',
+      label: 'Design brief template',
+      desc: 'Final brief structure',
+      icon: '✎',
+      render: renderJpdEditor,
+      parse: parseJpd,
+      serialise: serialiseJpd,
+      helpText: 'Each section here becomes a heading in the design brief generated from the right-hand sidebar on Step 4. Edit guidance text to steer what the tool puts in each section.'
     },
     {
       key: 'formFields',
@@ -288,6 +300,8 @@
         let parseErr = null;
         try { model = cfg.parse(r.text); } catch (e) { parseErr = e; }
         state.files[r.key] = {
+          key: r.key,
+          helpText: cfg.helpText || '',
           md: r.text,
           currentMd: r.text,
           model,
@@ -1386,12 +1400,14 @@
 
   function renderJpdEditor(host, f) {
     const model = f.model;
+    const editorKey = f.key || 'jpd';
     const refresh = () => {
       f.currentMd = serialiseJpd(model);
-      markDirty('jpd');
+      markDirty(editorKey);
     };
 
-    host.appendChild(helpBanner('Each section here maps to a heading in the generated JPD summary (Step 4). Change headings or guidance text to keep the tool in sync with the Jira Product Discovery form.'));
+    const helpText = f.helpText || 'Each section here maps to a heading in the generated JPD summary (Step 4). Change headings or guidance text to keep the tool in sync with the Jira Product Discovery form.';
+    host.appendChild(helpBanner(helpText));
 
     // Intro textarea
     const introText = serialiseBlocks(model.intro).replace(/\s+$/, '');
@@ -1410,7 +1426,10 @@
 
     // Sections
     const listHost = el('div');
-    host.appendChild(card('Template sections', 'Each section becomes a heading in the generated JPD markdown. Guidance text describes what goes in each section — Claude uses this when composing the output.', [listHost]));
+    const sectionsBlurb = editorKey === 'designBrief'
+      ? 'Each section becomes a heading in the generated design brief. Guidance text describes what goes in each section — the tool uses this (and the matching JPD content) when composing the output.'
+      : 'Each section becomes a heading in the generated JPD markdown. Guidance text describes what goes in each section — Claude uses this when composing the output.';
+    host.appendChild(card('Template sections', sectionsBlurb, [listHost]));
 
     function rebuild() {
       listHost.innerHTML = '';

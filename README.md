@@ -1,8 +1,8 @@
 # HSE Feature Intake Tool
 
-A feature intake and idea development tool for the HSE Health App 2027 roadmap and Innovation Week. It guides anyone with a feature idea through a structured process, producing a JPD-ready markdown summary, persona match, RICE score, and indicative wireframe.
+A form-to-design-brief tool for the HSE Health App 2027 roadmap and Innovation Week. It guides anyone with a feature idea through a structured process and produces two outputs: a JPD-ready markdown summary (intermediate) and a working **design brief** the design team can act on. Persona match, RICE score, and an indicative wireframe are folded into the brief.
 
-Built with plain HTML/CSS/JS. Uses the Anthropic Claude API for persona matching, RICE scoring, JPD summary generation, and wireframe sketches.
+Built with plain HTML/CSS/JS. Uses the Anthropic Claude API (or any configured LLM provider) for persona matching, RICE scoring, JPD summary, and design brief generation. A deterministic engine is used when no LLM is configured.
 
 ---
 
@@ -11,11 +11,12 @@ Built with plain HTML/CSS/JS. Uses the Anthropic Claude API for persona matching
 ```
 hse-intake/
 ├── config/
-│   ├── personas.md           HSE Health App personas (from HSE Digital research)
-│   ├── rice-config.md        RICE scoring rubric, reach reference ranges, effort guidance
-│   ├── jpd-template.md       JPD ticket template structure
-│   ├── form-fields.md        All intake form fields, types, options, and validation rules
-│   └── hse-design-tokens.md  HSE Design System colour, typography, and spacing tokens
+│   ├── personas.md                HSE Health App personas (from HSE Digital research)
+│   ├── rice-config.md             RICE scoring rubric, reach reference ranges, effort guidance
+│   ├── jpd-template.md            JPD ticket template structure (intermediate output)
+│   ├── design-brief-template.md   Design brief structure (final output, generated from sidebar)
+│   ├── form-fields.md             All intake form fields, types, options, and validation rules
+│   └── hse-design-tokens.md       HSE Design System colour, typography, and spacing tokens
 ├── src/
 │   └── hse-feature-intake.html   Working prototype (single-file HTML/CSS/JS)
 └── README.md
@@ -36,8 +37,10 @@ On navigation to this step, the tool sends the form data plus the full personas 
 ### Step 3: RICE score
 The user selects expected outcomes, Digital for Care 2030 pillars, and sets an effort estimate. On clicking Calculate RICE, the tool sends all form data and the RICE rubric to Claude and returns scores for Reach, Impact, Confidence, and Effort with per-dimension rationale and a final score.
 
-### Step 4: JPD summary and wireframe
-On navigation to this step the JPD summary is generated automatically, pulling everything from steps 1 to 3 and following the exact JPD template structure. The output is copyable markdown ready to paste into Jira Product Discovery. An optional wireframe sketch can be generated on demand using the HSE design tokens for visual guidance.
+### Step 4: JPD summary and design brief
+On navigation to this step the JPD summary is generated automatically, pulling everything from steps 1 to 3 and following the exact JPD template structure. The output is copyable markdown ready to paste into Jira Product Discovery.
+
+The right-hand sidebar then offers a **Generate design brief** action as the final step. It uses the JPD summary as source of truth and produces a markdown design brief following `design-brief-template.md`, with an indicative wireframe section that references HSE design tokens. Both outputs are copyable.
 
 ---
 
@@ -134,6 +137,9 @@ Update if the product team changes how they score features. Key values to keep c
 
 ### jpd-template.md
 Update if the JPD template in Jira Product Discovery changes. The section headings in this file are used to structure the generated output. Keep headings and guidance text in sync with the live JPD form.
+
+### design-brief-template.md
+Update to change the structure of the design brief produced from the right-hand sidebar on Step 4. Each H2 heading becomes a section in the brief, and the guidance text under each heading is fed to the language model (and the deterministic engine) to decide what content belongs there.
 
 ### form-fields.md
 Update to add, remove, or relabel fields in the intake form. Each field has a type, label, placeholder, and required flag. The admin panel will eventually allow this to be done without editing the file directly.

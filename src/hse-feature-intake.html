@@ -225,24 +225,6 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .reach-source-lbl { display: block; font-size: 12px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
 .reach-hint { font-size: 11px !important; color: #768692 !important; line-height: 1.45; margin-top: 7px; }
 
-/* Context summary bar */
-.context-bar {
-  display: none;
-  background: #F3F3F3;
-  border: 1px solid #D8DDE0;
-  border-radius: var(--r-sm);
-  padding: 8px 14px;
-  margin-bottom: 1rem;
-  font-size: 13px;
-  color: #455C68;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.4;
-}
-.context-bar .ctxbar-title { font-weight: 600; }
-.context-bar .ctxbar-sep { margin: 0 6px; opacity: 0.5; }
-
 /* Two-column layout */
 .app-columns { display: flex; gap: 28px; align-items: flex-start; }
 .app-main { flex: 1; min-width: 0; max-width: 640px; }
@@ -283,6 +265,14 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .jpd-sidebar-dot.pulse { animation: sbDotPulse .55s ease-out; }
 
 /* Sidebar inner content pieces */
+.sb-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #768692;
+  margin-bottom: 4px;
+}
 .sb-title { font-size: 14px; font-weight: 700; color: #212B32; line-height: 1.35; margin-bottom: .75rem; }
 .sb-section { padding-top: .625rem; border-top: 1px solid #D8DDE0; margin-bottom: .625rem; }
 .sb-section-label {
@@ -292,7 +282,35 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: .04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
+.sb-section-label svg { width: 14px; height: 14px; flex-shrink: 0; }
+.sb-persona-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #E8F1F4;
+  color: #455C68;
+  flex-shrink: 0;
+}
+.sb-persona-avatar svg { width: 14px; height: 14px; display: block; }
+.sb-persona-placeholder { display: flex; align-items: center; gap: 6px; }
+.sb-rice-formula {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed #D8DDE0;
+  font-size: 11px;
+  color: #768692;
+  font-family: 'Menlo', 'Consolas', monospace;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.sb-rice-formula strong { color: #212B32; font-weight: 600; }
 .sb-persona-name {
   font-size: 13px;
   color: #212B32;
@@ -369,6 +387,62 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 }
 .sb-copy-btn:hover { background: var(--c-dark); }
 .sb-copy-btn.copied { background: var(--c-accent); }
+.sb-outline-btn {
+  width: 100%;
+  text-align: center;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--c-primary);
+  border: 1px solid var(--c-primary);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.sb-outline-btn:hover { background: var(--c-light); }
+.sb-outline-btn.copied { color: var(--c-accent); border-color: var(--c-accent); }
+
+/* Sidebar — generate design brief CTA */
+.sb-cta-wrap { border-top: 1px solid #D8DDE0; padding-top: .75rem; margin-top: .25rem; }
+.sb-cta-eyebrow { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #768692; margin-bottom: 8px; }
+.sb-cta-title { font-size: 13px; font-weight: 600; color: #02594C; margin-bottom: 4px; line-height: 1.35; }
+.sb-cta-sub { font-size: 12px; color: #768692; line-height: 1.45; margin-bottom: .75rem; }
+.sb-cta-btn {
+  width: 100%;
+  text-align: center;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--c-primary);
+  color: white;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  font-family: inherit;
+  transition: background .15s;
+}
+.sb-cta-btn:hover { background: var(--c-dark); }
+.sb-cta-btn:disabled { opacity: .65; cursor: not-allowed; }
+.sb-cta-loading { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--c-muted); padding: 8px 0; }
+.sb-secondary-link {
+  display: block;
+  text-align: center;
+  margin-top: .5rem;
+  font-size: 12px;
+  color: var(--c-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  width: 100%;
+  padding: 4px;
+}
+.sb-secondary-link:hover { color: var(--c-primary); }
+.sb-secondary-link.copied { color: var(--c-accent); }
+.sb-error { font-size: 12px; color: var(--c-err); background: var(--c-err-bg); border: 1px solid #FFCCCC; border-radius: var(--r-sm); padding: 8px 10px; margin-top: 8px; line-height: 1.4; }
 
 @media (max-width: 800px) {
   .app-columns { display: block; }
@@ -381,17 +455,14 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 <div class="app">
 
   <div class="header">
-    <div class="hse-mark">
-      <svg width="22" height="16" viewBox="0 0 22 16">
-        <rect x="0" y="0" width="9" height="7"/>
-        <rect x="11" y="0" width="11" height="2.5"/>
-        <rect x="11" y="4.5" width="11" height="2.5"/>
-        <rect x="0" y="9" width="22" height="7"/>
+    <div class="hse-mark" aria-label="Ideas" title="Ideas">
+      <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1zm3-19a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2z"/>
       </svg>
     </div>
     <div>
-      <h1>Feature intake & analysis</h1>
-      <p>Internal design tool — idea to JPD in minutes</p>
+      <h1>Feature intake & design brief</h1>
+      <p>Internal design tool — from intake form to design brief</p>
     </div>
     <div class="header-spacer"></div>
     <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
@@ -431,22 +502,19 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
         <div class="step-label">RICE score</div>
       </div>
     </div>
-    <div class="step" id="s3" role="button" tabindex="0" aria-label="Step 4: JPD summary">
+    <div class="step" id="s3" role="button" tabindex="0" aria-label="Step 4: Summary & brief">
       <div class="step-inner">
         <div class="step-dot">4</div>
-        <div class="step-label">JPD summary</div>
+        <div class="step-label">Summary & brief</div>
       </div>
     </div>
   </div>
-
-  <!-- Context summary bar: visible on steps 2–4 -->
-  <div id="context-bar" class="context-bar"></div>
 
   <!-- Step 1: Problem -->
   <div class="panel active" id="p0">
     <div class="card">
       <h2>Understanding the problem</h2>
-      <p class="subtitle">For the team's internal use. Angela Knight's Microsoft Form and Word template handle public-facing intake for external and HSE stakeholders. Use this tool to go deeper for internal evaluation, then move quickly from an idea or incoming JPD item to a persona match, guide RICE score, and formatted summary.</p>
+      <p class="subtitle">For the team's internal use. Angela Knight's Microsoft Form and Word template handle public-facing intake. Use this tool to go deeper for internal evaluation — turn an idea or incoming JPD item into a persona match, guide RICE score, JPD summary, and a design brief the team can act on.</p>
 
       <div class="field">
         <label>Feature title</label>
@@ -650,28 +718,25 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     </div>
   </div>
 
-  <!-- Step 4: JPD Summary -->
+  <!-- Step 4: JPD Summary + Design Brief -->
   <div class="panel" id="p3">
     <div class="card">
       <h2>JPD summary</h2>
-      <p class="subtitle">A ready-to-paste markdown summary for Jira Product Discovery, compiled from everything entered across the previous steps.</p>
+      <p class="subtitle">A ready-to-paste markdown summary for Jira Product Discovery, compiled from everything entered across the previous steps. This also feeds the design brief — generate that from the panel on the right when you're ready.</p>
       <div id="wf-results">
         <div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>
       </div>
     </div>
 
-    <div class="card" id="wf-card" style="margin-top:.75rem">
-      <h2>Indicative wireframe</h2>
-      <p class="subtitle">A rough sketch of the feature to attach to the JPD ticket or use in playback. Optional — generates on demand.</p>
-      <div id="wf-sketch-results"></div>
-      <div style="margin-top:1rem">
-        <button class="btn btn-ghost" id="wfSketchBtn" onclick="runSketch()">Generate wireframe sketch →</button>
-      </div>
+    <div class="card" id="brief-card" style="margin-top:.75rem;display:none">
+      <h2>Design brief</h2>
+      <p class="subtitle">A working brief in the design team's voice, generated from everything above plus the design brief template. Use the panel on the right to (re)generate it.</p>
+      <div id="brief-results"></div>
     </div>
 
     <div class="btn-row">
       <button class="btn btn-ghost" onclick="goTo(2)">← Back</button>
-      <button class="btn btn-primary" onclick="regenWf()">Regenerate summary →</button>
+      <button class="btn btn-primary" onclick="regenWf()">Regenerate JPD summary →</button>
     </div>
   </div>
 
@@ -681,7 +746,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
     <div class="jpd-sidebar-card">
       <div class="jpd-sidebar-label">
         <span class="jpd-sidebar-dot" id="sidebarDot"></span>
-        JPD preview
+        Idea summary
       </div>
       <div id="sidebarInner"></div>
     </div>
@@ -701,11 +766,12 @@ function configFileUrl(filename) {
 }
 
 const CONFIG_FILES = [
-  { key: 'personas',     file: 'personas.md' },
-  { key: 'riceConfig',   file: 'rice-config.md' },
-  { key: 'jpdTemplate',  file: 'jpd-template.md' },
-  { key: 'formFields',   file: 'form-fields.md' },
-  { key: 'designTokens', file: 'hse-design-tokens.md' }
+  { key: 'personas',           file: 'personas.md' },
+  { key: 'riceConfig',         file: 'rice-config.md' },
+  { key: 'jpdTemplate',        file: 'jpd-template.md' },
+  { key: 'formFields',         file: 'form-fields.md' },
+  { key: 'designTokens',       file: 'hse-design-tokens.md' },
+  { key: 'designBriefTemplate', file: 'design-brief-template.md' }
 ];
 const CONFIG = {};
 let configReady = false;
@@ -714,8 +780,8 @@ let configPromise = null;
 let selectedPillars = [];
 let importedCsvRows = [];
 let state = {
-  personaDone: false, riceDone: false, wfDone: false,
-  personaData: null, riceData: null, mdOutput: null,
+  personaDone: false, riceDone: false, wfDone: false, briefDone: false,
+  personaData: null, riceData: null, mdOutput: null, briefMarkdown: null,
   aiAssist: false, providerConfigured: false, provider: null, model: null,
   primaryPersonaName: null, primaryPersonaReason: null
 };
@@ -724,7 +790,7 @@ let sidebarState = {
   title: '', audience: '',
   personaName: null, personaReason: null, personaBadge: null,
   riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-  jpdReady: false
+  jpdReady: false, briefReady: false, briefLoading: false
 };
 let _sidebarTitleTimer = null;
 
@@ -770,22 +836,21 @@ function loadSample() {
 
   syncEffortUI();
 
-  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
+  state = { personaDone: false, riceDone: false, wfDone: false, briefDone: false,
+            personaData: null, briefMarkdown: null,
             primaryPersonaName: null, primaryPersonaReason: null };
   sidebarState = {
     title: document.getElementById('f-title').value.trim(),
     audience: document.getElementById('f-audience').value,
     personaName: null, personaReason: null, personaBadge: null,
     riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-    jpdReady: false
+    jpdReady: false, briefReady: false, briefLoading: false
   };
   renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
-  document.getElementById('wf-sketch-results').innerHTML = '';
-  const sketchBtn = document.getElementById('wfSketchBtn');
-  if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+  hideBriefCard();
   clearCsvMessages();
   saveIntakeDraft();
 }
@@ -807,21 +872,20 @@ function clearForm() {
   document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => cb.checked = false);
   selectedPillars = [];
   document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
-  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
+  state = { personaDone: false, riceDone: false, wfDone: false, briefDone: false,
+            personaData: null, briefMarkdown: null,
             primaryPersonaName: null, primaryPersonaReason: null };
   sidebarState = {
     title: '', audience: '',
     personaName: null, personaReason: null, personaBadge: null,
     riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-    jpdReady: false
+    jpdReady: false, briefReady: false, briefLoading: false
   };
   renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
-  document.getElementById('wf-sketch-results').innerHTML = '';
-  const sketchBtn = document.getElementById('wfSketchBtn');
-  if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
+  hideBriefCard();
   clearCsvMessages();
   clearIntakeDraft();
 }
@@ -1175,23 +1239,7 @@ function updateModePill() {
   }
 }
 
-function updateContextBar(n) {
-  const bar = document.getElementById('context-bar');
-  if (!bar) return;
-  if (n === 0) { bar.style.display = 'none'; return; }
-  const f = getForm();
-  const title = f.title || 'Untitled feature';
-  const personaName = state.primaryPersonaName || f.audience || '—';
-  const reason = state.primaryPersonaReason || '';
-  let html = `<span class="ctxbar-title">${escHtml(title)}</span>`;
-  html += `<span class="ctxbar-sep"> · </span>${escHtml(personaName)}`;
-  if (reason) html += `<span class="ctxbar-sep"> · </span>${escHtml(reason)}`;
-  bar.innerHTML = html;
-  bar.style.display = 'block';
-}
-
 function goTo(n) {
-  updateContextBar(n);
   saveIntakeDraft();
   document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === n));
   document.querySelectorAll('.step').forEach((s, i) => {
@@ -1356,7 +1404,6 @@ async function runPersonas() {
         ? _primary.reason.split(/\.\s+/)[0].replace(/\.$/, '')
         : '';
     }
-    updateContextBar(1);
     sidebarState.personaName = _primary ? _primary.name : null;
     sidebarState.personaReason = _primary ? (_primary.reason ? _primary.reason.split(/\.\s+/)[0].replace(/\.$/, '') : '') : null;
     sidebarState.personaBadge = _primary ? (_primary.rank || 'primary') : null;
@@ -1501,7 +1548,7 @@ function renderRice(el, r, f) {
       </div>
       <div class="rice-cell rice-cell-total">
         <div class="rl">
-          <span style="color:#4DDFC7">R</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#7EB3FF">I</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#C98EF5">C</span><span style="opacity:.45;font-weight:400">·</span><span style="color:#A8C0CB">E</span>
+          <span>R</span><span style="opacity:.45;font-weight:400">·</span><span>I</span><span style="opacity:.45;font-weight:400">·</span><span>C</span><span style="opacity:.45;font-weight:400">·</span><span>E</span>
         </div>
         <div class="rv">${r.total}</div>
         <div class="rn">Guide score</div>
@@ -1652,82 +1699,182 @@ function copyMd() {
 
 function regenWf() {
   state.wfDone = false;
+  // Regenerating the JPD invalidates the brief because the brief is built on top of it.
+  state.briefDone = false;
+  state.briefMarkdown = null;
+  sidebarState.briefReady = false;
+  sidebarState.briefLoading = false;
+  hideBriefCard();
+  renderSidebar();
   runWireframe();
 }
 
-async function runSketch() {
-  const el = document.getElementById('wf-sketch-results');
-  const btn = document.getElementById('wfSketchBtn');
+/* ----- Design brief (final output, generated from sidebar CTA) ----- */
 
-  if (activeMode() !== 'ai') {
-    el.innerHTML = `<div class="summary-note"><strong>Wireframe sketch needs AI assist.</strong> The deterministic engines can build the persona match, RICE score, and JPD summary without a language model, but generating a rough wireframe requires one. To enable it: open the <a href="../admin">admin panel</a>, turn on AI assist, and make sure an LLM provider is configured on the server. Everything else keeps working without this.</div>`;
-    btn.disabled = true;
-    btn.textContent = 'AI assist required';
+function hideBriefCard() {
+  const card = document.getElementById('brief-card');
+  if (card) card.style.display = 'none';
+  const results = document.getElementById('brief-results');
+  if (results) results.innerHTML = '';
+}
+
+function showBriefCard(md) {
+  const card = document.getElementById('brief-card');
+  const results = document.getElementById('brief-results');
+  if (!card || !results) return;
+  const modeTag = activeMode() === 'ai'
+    ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
+    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+  results.innerHTML = `
+    <div class="copy-bar">
+      <span>Design brief markdown ${modeTag}</span>
+      <button class="btn-copy" id="copyBriefBtn" onclick="copyBrief()">Copy design brief</button>
+    </div>
+    <div class="md-output" id="briefOut">${escHtml(md)}</div>`;
+  card.style.display = 'block';
+}
+
+function copyBrief() {
+  if (!state.briefMarkdown) return;
+  navigator.clipboard.writeText(state.briefMarkdown).then(() => {
+    const btn = document.getElementById('copyBriefBtn');
+    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy design brief'; btn.classList.remove('copied'); }, 2000); }
+  });
+}
+
+function regenBrief() {
+  state.briefDone = false;
+  state.briefMarkdown = null;
+  sidebarState.briefReady = false;
+  hideBriefCard();
+  runDesignBrief();
+}
+
+async function runDesignBrief() {
+  if (!state.wfDone || !state.mdOutput) {
+    // Shouldn't happen — sidebar CTA only shows when JPD is ready — but guard anyway.
     return;
   }
+  sidebarState.briefLoading = true;
+  renderSidebar();
 
-  btn.disabled = true;
-  btn.textContent = 'Generating...';
-  el.innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Generating wireframe sketch...</div>';
   try { await configPromise; } catch {
-    el.innerHTML = '<div class="error">Config failed to load. Check the banner at the top of the page.</div>';
-    btn.textContent = 'Generate wireframe sketch →';
-    btn.disabled = false;
+    sidebarState.briefLoading = false;
+    renderSidebar();
+    const errEl = document.getElementById('sbBriefError');
+    if (errEl) errEl.innerHTML = `<div class="sb-error">Config failed to load. Check the banner at the top of the page.</div>`;
     return;
   }
+
   const f = getForm();
-
-  const personaCtx = state.personaData
-    ? state.personaData.matches.map(m => m.name).join(', ')
-    : (f.audience || 'general user');
-
-  const prompt = `You are a UX designer for the HSE Health App — a mobile-first health app used in Ireland with tab navigation (Home, My Health, Services, Messages). Generate a rough wireframe sketch for a proposed feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
-
-HSE DESIGN SYSTEM TOKENS — use these when describing visual elements in the wireframe notes:
-${CONFIG.designTokens || ''}
-
-FEATURE:
-Title: ${f.title || 'Not provided'}
-Problem: ${f.problem || 'Not provided'}
-Primary users: ${personaCtx}
-Audience: ${f.audience || 'Not specified'}
-
-Return exactly this structure:
-{"screens":[{"title":"screen name","elements":[{"type":"header","label":"page title"},{"type":"nav","label":"active tab name"},{"type":"card","label":"card content description"},{"type":"list_item","label":"list row description"},{"type":"cta","label":"primary button label"},{"type":"text_block","label":"supporting text description"},{"type":"badge_row","label":"tag1, tag2, tag3"}]}],"notes":"2-3 sentences on key design considerations — reference specific HSE tokens where relevant e.g. use hse-green-500 for the CTA, hse-grey-50 card backgrounds, hse-heading-xs for section labels. Also note any content or accessibility considerations."}
-
-Include 1-3 screens. Use only these element types: header, nav, card, list_item, cta, text_block, badge_row. Keep labels concise. Follow HSE conventions — accessible, plain English, Arial typography.`;
-
   try {
-    const r = await callLLMJson(prompt);
-    const typeMap = { header:'wf-header', nav:'wf-nav', card:'wf-card', list_item:'wf-list-item', cta:'wf-cta', text_block:'wf-text-block', badge_row:'wf-badge-row' };
-
-    let html = r.screens.map(s => {
-      const els = s.elements.map(e => {
-        if (e.type === 'nav') {
-          const tabs = ['Home', 'My health', e.label, 'Messages'];
-          return `<div class="wf-el wf-nav">${tabs.map((t,i) => `<span${i===2?' class="active"':''}>${t}</span>`).join('')}</div>`;
-        }
-        if (e.type === 'badge_row') {
-          const badges = e.label.split(',').map(b => `<span class="wf-badge">${b.trim()}</span>`).join('');
-          return `<div class="wf-el wf-badge-row">${badges}</div>`;
-        }
-        return `<div class="wf-el ${typeMap[e.type]||'wf-card'}">${e.label}</div>`;
-      }).join('');
-      return `<div class="wf-screen"><div class="wf-screen-title">${s.title}</div>${els}</div>`;
-    }).join('');
-
-    if (r.notes) html += `<div class="wf-notes"><strong>Design notes:</strong> ${r.notes}</div>`;
-    el.innerHTML = `<div class="wf-screens-wrap">${html}</div>`;
-    btn.textContent = 'Regenerate sketch →';
-    btn.disabled = false;
-  } catch(e) {
-    el.innerHTML = `<div class="error"><strong>Sketch generation failed.</strong> ${e.message}</div>`;
-    btn.textContent = 'Generate wireframe sketch →';
-    btn.disabled = false;
+    const md = (activeMode() === 'ai')
+      ? await runDesignBriefAi(f)
+      : Engines.buildDesignBrief(
+          f,
+          state.personaData,
+          state.riceData,
+          state.mdOutput || '',
+          CONFIG.designBriefTemplate || '',
+          CONFIG.designTokens || ''
+        );
+    state.briefDone = true;
+    state.briefMarkdown = md;
+    sidebarState.briefLoading = false;
+    sidebarState.briefReady = true;
+    renderSidebar();
+    pulseSidebarDot();
+    showBriefCard(md);
+    saveIntakeDraft();
+  } catch (e) {
+    sidebarState.briefLoading = false;
+    renderSidebar();
+    const errEl = document.getElementById('sbBriefError');
+    if (errEl) errEl.innerHTML = `<div class="sb-error"><strong>Brief generation failed.</strong> ${escHtml(e.message)}</div>`;
   }
 }
 
-/* ----- JPD preview sidebar ----- */
+async function runDesignBriefAi(f) {
+  const personaCtx = state.personaData
+    ? state.personaData.matches.map(m => `${m.name} (${m.rank}) — ${m.reason}`).join('\n')
+    : (f.audience || 'not specified');
+  const accessibilityNote = state.personaData && state.personaData.accessibility_flag
+    ? state.personaData.accessibility_flag : 'Not assessed';
+  const riceCtx = state.riceData
+    ? `Reach ${Math.round(state.riceData.reach.score).toLocaleString()}/mo (source: ${f.reachSource || 'not provided'}) · Impact ${state.riceData.impact.score}× · Confidence ${state.riceData.confidence.score}% · Effort ${f.effort} person-months · Score ${state.riceData.total}`
+    : 'Not yet calculated.';
+  const confidencePct = state.riceData && state.riceData.confidence
+    ? Number(state.riceData.confidence.score)
+    : Number(f.evidence || 0);
+  const pillarNames = {
+    '1': 'Patient as empowered partner', '2': 'Digitally connected care',
+    '3': 'Digital health ecosystem',     '4': 'Digitally enabled staff',
+    '5': 'Secure foundations',           '6': 'Data driven services'
+  };
+  const pillarsText = (f.pillars || []).map(p => `${p}. ${pillarNames[p] || ''}`.trim()).join('; ') || 'None selected';
+
+  const system = "You are a design lead at HSE Digital. You write design briefs for the HSE Health App that the design team can act on. The intake form has already been turned into a JPD summary. Your job is to translate that into a working design brief that uses the JPD ticket as its source of truth — same facts, but reframed in the design team's voice and structured for design action.";
+
+  const prompt = `Generate a design brief in markdown using the template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
+
+DESIGN BRIEF TEMPLATE (follow these H2 headings exactly, in this order, including the guidance text intent):
+${CONFIG.designBriefTemplate || ''}
+
+JPD SUMMARY (already generated — treat this as the source of truth for facts and language):
+${state.mdOutput || 'Not generated.'}
+
+FORM DATA:
+Title: ${f.title || 'Not provided'}
+Feature overview: ${f.overview || 'Not provided'}
+Problem being solved: ${f.problem || 'Not provided'}
+Primary user: ${f.audience || 'Not specified'}
+Also affects: ${f.alsoAffects || 'Not specified'}
+How need was identified: ${f.identified || 'Not specified'}
+Supporting evidence: ${f.evidenceDetail || 'Not provided'}
+Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
+Deadline or dependency: ${f.deadline || 'No'}${f.deadlineDetail ? ' — ' + f.deadlineDetail : ''}
+Data / integration needs: ${f.data || 'None noted'}
+External dependency: ${f.externalDependency || 'No external dependency'}${f.externalDependencyDetail ? ' — ' + f.externalDependencyDetail : ''}
+Regulatory / compliance: ${f.compliance || 'None noted'}
+Expected outcomes: ${(f.outcomes || []).join(', ') || 'None selected'}
+Digital for Care 2030 pillars: ${pillarsText}
+Requestor: ${f.requestor || 'Not provided'}
+Clinical / service owner sponsor: ${f.sponsor || 'Not provided'}
+Email address: ${f.email || 'Not provided'}
+Team / Unit / Area / Group: ${f.teamUnit || 'Not provided'}
+
+PERSONA MATCHES:
+${personaCtx}
+
+ACCESSIBILITY FLAG: ${accessibilityNote}
+
+RICE: ${riceCtx}
+
+HSE DESIGN SYSTEM TOKENS (use these names in the Indicative wireframe section, e.g. hse-green-500 for the primary CTA, hse-grey-50 card backgrounds, hse-heading-xs section labels):
+${CONFIG.designTokens || ''}
+
+Writing instructions:
+- Follow the design brief template H2 headings EXACTLY (order, wording). Plain English, design team voice — active, decisions to be made.
+- For "JPD location": the JPD link is not known by the tool. Write "To be created — paste link once available" unless the form provides one.
+- For "Project overview": pull from feature overview and problem. 3 to 5 sentences. State what a user can do that they cannot today.
+- For "Why is this work necessary": connect problem to evidence, persona, strategic alignment, and any deadline. This maps from the JPD "What is the problem being solved" + "How was this need identified" + "Supporting evidence" + "Strategic alignment" sections.
+- For "Stakeholders and team": render a markdown table with rows: Project manager (leave value blank if unknown), Requestor, Clinical / service owner sponsor, Team / unit. Add additional rows only when names are known.
+- For "User value": describe what the user gets. Reference the primary persona by name and at least one of their jobs to be done or key challenges. If accessibility implications were flagged, summarise the impact for those users here.
+- For "Internal HSE value": map "Strategic alignment / Digital for Care 2030 pillars" by their names (not just numbers), efficiency, cost, safety, regulatory.
+- For "Problems to solve": 3 to 5 DISCRETE design problems the team needs to tackle, derived from the user's problem statement. NOT a single restatement. Each item must be sketchable against — for example: "How do we let a user opt in or out of notifications without burying the control?" rather than "Notifications".
+- For "Team dependencies and involvement": which teams need to be involved (clinical, content, research, data, integrations, programme), what they provide, sequencing.
+- For "References": pull from supporting evidence and the persona research references implied by the persona match. Preserve URLs as-is.
+- For "Timeline": indicative timing. ${confidencePct > 0 && confidencePct <= 60 ? 'Confidence is ' + confidencePct + '% — recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness.' : 'Note any deadline or programme milestone explicitly.'}
+- For "Challenges": risks, constraints, technical or regulatory dependencies, and accessibility considerations as bullets.
+- For "Indicative wireframe": describe 1 to 3 screens with the rough shape (header, navigation, key content area, primary CTA, supporting text) using HSE design tokens by name (e.g. hse-green-500 for primary CTA, hse-grey-50 cards, hse-heading-xs section labels). Keep it as text — no ASCII art.
+
+End with a single line: \`---\` then \`*Generated: ${new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}*\`.`;
+
+  const text = await callLLM(prompt, { max_tokens: 2200, system });
+  return text.replace(/```markdown\s*/gi, '').replace(/```\s*/g, '').trim();
+}
+
+/* ----- Sidebar (JPD preview + design brief CTA) ----- */
 
 function pulseSidebarDot() {
   const dot = document.getElementById('sidebarDot');
@@ -1742,7 +1889,8 @@ function renderSidebar() {
   const sidebar = document.getElementById('jpd-sidebar');
   if (!sidebar) return;
   const { title, audience, personaName, personaReason, personaBadge,
-          riceScore, riceReach, riceImpact, riceConfidence, jpdReady } = sidebarState;
+          riceScore, riceReach, riceImpact, riceConfidence,
+          jpdReady, briefReady, briefLoading } = sidebarState;
 
   if (!title) { sidebar.style.display = 'none'; return; }
   sidebar.style.display = 'block';
@@ -1750,53 +1898,77 @@ function renderSidebar() {
   const inner = document.getElementById('sidebarInner');
   if (!inner) return;
 
-  if (jpdReady) {
-    const riceStr = riceScore !== null ? ' · RICE: ' + riceScore : '';
-    const personaStr = personaName || audience || '';
-    inner.innerHTML = `
-      <div class="sb-compact-header">
-        <div class="sb-compact-title">${escHtml(title)}</div>
-        <div class="sb-compact-meta">${escHtml(personaStr + riceStr)}</div>
-      </div>
-      <div class="sb-ready">
-        <div class="sb-ready-row">
-          <div class="sb-ready-icon">✓</div>
-          <span class="sb-ready-label">Ready to copy</span>
-        </div>
-        <button class="sb-copy-btn" id="sbCopyBtn" onclick="sbCopyMd()">Copy markdown</button>
-      </div>`;
-    return;
-  }
+  const personaIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.418 3.582-8 8-8s8 3.582 8 8"></path></svg>`;
 
-  let html = `<div class="sb-title">${escHtml(title)}</div>`;
+  // 1. Title
+  let html = `<div class="sb-eyebrow">Title</div><div class="sb-title">${escHtml(title)}</div>`;
 
+  // 2. Persona
   if (personaName) {
     const bc = personaBadge === 'primary' ? 'badge-p' : 'badge-s';
     html += `<div class="sb-section">
-      <div class="sb-section-label">For</div>
-      <div class="sb-persona-name">${escHtml(personaName)}<span class="badge ${bc}">${escHtml(personaBadge || 'primary')}</span></div>
+      <div class="sb-section-label"><span>Persona</span></div>
+      <div class="sb-persona-name"><span class="sb-persona-avatar">${personaIcon}</span>${escHtml(personaName)}<span class="badge ${bc}">${escHtml(personaBadge || 'primary')}</span></div>
       ${personaReason ? `<div class="sb-persona-reason">${escHtml(personaReason)}</div>` : ''}
     </div>`;
   } else if (audience) {
     html += `<div class="sb-section">
-      <div class="sb-section-label">For</div>
-      <div class="sb-persona-placeholder">${escHtml(audience)}</div>
+      <div class="sb-section-label"><span>Persona</span></div>
+      <div class="sb-persona-placeholder"><span class="sb-persona-avatar">${personaIcon}</span>${escHtml(audience)}</div>
     </div>`;
   }
 
-  html += `<div class="sb-section"><div class="sb-section-label">RICE</div>`;
+  // 3. Guide RICE Score
+  html += `<div class="sb-section"><div class="sb-section-label"><span>Guide RICE Score</span></div>`;
   if (riceScore !== null) {
     const reachStr = riceReach != null ? Math.round(riceReach).toLocaleString() + '/mo' : '—';
     const impactStr = riceImpact != null ? riceImpact + '×' : '—';
     const confStr  = riceConfidence != null ? riceConfidence + '%' : '—';
     const effortStr = sidebarState.riceEffort != null ? sidebarState.riceEffort + 'mo' : '—';
+    const reachNumStr = riceReach != null ? Math.round(riceReach).toLocaleString() : '—';
+    const impactNumStr = riceImpact != null ? String(riceImpact) : '—';
+    const confNumStr = riceConfidence != null ? riceConfidence + '%' : '—';
+    const effortNumStr = sidebarState.riceEffort != null ? String(sidebarState.riceEffort) : '—';
     html += `<div class="sb-rice-score">${riceScore}</div>
       <div class="sb-rice-pills">
         <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-r">R</span>${escHtml(reachStr)}</span>
         <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-i">I</span>${escHtml(impactStr)}</span>
         <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-c">C</span>${escHtml(confStr)}</span>
         <span class="sb-rice-pill"><span class="sb-pill-badge rice-badge-e">E</span>${escHtml(effortStr)}</span>
-      </div>`;
+      </div>
+      <div class="sb-rice-formula">(<strong>${escHtml(reachNumStr)}</strong> × <strong>${escHtml(impactNumStr)}</strong> × <strong>${escHtml(confNumStr)}</strong>) ÷ <strong>${escHtml(effortNumStr)}</strong> = <strong>${riceScore}</strong></div>`;
+  } else {
+    html += `<div class="sb-rice-pending">Pending</div>`;
+  }
+  html += `</div>`;
+
+  // 4. JPD summary
+  html += `<div class="sb-section"><div class="sb-section-label"><span>JPD summary</span></div>`;
+  if (jpdReady) {
+    html += `<button class="sb-outline-btn" id="sbCopyJpdBtn" onclick="sbCopyMd()">Copy JPD markdown</button>`;
+  } else {
+    html += `<div class="sb-rice-pending">Pending</div>`;
+  }
+  html += `</div>`;
+
+  // 5. Design brief
+  html += `<div class="sb-section"><div class="sb-section-label"><span>Design brief</span></div>`;
+  if (briefReady) {
+    html += `
+      <div class="sb-ready-row">
+        <div class="sb-ready-icon">✓</div>
+        <span class="sb-ready-label">Ready</span>
+      </div>
+      <button class="sb-copy-btn" id="sbCopyBriefBtn" onclick="sbCopyBrief()">Copy design brief</button>
+      <button class="sb-secondary-link" id="sbRegenBriefBtn" onclick="regenBrief()" style="margin-top:2px">Regenerate brief</button>`;
+  } else if (jpdReady) {
+    const ctaInner = briefLoading
+      ? `<div class="sb-cta-loading"><div class="dots"><span></span><span></span><span></span></div>Writing design brief...</div>`
+      : `<button class="sb-cta-btn" id="sbBriefBtn" onclick="runDesignBrief()">Generate design brief →</button>`;
+    html += `
+      <div class="sb-cta-sub">Compiles persona, RICE, and an indicative wireframe for the design team.</div>
+      ${ctaInner}
+      <div id="sbBriefError"></div>`;
   } else {
     html += `<div class="sb-rice-pending">Pending</div>`;
   }
@@ -1808,8 +1980,21 @@ function renderSidebar() {
 function sbCopyMd() {
   if (!state.mdOutput) return;
   navigator.clipboard.writeText(state.mdOutput).then(() => {
-    const btn = document.getElementById('sbCopyBtn');
-    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy markdown'; btn.classList.remove('copied'); }, 2000); }
+    const btn = document.getElementById('sbCopyJpdBtn');
+    if (btn) {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 2000);
+    }
+  });
+}
+
+function sbCopyBrief() {
+  if (!state.briefMarkdown) return;
+  navigator.clipboard.writeText(state.briefMarkdown).then(() => {
+    const btn = document.getElementById('sbCopyBriefBtn');
+    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy design brief'; btn.classList.remove('copied'); }, 2000); }
   });
 }
 
@@ -1837,7 +2022,9 @@ function collectIntakeDraft() {
     riceDone: state.riceDone,
     riceData: state.riceData,
     wfDone: state.wfDone,
-    mdOutput: state.mdOutput
+    mdOutput: state.mdOutput,
+    briefDone: state.briefDone,
+    briefMarkdown: state.briefMarkdown
   };
 }
 
@@ -1941,6 +2128,8 @@ function restoreIntakeDraft() {
     state.riceData = d.riceData || null;
     state.wfDone = !!d.wfDone;
     state.mdOutput = d.mdOutput != null ? d.mdOutput : null;
+    state.briefDone = !!d.briefDone;
+    state.briefMarkdown = d.briefMarkdown != null ? d.briefMarkdown : null;
 
     if (state.personaDone && state.personaData) {
       renderPersonas(document.getElementById('persona-results'), state.personaData);
@@ -1958,6 +2147,10 @@ function restoreIntakeDraft() {
 
     if (state.wfDone && state.mdOutput) {
       renderStoredJpdSummary(state.mdOutput);
+    }
+
+    if (state.briefDone && state.briefMarkdown) {
+      showBriefCard(state.briefMarkdown);
     }
 
     if (typeof d.activeStep === 'number' && d.activeStep >= 0 && d.activeStep <= 3) {
@@ -1983,6 +2176,8 @@ function restoreIntakeDraft() {
       sidebarState.riceEffort = state.riceData.effort ? state.riceData.effort.score : null;
     }
     sidebarState.jpdReady = !!state.wfDone;
+    sidebarState.briefReady = !!state.briefDone;
+    sidebarState.briefLoading = false;
     renderSidebar();
   } finally {
     intakeRestoring = false;

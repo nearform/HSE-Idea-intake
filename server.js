@@ -64,7 +64,8 @@ const ALLOWED_CONFIG = new Set([
   'rice-config.md',
   'jpd-template.md',
   'form-fields.md',
-  'hse-design-tokens.md'
+  'hse-design-tokens.md',
+  'design-brief-template.md'
 ]);
 
 const STATIC_MIME = {
