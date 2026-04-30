@@ -71,7 +71,7 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .cb-item:hover { background: var(--c-light); }
 .cb-item input[type=checkbox] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--c-accent); }
 
-.pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 4px; }
+.pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
 .pillar-btn { padding: 9px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-white); font-size: 12px; color: var(--c-text); cursor: pointer; text-align: left; line-height: 1.4; font-family: inherit; transition: all .15s; }
 .pillar-btn:hover { background: var(--c-light); }
 .pillar-btn.on { background: var(--c-primary); border-color: var(--c-primary); color: white; }
@@ -170,6 +170,44 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
 .mode-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c-muted); }
 .mode-pill.ai .dot { background: #1E4A91; }
 .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+
+/* Effort quick-select */
+.effort-btns { display: flex; gap: 6px; margin-top: 4px; align-items: center; flex-wrap: wrap; }
+.effort-btn { padding: 7px 18px; border: 1px solid var(--c-border); border-radius: var(--r-sm); background: var(--c-white); font-size: 13px; color: var(--c-text); cursor: pointer; font-family: inherit; transition: all .15s; }
+.effort-btn:hover { background: var(--c-light); }
+.effort-btn.on { background: var(--c-primary); border-color: var(--c-primary); color: white; }
+.effort-btn.other { color: var(--c-muted); padding: 7px 14px; }
+#effort-custom { width: 90px; padding: 7px 10px; border: 1px solid var(--c-border); border-radius: var(--r-sm); font-size: 14px; color: var(--c-text); font-family: inherit; outline: none; transition: border-color .15s; }
+#effort-custom:focus { border-color: var(--c-accent); }
+
+/* Reach inline row */
+.reach-row { display: flex; gap: 14px; align-items: flex-end; }
+.reach-col-main { flex: 0 0 60%; min-width: 0; }
+.reach-col-source { flex: 1; min-width: 0; }
+.reach-inline { display: flex; align-items: center; gap: 7px; flex-wrap: nowrap; }
+.reach-prefix { font-size: 13px; color: var(--c-text); white-space: nowrap; padding-bottom: 1px; }
+.reach-input { width: 140px !important; max-width: 140px !important; flex-shrink: 0; }
+.reach-suffix { font-size: 12px; color: var(--c-muted); white-space: nowrap; padding-bottom: 1px; }
+.reach-source-lbl { display: block; font-size: 12px; font-weight: 600; color: var(--c-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+.reach-hint { font-size: 11px !important; color: #768692 !important; line-height: 1.45; margin-top: 7px; }
+
+/* Context summary bar */
+.context-bar {
+  display: none;
+  background: #F3F3F3;
+  border: 1px solid #D8DDE0;
+  border-radius: var(--r-sm);
+  padding: 8px 14px;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  color: #455C68;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+.context-bar .ctxbar-title { font-weight: 600; }
+.context-bar .ctxbar-sep { margin: 0 6px; opacity: 0.5; }
 </style>
 </head>
 <body>
@@ -230,6 +268,9 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       </div>
     </div>
   </div>
+
+  <!-- Context summary bar: visible on steps 2–4 -->
+  <div id="context-bar" class="context-bar"></div>
 
   <!-- Step 1: Problem -->
   <div class="panel active" id="p0">
@@ -407,18 +448,33 @@ body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--c-l
       </div>
 
       <div class="field">
-        <label>Effort estimate (person-months across design, content, research, product, and delivery)</label>
-        <input type="number" id="f-effort" value="2" min="0.5" max="24" step="0.5" placeholder="Total effort across design, content, research, product, and delivery" style="width:100%">
+        <label>Effort estimate (person-months)</label>
+        <div class="effort-btns" id="effort-btns">
+          <button type="button" class="effort-btn" data-val="1" onclick="setEffort(1)">1</button>
+          <button type="button" class="effort-btn" data-val="2" onclick="setEffort(2)">2</button>
+          <button type="button" class="effort-btn" data-val="3" onclick="setEffort(3)">3</button>
+          <button type="button" class="effort-btn" data-val="4" onclick="setEffort(4)">4</button>
+          <button type="button" class="effort-btn other" data-val="other" onclick="setEffortOther()">Other…</button>
+          <input type="number" id="effort-custom" min="0.5" max="120" step="0.5" placeholder="e.g. 8" style="display:none" oninput="syncEffortFromCustom(this.value)">
+        </div>
+        <input type="hidden" id="f-effort" value="2">
+        <div class="field-hint">Across design, content, research, product, and delivery</div>
       </div>
       <div class="field">
-        <label>Estimated monthly reach (users)</label>
-        <input type="number" id="f-reach" min="1" step="1" placeholder="e.g. 7750 — see sources below">
-        <div class="field-hint">Divide total affected population by 12 to get monthly reach. Sources: CSO (cso.ie), HSE programme data, Health Research Board. Examples: Type 1 diabetes 2,500/mo · Proxy care 102,500/mo · Polish speakers 7,750/mo · Prescribed medicines 208,000/mo</div>
-      </div>
-      <div class="field">
-        <label>Source or basis for this figure</label>
-        <input type="text" id="f-reach-source" placeholder="e.g. CSO 2022 health statistics and HSE programme estimates">
-        <div class="field-hint recommended">Recommended (optional).</div>
+        <div class="reach-row">
+          <div class="reach-col-main">
+            <div class="reach-inline">
+              <span class="reach-prefix">Monthly reach:</span>
+              <input type="number" id="f-reach" min="1" step="1" placeholder="e.g. 7750" class="reach-input">
+              <span class="reach-suffix">users/month</span>
+            </div>
+          </div>
+          <div class="reach-col-source">
+            <label class="reach-source-lbl" for="f-reach-source">Source</label>
+            <input type="text" id="f-reach-source" placeholder="e.g. CSO 2022">
+          </div>
+        </div>
+        <div class="field-hint reach-hint">Divide total affected population by 12 to get monthly reach. Examples: Type 1 diabetes 2,500/mo · Proxy care 102,500/mo · Polish speakers 7,750/mo · Prescribed medicines 208,000/mo</div>
       </div>
 
       <div id="rice-results"></div>
@@ -481,8 +537,13 @@ let importedCsvRows = [];
 let state = {
   personaDone: false, riceDone: false, wfDone: false,
   personaData: null, riceData: null, mdOutput: null,
-  aiAssist: false, providerConfigured: false, provider: null, model: null
+  aiAssist: false, providerConfigured: false, provider: null, model: null,
+  primaryPersonaName: null, primaryPersonaReason: null
 };
+
+/** Session draft — survives step changes, refresh, and back/forward within the tab */
+const INTAKE_DRAFT_KEY = 'hse-intake-draft-v1';
+let intakeRestoring = false;
 
 function loadSample() {
   document.getElementById('f-title').value = 'Test result notifications for chronic disease patients';
@@ -520,7 +581,10 @@ function loadSample() {
     if (match) btn.classList.toggle('on', selectedPillars.includes(match[1]));
   });
 
-  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null };
+  syncEffortUI();
+
+  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
+            primaryPersonaName: null, primaryPersonaReason: null };
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
@@ -528,6 +592,7 @@ function loadSample() {
   const sketchBtn = document.getElementById('wfSketchBtn');
   if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
   clearCsvMessages();
+  saveIntakeDraft();
 }
 
 function clearForm() {
@@ -542,11 +607,13 @@ function clearForm() {
   document.getElementById('f-external-dependency').value = 'No external dependency';
   document.getElementById('f-external-dependency-detail-wrap').style.display = 'none';
   document.getElementById('f-effort').value = '2';
+  syncEffortUI();
   document.getElementById('f-reach').value = '';
   document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => cb.checked = false);
   selectedPillars = [];
   document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
-  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null };
+  state = { personaDone: false, riceDone: false, wfDone: false, personaData: null,
+            primaryPersonaName: null, primaryPersonaReason: null };
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
   document.getElementById('rice-results').innerHTML = '';
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
@@ -554,6 +621,7 @@ function clearForm() {
   const sketchBtn = document.getElementById('wfSketchBtn');
   if (sketchBtn) { sketchBtn.textContent = 'Generate wireframe sketch →'; sketchBtn.disabled = false; }
   clearCsvMessages();
+  clearIntakeDraft();
 }
 
 function normalizeHeader(v) {
@@ -768,6 +836,7 @@ function applyCsvRowToForm(rowObj, mapping) {
   document.getElementById('f-external-dependency').value = 'No external dependency';
   document.getElementById('f-external-dependency').dispatchEvent(new Event('change'));
   applyCsvOutcomes(rowObj, mapping);
+  saveIntakeDraft();
 }
 
 function showCsvPicker(records, mapping) {
@@ -904,7 +973,24 @@ function updateModePill() {
   }
 }
 
+function updateContextBar(n) {
+  const bar = document.getElementById('context-bar');
+  if (!bar) return;
+  if (n === 0) { bar.style.display = 'none'; return; }
+  const f = getForm();
+  const title = f.title || 'Untitled feature';
+  const personaName = state.primaryPersonaName || f.audience || '—';
+  const reason = state.primaryPersonaReason || '';
+  let html = `<span class="ctxbar-title">${escHtml(title)}</span>`;
+  html += `<span class="ctxbar-sep"> · </span>${escHtml(personaName)}`;
+  if (reason) html += `<span class="ctxbar-sep"> · </span>${escHtml(reason)}`;
+  bar.innerHTML = html;
+  bar.style.display = 'block';
+}
+
 function goTo(n) {
+  updateContextBar(n);
+  saveIntakeDraft();
   document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === n));
   document.querySelectorAll('.step').forEach((s, i) => {
     s.classList.remove('active', 'done');
@@ -933,6 +1019,53 @@ function togglePillar(btn, p) {
   } else {
     selectedPillars.push(p);
     btn.classList.add('on');
+  }
+  saveIntakeDraft();
+}
+
+const EFFORT_PRESETS = [1, 2, 3, 4];
+
+function setEffort(val) {
+  document.getElementById('f-effort').value = val;
+  document.getElementById('effort-custom').style.display = 'none';
+  document.querySelectorAll('.effort-btn').forEach(b => {
+    b.classList.toggle('on', +b.dataset.val === val);
+  });
+  saveIntakeDraft();
+}
+
+function setEffortOther() {
+  const inp = document.getElementById('effort-custom');
+  inp.style.display = 'inline-block';
+  inp.focus();
+  document.querySelectorAll('.effort-btn').forEach(b => {
+    b.classList.toggle('on', b.dataset.val === 'other');
+  });
+  saveIntakeDraft();
+}
+
+function syncEffortFromCustom(v) {
+  const val = parseFloat(v);
+  if (Number.isFinite(val) && val > 0) {
+    document.getElementById('f-effort').value = val;
+  }
+  saveIntakeDraft();
+}
+
+function syncEffortUI() {
+  const val = parseFloat(document.getElementById('f-effort').value);
+  const inp = document.getElementById('effort-custom');
+  if (EFFORT_PRESETS.includes(val)) {
+    inp.style.display = 'none';
+    document.querySelectorAll('.effort-btn').forEach(b => {
+      b.classList.toggle('on', +b.dataset.val === val);
+    });
+  } else {
+    inp.style.display = 'inline-block';
+    inp.value = Number.isFinite(val) ? val : '';
+    document.querySelectorAll('.effort-btn').forEach(b => {
+      b.classList.toggle('on', b.dataset.val === 'other');
+    });
   }
 }
 
@@ -1012,7 +1145,16 @@ async function runPersonas() {
       : Engines.matchPersonas(f, CONFIG.personas || '');
     state.personaDone = true;
     state.personaData = r;
+    const _primary = (r.matches || []).find(m => m.rank === 'primary') || (r.matches || [])[0];
+    if (_primary) {
+      state.primaryPersonaName = _primary.name;
+      state.primaryPersonaReason = _primary.reason
+        ? _primary.reason.split(/\.\s+/)[0].replace(/\.$/, '')
+        : '';
+    }
+    updateContextBar(1);
     renderPersonas(el, r);
+    saveIntakeDraft();
   } catch (e) {
     el.innerHTML = `<div class="error"><strong>Persona matching failed.</strong> ${escHtml(e.message)}<br><br>Check the feature title and problem have enough detail, then go back and try again. You can also turn off AI assist in the admin panel to use deterministic matching.</div>`;
   }
@@ -1090,6 +1232,7 @@ async function calcRice() {
     const btn = document.getElementById('rice-btn');
     btn.textContent = 'Next: JPD summary →';
     btn.onclick = () => goTo(3);
+    saveIntakeDraft();
   } catch (e) {
     el.innerHTML = `<div class="error"><strong>RICE calculation failed.</strong> ${escHtml(e.message)}</div>`;
   }
@@ -1171,6 +1314,7 @@ async function runWireframe() {
         <button class="btn-copy" id="copyBtn" onclick="copyMd()">Copy markdown</button>
       </div>
       <div class="md-output" id="mdOut">${escHtml(md)}</div>`;
+    saveIntakeDraft();
   } catch (e) {
     el.innerHTML = `<div class="error"><strong>Summary generation failed.</strong> ${escHtml(e.message)}</div>`;
   }
@@ -1322,11 +1466,167 @@ Include 1-3 screens. Use only these element types: header, nav, card, list_item,
   }
 }
 
+/* ----- Session draft (step navigation + refresh) ----- */
+
+function collectIntakeDraft() {
+  const fields = {};
+  document.querySelectorAll('input[id^="f-"], textarea[id^="f-"], select[id^="f-"]').forEach(el => {
+    if (el.type === 'checkbox') return;
+    fields[el.id] = el.value;
+  });
+  const outcomes = [...document.querySelectorAll('.outcomes-grid input[type=checkbox]:checked')].map(cb => cb.value);
+  let activeStep = 0;
+  document.querySelectorAll('.panel').forEach((p, i) => {
+    if (p.classList.contains('active')) activeStep = i;
+  });
+  return {
+    v: 1,
+    fields,
+    outcomes,
+    pillars: selectedPillars.slice(),
+    activeStep,
+    personaDone: state.personaDone,
+    personaData: state.personaData,
+    riceDone: state.riceDone,
+    riceData: state.riceData,
+    wfDone: state.wfDone,
+    mdOutput: state.mdOutput
+  };
+}
+
+function saveIntakeDraft() {
+  if (intakeRestoring) return;
+  try {
+    sessionStorage.setItem(INTAKE_DRAFT_KEY, JSON.stringify(collectIntakeDraft()));
+  } catch (e) {
+    /* ignore quota / private mode */
+  }
+}
+
+let _saveDraftTimer = null;
+function scheduleSaveIntakeDraft() {
+  if (intakeRestoring) return;
+  if (_saveDraftTimer) clearTimeout(_saveDraftTimer);
+  _saveDraftTimer = setTimeout(() => { saveIntakeDraft(); _saveDraftTimer = null; }, 250);
+}
+
+function clearIntakeDraft() {
+  try {
+    sessionStorage.removeItem(INTAKE_DRAFT_KEY);
+  } catch (e) {
+    /* ignore */
+  }
+}
+
+function renderStoredJpdSummary(md) {
+  const el = document.getElementById('wf-results');
+  if (!el || md == null) return;
+  const modeTag = activeMode() === 'ai'
+    ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
+    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+  el.innerHTML = `
+    <div class="copy-bar">
+      <span>Ready to paste into JPD ${modeTag}</span>
+      <button class="btn-copy" id="copyBtn" onclick="copyMd()">Copy markdown</button>
+    </div>
+    <div class="md-output" id="mdOut">${escHtml(md)}</div>`;
+}
+
+function restoreIntakeDraft() {
+  let raw = null;
+  try {
+    raw = sessionStorage.getItem(INTAKE_DRAFT_KEY);
+  } catch (e) {
+    return;
+  }
+  if (!raw) return;
+  let d = null;
+  try {
+    d = JSON.parse(raw);
+  } catch (e) {
+    return;
+  }
+  if (!d || d.v !== 1 || !d.fields) return;
+
+  intakeRestoring = true;
+  try {
+    Object.entries(d.fields).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el && 'value' in el) el.value = val != null ? String(val) : '';
+    });
+    document.getElementById('f-deadline').dispatchEvent(new Event('change'));
+    document.getElementById('f-external-dependency').dispatchEvent(new Event('change'));
+    syncEffortUI();
+
+    if (Array.isArray(d.outcomes)) {
+      document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => {
+        cb.checked = d.outcomes.includes(cb.value);
+      });
+    }
+
+    selectedPillars = Array.isArray(d.pillars) ? d.pillars.slice() : [];
+    document.querySelectorAll('.pillar-btn').forEach(btn => {
+      const oc = btn.getAttribute('onclick');
+      const match = oc && oc.match(/'(\d+)'/);
+      if (match) btn.classList.toggle('on', selectedPillars.includes(match[1]));
+    });
+
+    state.personaDone = !!d.personaDone;
+    state.personaData = d.personaData || null;
+    if (state.personaData) {
+      const _rp = (state.personaData.matches || []).find(m => m.rank === 'primary') || (state.personaData.matches || [])[0];
+      if (_rp) {
+        state.primaryPersonaName = _rp.name;
+        state.primaryPersonaReason = _rp.reason
+          ? _rp.reason.split(/\.\s+/)[0].replace(/\.$/, '')
+          : '';
+      }
+    }
+    state.riceDone = !!d.riceDone;
+    state.riceData = d.riceData || null;
+    state.wfDone = !!d.wfDone;
+    state.mdOutput = d.mdOutput != null ? d.mdOutput : null;
+
+    if (state.personaDone && state.personaData) {
+      renderPersonas(document.getElementById('persona-results'), state.personaData);
+    }
+
+    if (state.riceDone && state.riceData) {
+      const rel = document.getElementById('rice-results');
+      renderRice(rel, state.riceData, getForm());
+      const riceBtn = document.getElementById('rice-btn');
+      if (riceBtn) {
+        riceBtn.textContent = 'Next: JPD summary →';
+        riceBtn.onclick = () => goTo(3);
+      }
+    }
+
+    if (state.wfDone && state.mdOutput) {
+      renderStoredJpdSummary(state.mdOutput);
+    }
+
+    if (typeof d.activeStep === 'number' && d.activeStep >= 0 && d.activeStep <= 3) {
+      goTo(d.activeStep);
+    }
+  } finally {
+    intakeRestoring = false;
+  }
+  saveIntakeDraft();
+}
+
 /* ----- Bootstrap ----- */
 
 document.addEventListener('DOMContentLoaded', () => {
+  restoreIntakeDraft();
+  syncEffortUI();
   configPromise = loadConfigs();
   configPromise.catch(() => {});
+  const appRoot = document.querySelector('.app');
+  if (appRoot) {
+    appRoot.addEventListener('input', scheduleSaveIntakeDraft);
+    appRoot.addEventListener('change', scheduleSaveIntakeDraft);
+  }
+  window.addEventListener('beforeunload', saveIntakeDraft);
   const fileInput = document.getElementById('csv-file-input');
   if (fileInput) {
     fileInput.addEventListener('change', (ev) => {
