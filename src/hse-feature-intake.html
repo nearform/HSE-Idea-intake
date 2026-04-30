@@ -1021,6 +1021,7 @@ function togglePillar(btn, p) {
     btn.classList.add('on');
   }
   saveIntakeDraft();
+  scheduleRiceRecalc();
 }
 
 const EFFORT_PRESETS = [1, 2, 3, 4];
@@ -1032,6 +1033,7 @@ function setEffort(val) {
     b.classList.toggle('on', +b.dataset.val === val);
   });
   saveIntakeDraft();
+  scheduleRiceRecalc();
 }
 
 function setEffortOther() {
@@ -1050,6 +1052,7 @@ function syncEffortFromCustom(v) {
     document.getElementById('f-effort').value = val;
   }
   saveIntakeDraft();
+  scheduleRiceRecalc();
 }
 
 function syncEffortUI() {
@@ -1510,6 +1513,13 @@ function scheduleSaveIntakeDraft() {
   _saveDraftTimer = setTimeout(() => { saveIntakeDraft(); _saveDraftTimer = null; }, 250);
 }
 
+let _riceRecalcTimer = null;
+function scheduleRiceRecalc() {
+  if (!state.riceDone) return;
+  if (_riceRecalcTimer) clearTimeout(_riceRecalcTimer);
+  _riceRecalcTimer = setTimeout(() => { _riceRecalcTimer = null; calcRice(); }, 500);
+}
+
 function clearIntakeDraft() {
   try {
     sessionStorage.removeItem(INTAKE_DRAFT_KEY);
@@ -1627,6 +1637,14 @@ document.addEventListener('DOMContentLoaded', () => {
     appRoot.addEventListener('change', scheduleSaveIntakeDraft);
   }
   window.addEventListener('beforeunload', saveIntakeDraft);
+
+  const outcomesGrid = document.querySelector('.outcomes-grid');
+  if (outcomesGrid) outcomesGrid.addEventListener('change', scheduleRiceRecalc);
+  const reachEl = document.getElementById('f-reach');
+  if (reachEl) reachEl.addEventListener('input', scheduleRiceRecalc);
+  const reachSourceEl = document.getElementById('f-reach-source');
+  if (reachSourceEl) reachSourceEl.addEventListener('input', scheduleRiceRecalc);
+
   const fileInput = document.getElementById('csv-file-input');
   if (fileInput) {
     fileInput.addEventListener('change', (ev) => {
