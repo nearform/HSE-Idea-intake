@@ -138,15 +138,29 @@ body {
 .badge-p { background: var(--c-tint); color: var(--c-primary); border: 1px solid #C8EFE3; }
 .badge-s { background: #F3F3F3; color: var(--c-muted); border: 1px solid var(--c-border); }
 
-.rice-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: .875rem 0; }
+.rice-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: .875rem 0; }
 .rice-cell { background: var(--c-subtle); border-radius: var(--r-md); padding: .875rem .75rem; border: 1px solid var(--c-border); text-align: center; }
-.rice-cell-total { background: var(--c-primary); border-color: var(--c-primary); color: white; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06); }
+.rice-cell-total {
+  grid-column: 1 / -1;
+  background: var(--c-primary);
+  border-color: var(--c-primary);
+  color: white;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: .875rem 1.125rem;
+  text-align: left;
+}
 .rl { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--c-muted); font-weight: 600; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 5px; }
-.rice-cell-total .rl { color: rgba(255,255,255,.7); font-weight: 600; }
+.rice-cell-total .rl { color: rgba(255,255,255,.7); font-weight: 600; margin-bottom: 4px; justify-content: flex-start; }
 .rv { font-size: 22px; font-weight: 700; color: var(--c-text); margin-bottom: 3px; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
-.rice-cell-total .rv { color: white; font-size: 30px; letter-spacing: -0.025em; }
+.rice-cell-total .rv { color: white; font-size: 32px; letter-spacing: -0.025em; margin-bottom: 0; line-height: 1; white-space: nowrap; }
 .rn { font-size: 11px; color: var(--c-muted-2); line-height: 1.4; }
 .rice-cell-total .rn { color: rgba(255,255,255,.72); }
+.rice-total-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.rice-total-text .rn { font-size: 12px; }
 /* RICE letter badge — keep distinctive HSE-aligned colours, signal beyond colour via the letter */
 .rice-badge {
   display: inline-flex;
@@ -1664,20 +1678,20 @@ function renderRice(el, r, f) {
         <div class="rn">${escHtml(shortNote(r.effort.note, 'effort'))}</div>
       </div>
       <div class="rice-cell rice-cell-total">
-        <div class="rl">
-          <span>R</span><span style="opacity:.45;font-weight:400">·</span><span>I</span><span style="opacity:.45;font-weight:400">·</span><span>C</span><span style="opacity:.45;font-weight:400">·</span><span>E</span>
+        <div class="rice-total-text">
+          <div class="rl">
+            <span>R</span><span style="opacity:.45;font-weight:400">·</span><span>I</span><span style="opacity:.45;font-weight:400">·</span><span>C</span><span style="opacity:.45;font-weight:400">·</span><span>E</span>
+          </div>
+          <div class="rn">Guide score</div>
         </div>
         <div class="rv">${r.total}</div>
-        <div class="rn">Guide score</div>
       </div>
     </div>
     <div class="rice-formula-notice">
       <div class="rice-formula-label">How this score was calculated</div>
       <div class="rice-formula-expr">(Reach × Impact × Confidence) ÷ Effort = Score</div>
       <div class="rice-formula-expr">(<strong>${Math.round(r.reach.score).toLocaleString()}</strong> × <strong>${r.impact.score}</strong> × <strong>${r.confidence.score}%</strong>) ÷ <strong>${f.effort}</strong> = <strong>${r.total}</strong></div>
-    </div>
-    <div class="summary-note">This is a starting point for discussion. Reach and effort figures should be verified with the relevant teams before final scoring.</div>
-    ${r.summary ? `<div class="summary-note">${escHtml(r.summary)}</div>` : ''}`;
+    </div>`;
 }
 
 async function runRiceAi(f) {
