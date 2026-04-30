@@ -392,7 +392,9 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/hse-feature-intake.html') {
     if (req.method !== 'GET') { res.writeHead(405, { 'Allow': 'GET' }); res.end(); return; }
-    sendFile(res, INDEX_FILE, STATIC_MIME['.html']); return;
+    res.writeHead(301, { Location: '/src/hse-feature-intake.html' });
+    res.end();
+    return;
   }
 
   if (pathname === '/admin' || pathname === '/admin.html') {
