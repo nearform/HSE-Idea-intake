@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HSE Feature Intake — Submitted ideas</title>
+<style>
+:root {
+  --c-dark: #003D35;
+  --c-primary: #005C4E;
+  --c-accent: #007A6A;
+  --c-light: #EDF6F4;
+  --c-mid: #B8DDD7;
+  --c-white: #FFFFFF;
+  --c-text: #1C2B2A;
+  --c-muted: #527570;
+  --c-muted-2: #6F8A86;
+  --c-border: #C5DEDA;
+  --c-border-strong: #9CC5BD;
+  --c-subtle: #F5F9F8;
+  --c-bg: #F5F9F8;
+  --c-warn-bg: #FFF8E6;
+  --c-warn: #8A6200;
+  --c-err-bg: #FFF0F0;
+  --c-err: #C0392B;
+  --c-focus: rgba(0,122,106,.18);
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--c-primary); text-decoration: none; }
+a:hover { color: var(--c-dark); text-decoration: underline; }
+
+/* Header — mirrors the intake / admin pages */
+.app-header {
+  background: var(--c-white);
+  border-bottom: 1px solid var(--c-border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.hse-mark {
+  width: 36px; height: 36px;
+  background: var(--c-primary);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hse-mark svg { fill: white; }
+.app-header h1 { font-size: 16px; font-weight: 600; color: var(--c-dark); line-height: 1.2; }
+.app-header p { font-size: 12px; color: var(--c-muted); margin-top: 2px; }
+.app-header .grow { flex: 1; }
+.app-header a.header-btn {
+  background: transparent;
+  border: 1px solid var(--c-border);
+  color: var(--c-muted);
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-family: inherit;
+  transition: background .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.app-header a.header-btn:hover { background: var(--c-light); color: var(--c-primary); border-color: var(--c-accent); text-decoration: none; }
+.app-header a.header-btn.primary { background: var(--c-primary); border-color: var(--c-primary); color: white; }
+.app-header a.header-btn.primary:hover { background: var(--c-dark); border-color: var(--c-dark); color: white; }
+
+/* Page shell */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+.page-head { margin-bottom: 22px; }
+.page-head h2 { font-size: 22px; color: var(--c-dark); font-weight: 600; line-height: 1.2; }
+.page-head .subtitle {
+  font-size: 13px;
+  color: var(--c-muted);
+  margin-top: 6px;
+  max-width: 640px;
+  line-height: 1.55;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.toolbar .filter {
+  flex: 1;
+  min-width: 240px;
+  position: relative;
+}
+.toolbar .filter input {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--c-text);
+  background: var(--c-white);
+  outline: none;
+  font-family: inherit;
+  transition: border-color .15s, box-shadow .15s;
+}
+.toolbar .filter input:focus {
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px var(--c-focus);
+}
+.toolbar .filter .filter-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--c-muted-2);
+  pointer-events: none;
+  display: flex;
+}
+.toolbar .filter .filter-icon svg { width: 14px; height: 14px; fill: currentColor; }
+.toolbar label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.toolbar select {
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--c-text);
+  background: var(--c-white);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%23527570' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.toolbar select:focus { border-color: var(--c-accent); }
+.toolbar .count {
+  font-size: 12px;
+  color: var(--c-muted-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Table */
+.table-wrap {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: #FBFDFC;
+  border-bottom: 1px solid var(--c-border);
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--c-muted);
+  padding: 11px 14px;
+  white-space: nowrap;
+}
+thead th.num { text-align: right; }
+thead th.actions { text-align: right; }
+tbody tr { border-bottom: 1px solid var(--c-border); transition: background .12s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--c-subtle); }
+tbody td {
+  padding: 13px 14px;
+  vertical-align: middle;
+}
+tbody td.title-cell {
+  color: var(--c-dark);
+  font-weight: 500;
+  line-height: 1.4;
+  max-width: 380px;
+}
+tbody td.title-cell .title-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+tbody td.title-cell .problem-line {
+  display: block;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--c-muted-2);
+  margin-top: 3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 380px;
+}
+tbody td.rice-cell { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tbody td.persona-cell { color: var(--c-text); }
+tbody td.persona-cell.empty { color: var(--c-muted-2); font-style: italic; }
+tbody td.date-cell { color: var(--c-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+tbody td.actions-cell { text-align: right; white-space: nowrap; }
+
+.rice-num {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--c-light);
+  color: var(--c-dark);
+  font-weight: 600;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  min-width: 44px;
+  text-align: center;
+}
+.rice-num.empty { background: transparent; color: var(--c-muted-2); font-weight: 400; font-style: italic; }
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 11px;
+  border: 1px solid var(--c-border);
+  background: var(--c-white);
+  color: var(--c-text);
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .12s, border-color .12s, color .12s;
+  margin-left: 6px;
+}
+.copy-btn:first-child { margin-left: 0; }
+.copy-btn:hover:not(:disabled) {
+  background: var(--c-light);
+  border-color: var(--c-accent);
+  color: var(--c-primary);
+}
+.copy-btn:focus-visible {
+  outline: none;
+  border-color: var(--c-accent);
+  box-shadow: 0 0 0 3px var(--c-focus);
+}
+.copy-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  color: var(--c-muted-2);
+}
+.copy-btn svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+
+/* Empty state */
+.empty {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 56px 32px;
+  text-align: center;
+  color: var(--c-muted);
+}
+.empty h3 { font-size: 16px; color: var(--c-dark); font-weight: 600; margin-bottom: 8px; }
+.empty p { font-size: 13px; line-height: 1.55; max-width: 420px; margin: 0 auto 18px; }
+.empty .empty-cta {
+  display: inline-block;
+  background: var(--c-primary);
+  color: white;
+  padding: 9px 18px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+}
+.empty .empty-cta:hover { background: var(--c-dark); color: white; text-decoration: none; }
+
+.no-matches {
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--c-muted-2);
+  font-size: 13px;
+}
+
+/* Loading */
+.loading-wrap {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: var(--c-muted);
+  font-size: 13px;
+}
+.dots { display: inline-flex; gap: 4px; }
+.dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--c-accent); animation: blink 1.1s infinite; }
+.dots span:nth-child(2) { animation-delay: .22s; }
+.dots span:nth-child(3) { animation-delay: .44s; }
+@keyframes blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+/* Banner */
+.banner {
+  border-radius: var(--r-md);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  border: 1px solid;
+}
+.banner.err { background: var(--c-err-bg); border-color: #FFCCCC; color: var(--c-err); }
+
+/* Toast */
+.toast-stack {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 1000;
+  pointer-events: none;
+}
+.toast {
+  background: var(--c-dark);
+  color: white;
+  padding: 10px 14px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: 0 6px 20px rgba(0, 61, 53, .25);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 180px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .18s ease, transform .18s ease;
+  pointer-events: auto;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+.toast.err { background: var(--c-err); }
+.toast svg { width: 14px; height: 14px; fill: currentColor; flex-shrink: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dots span { animation: none; opacity: .6; }
+  .toast { transition: opacity .12s; transform: none; }
+}
+
+@media (max-width: 720px) {
+  .page { padding: 20px 14px 60px; }
+  thead th, tbody td { padding: 10px 10px; }
+  tbody td.title-cell { max-width: 200px; }
+  tbody td.title-cell .problem-line { max-width: 200px; }
+  .copy-btn span { display: none; }
+  .copy-btn { padding: 7px 9px; }
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="hse-mark" aria-label="HSE">
+    <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true">
+      <rect x="0" y="0" width="9" height="7"/>
+      <rect x="11" y="0" width="11" height="2.5"/>
+      <rect x="11" y="4.5" width="11" height="2.5"/>
+      <rect x="0" y="9" width="22" height="7"/>
+    </svg>
+  </div>
+  <div>
+    <h1>Submitted ideas</h1>
+    <p>All intakes captured by the tool. Copy the JPD summary or design brief from any row.</p>
+  </div>
+  <div class="grow"></div>
+  <a class="header-btn" href="/admin">Admin</a>
+  <a class="header-btn primary" href="/src/hse-feature-intake.html">+ New idea</a>
+</header>
+
+<main class="page">
+
+  <div id="errBanner" class="banner err" style="display:none"></div>
+
+  <div class="toolbar" id="toolbar" style="display:none">
+    <div class="filter">
+      <span class="filter-icon" aria-hidden="true">
+        <svg viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+      </span>
+      <input type="search" id="filterInput" placeholder="Filter by title, persona, or problem" aria-label="Filter submissions">
+    </div>
+    <label for="sortSelect">Sort</label>
+    <select id="sortSelect" aria-label="Sort submissions">
+      <option value="rice-desc">RICE (high to low)</option>
+      <option value="rice-asc">RICE (low to high)</option>
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="title">Title (A–Z)</option>
+    </select>
+    <span class="count" id="countLabel"></span>
+  </div>
+
+  <div id="loadingState" class="loading-wrap">
+    <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <span>Loading submissions…</span>
+  </div>
+
+  <div id="emptyState" class="empty" style="display:none">
+    <h3>No submissions yet</h3>
+    <p>Submitted ideas appear here once someone completes an intake all the way through to the design brief. Start a new one to populate the table.</p>
+    <a class="empty-cta" href="/src/hse-feature-intake.html">+ Start an intake</a>
+  </div>
+
+  <div id="tableWrap" class="table-wrap" style="display:none">
+    <table>
+      <thead>
+        <tr>
+          <th class="title-th">Title</th>
+          <th class="num">RICE</th>
+          <th>Primary persona</th>
+          <th>Submitted</th>
+          <th class="actions">Documents</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div id="noMatches" class="no-matches" style="display:none">No submissions match that filter.</div>
+  </div>
+
+</main>
+
+<div class="toast-stack" id="toastStack" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const els = {
+    err: document.getElementById('errBanner'),
+    toolbar: document.getElementById('toolbar'),
+    filter: document.getElementById('filterInput'),
+    sort: document.getElementById('sortSelect'),
+    count: document.getElementById('countLabel'),
+    loading: document.getElementById('loadingState'),
+    empty: document.getElementById('emptyState'),
+    tableWrap: document.getElementById('tableWrap'),
+    tbody: document.getElementById('tbody'),
+    noMatches: document.getElementById('noMatches'),
+    toastStack: document.getElementById('toastStack')
+  };
+
+  let intakes = [];
+
+  function escHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '—';
+    const now = new Date();
+    const diffMs = now - d;
+    const day = 24 * 60 * 60 * 1000;
+    if (diffMs < 60 * 1000) return 'just now';
+    if (diffMs < 60 * 60 * 1000) {
+      const m = Math.round(diffMs / (60 * 1000));
+      return `${m} min ago`;
+    }
+    if (diffMs < day) {
+      const h = Math.round(diffMs / (60 * 60 * 1000));
+      return `${h} hr ago`;
+    }
+    if (diffMs < 7 * day) {
+      const days = Math.round(diffMs / day);
+      return `${days} day${days === 1 ? '' : 's'} ago`;
+    }
+    return d.toLocaleDateString('en-IE', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function formatRice(n) {
+    if (n == null || !isFinite(n)) return '—';
+    if (Math.abs(n) >= 100) return Math.round(n).toLocaleString('en-IE');
+    if (Math.abs(n) >= 10) return n.toFixed(1);
+    return n.toFixed(2);
+  }
+
+  function showToast(message, kind) {
+    const t = document.createElement('div');
+    t.className = 'toast' + (kind === 'err' ? ' err' : '');
+    const icon = kind === 'err'
+      ? '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zm0 4a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V5a1 1 0 0 0-1-1zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>'
+      : '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.485 3.515a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414 0l-3-3a1 1 0 1 1 1.414-1.414L5.778 9.808l6.293-6.293a1 1 0 0 1 1.414 0z"/></svg>';
+    t.innerHTML = icon + '<span>' + escHtml(message) + '</span>';
+    els.toastStack.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => {
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 250);
+    }, 2200);
+  }
+
+  async function copyToClipboard(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    // Fallback for non-secure contexts (e.g. plain http://localhost on some browsers)
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    if (!ok) throw new Error('Clipboard write failed');
+  }
+
+  async function handleCopy(btn, intakeId, kind) {
+    if (btn.disabled) return;
+    const original = btn.innerHTML;
+    btn.disabled = true;
+    try {
+      const res = await fetch('/api/intakes/' + encodeURIComponent(intakeId), { cache: 'no-store' });
+      if (!res.ok) throw new Error(`${res.status}`);
+      const data = await res.json();
+      const md = kind === 'jpd' ? data.jpd_markdown : data.brief_markdown;
+      if (!md) {
+        showToast(kind === 'jpd' ? 'No JPD markdown saved' : 'No design brief saved', 'err');
+        return;
+      }
+      await copyToClipboard(md);
+      showToast(kind === 'jpd' ? 'JPD copied' : 'Brief copied');
+    } catch (e) {
+      showToast('Copy failed — ' + (e.message || 'unknown error'), 'err');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  }
+
+  function sortIntakes(list, mode) {
+    const arr = list.slice();
+    switch (mode) {
+      case 'rice-asc':
+        arr.sort((a, b) => (a.rice_total ?? -Infinity) - (b.rice_total ?? -Infinity));
+        break;
+      case 'newest':
+        arr.sort((a, b) => (Date.parse(b.ts) || 0) - (Date.parse(a.ts) || 0));
+        break;
+      case 'oldest':
+        arr.sort((a, b) => (Date.parse(a.ts) || 0) - (Date.parse(b.ts) || 0));
+        break;
+      case 'title':
+        arr.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'en'));
+        break;
+      case 'rice-desc':
+      default:
+        arr.sort((a, b) => (b.rice_total ?? -Infinity) - (a.rice_total ?? -Infinity));
+    }
+    return arr;
+  }
+
+  function applyFilter(list, q) {
+    const term = q.trim().toLowerCase();
+    if (!term) return list;
+    return list.filter(i => {
+      const hay = [i.title, i.persona_primary, i.problem_excerpt]
+        .filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+  }
+
+  function render() {
+    const filtered = applyFilter(intakes, els.filter.value);
+    const sorted = sortIntakes(filtered, els.sort.value);
+
+    els.count.textContent = intakes.length === filtered.length
+      ? `${intakes.length} ${intakes.length === 1 ? 'submission' : 'submissions'}`
+      : `${sorted.length} of ${intakes.length}`;
+
+    if (!sorted.length) {
+      els.tbody.innerHTML = '';
+      els.noMatches.style.display = 'block';
+      return;
+    }
+    els.noMatches.style.display = 'none';
+
+    const rows = sorted.map(i => {
+      const personaCls = i.persona_primary ? 'persona-cell' : 'persona-cell empty';
+      const personaText = i.persona_primary || 'Not matched';
+      const riceCls = (i.rice_total == null) ? 'rice-num empty' : 'rice-num';
+      const jpdDisabled = i.has_jpd ? '' : 'disabled';
+      const briefDisabled = i.has_brief ? '' : 'disabled';
+      const jpdTitle = i.has_jpd ? 'Copy JPD markdown to clipboard' : 'No JPD markdown saved for this submission';
+      const briefTitle = i.has_brief ? 'Copy design brief to clipboard' : 'No design brief saved for this submission';
+      const problemLine = i.problem_excerpt
+        ? `<span class="problem-line">${escHtml(i.problem_excerpt)}</span>` : '';
+      return `
+        <tr>
+          <td class="title-cell">
+            <span class="title-text">${escHtml(i.title || 'Untitled')}</span>
+            ${problemLine}
+          </td>
+          <td class="rice-cell"><span class="${riceCls}">${escHtml(formatRice(i.rice_total))}</span></td>
+          <td class="${personaCls}">${escHtml(personaText)}</td>
+          <td class="date-cell" title="${escHtml(i.ts || '')}">${escHtml(formatDate(i.ts))}</td>
+          <td class="actions-cell">
+            <button type="button" class="copy-btn" data-id="${escHtml(i.id)}" data-kind="jpd" ${jpdDisabled} title="${escHtml(jpdTitle)}" aria-label="${escHtml(jpdTitle)}">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1a2 2 0 0 0-2 2v1H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H5zm0 1h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-1V6a2 2 0 0 0-2-2H4V3a1 1 0 0 1 1-1zM2 5h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>
+              <span>JPD</span>
+            </button>
+            <button type="button" class="copy-btn" data-id="${escHtml(i.id)}" data-kind="brief" ${briefDisabled} title="${escHtml(briefTitle)}" aria-label="${escHtml(briefTitle)}">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1a2 2 0 0 0-2 2v1H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H5zm0 1h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-1V6a2 2 0 0 0-2-2H4V3a1 1 0 0 1 1-1zM2 5h8a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg>
+              <span>Brief</span>
+            </button>
+          </td>
+        </tr>`;
+    }).join('');
+
+    els.tbody.innerHTML = rows;
+  }
+
+  els.tbody.addEventListener('click', e => {
+    const btn = e.target.closest('.copy-btn');
+    if (!btn) return;
+    const id = btn.getAttribute('data-id');
+    const kind = btn.getAttribute('data-kind');
+    if (id && kind) handleCopy(btn, id, kind);
+  });
+
+  els.filter.addEventListener('input', render);
+  els.sort.addEventListener('change', render);
+
+  async function load() {
+    try {
+      const res = await fetch('/api/intakes', { cache: 'no-store' });
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const data = await res.json();
+      intakes = Array.isArray(data.intakes) ? data.intakes : [];
+      els.loading.style.display = 'none';
+      if (!intakes.length) {
+        els.empty.style.display = 'block';
+        return;
+      }
+      els.toolbar.style.display = 'flex';
+      els.tableWrap.style.display = 'block';
+      render();
+    } catch (e) {
+      els.loading.style.display = 'none';
+      els.err.style.display = 'block';
+      els.err.textContent = 'Failed to load submissions: ' + (e.message || 'unknown error');
+    }
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

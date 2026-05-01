@@ -111,6 +111,33 @@ body {
 .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
 .btn-ghost { background: var(--c-white); color: var(--c-muted); border: 1px solid var(--c-border); }
 .btn-ghost:hover { background: var(--c-subtle); color: var(--c-text); border-color: var(--c-border-strong); }
+.btn-secondary { background: #F1F5FC; color: #094492; border: 1px solid #C8DCF6; }
+.btn-secondary:hover { background: #E4ECF8; border-color: #A8C5EE; }
+.btn-secondary:disabled { opacity: .55; cursor: not-allowed; }
+.draft-check-card { background: #F1F5FC; border: 1px solid #C8DCF6; border-radius: var(--r-md); padding: .875rem 1rem; margin-bottom: 1rem; }
+.draft-check-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+.draft-check-title { font-size: 12px; font-weight: 700; color: #094492; text-transform: uppercase; letter-spacing: .04em; }
+.draft-check-dismiss { background: transparent; border: none; color: #094492; cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: var(--r-sm); }
+.draft-check-dismiss:hover { background: rgba(9, 68, 146, 0.1); }
+.draft-check-sub { font-size: 12.5px; color: var(--c-muted); margin-bottom: 10px; line-height: 1.5; }
+.draft-check-question { background: var(--c-white); border: 1px solid #C8DCF6; border-radius: var(--r-sm); padding: 10px 12px; margin-top: 8px; font-size: 13px; color: var(--c-text); line-height: 1.55; }
+.draft-check-q-text { font-weight: 500; }
+.draft-check-q-why { color: var(--c-muted); font-size: 12px; margin-top: 4px; font-style: italic; }
+.draft-check-q-field { display: inline-block; font-size: 10px; font-weight: 600; color: #094492; background: #E4ECF8; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: .04em; margin-right: 6px; vertical-align: middle; }
+.draft-check-empty { font-size: 13px; color: var(--c-muted); padding: 8px 0; }
+.draft-check-disabled { font-size: 12.5px; color: var(--c-muted); padding: 8px 0; }
+.draft-check-error { font-size: 12.5px; color: var(--c-err); padding: 8px 0; }
+.draft-check-similar { background: var(--c-white); border: 1px solid #C8DCF6; border-radius: var(--r-sm); padding: 10px 12px; margin-bottom: 10px; }
+.draft-check-similar-head { font-size: 13px; font-weight: 600; color: #094492; margin-bottom: 4px; }
+.draft-check-similar-item { padding: 8px 0; border-top: 1px solid #E4ECF8; }
+.draft-check-similar-item:first-of-type { border-top: none; padding-top: 6px; }
+.draft-check-similar-row { display: flex; align-items: baseline; gap: 8px; }
+.draft-check-similar-pct { font-size: 11px; font-weight: 700; color: var(--c-white); background: #094492; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.draft-check-similar-title { font-size: 13px; color: var(--c-text); font-weight: 500; line-height: 1.45; }
+.draft-check-similar-meta { font-size: 11px; color: var(--c-muted-2); margin-top: 2px; margin-left: 36px; }
+.draft-check-similar-excerpt { font-size: 12px; color: var(--c-muted); margin-top: 4px; margin-left: 36px; line-height: 1.5; font-style: italic; }
+.draft-check-questions-block { margin-top: 4px; }
+.draft-check-section-title { font-size: 12px; font-weight: 700; color: #094492; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
 
 /* Results — persona cards. Full border + leading dot, no side-stripe */
 .persona-card {
@@ -134,6 +161,15 @@ body {
 }
 .persona-card[data-rank="secondary"] h3::before { background: var(--c-border-strong); }
 .persona-card p { font-size: 13px; color: var(--c-muted); line-height: 1.55; }
+.persona-evidence { margin-top: 10px; font-size: 12px; }
+.persona-evidence summary { cursor: pointer; color: var(--c-muted-2); font-weight: 500; padding: 4px 0; user-select: none; -webkit-user-select: none; list-style: none; display: inline-flex; align-items: center; gap: 4px; }
+.persona-evidence summary::-webkit-details-marker { display: none; }
+.persona-evidence summary::before { content: '▸'; font-size: 9px; transition: transform .15s ease; display: inline-block; }
+.persona-evidence[open] summary::before { transform: rotate(90deg); }
+.persona-evidence summary:hover { color: var(--c-text); }
+.persona-evidence-item { padding: 6px 10px; margin-top: 6px; background: var(--c-subtle); border-left: 2px solid var(--c-accent); border-radius: 0 var(--r-sm) var(--r-sm) 0; line-height: 1.5; }
+.persona-evidence-section { display: block; font-size: 10px; font-weight: 600; color: var(--c-muted-2); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+.persona-evidence-bullet { color: var(--c-text); font-style: italic; }
 .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-left: 6px; font-weight: 600; vertical-align: middle; letter-spacing: .02em; }
 .badge-p { background: var(--c-tint); color: var(--c-primary); border: 1px solid #C8EFE3; }
 .badge-s { background: #F3F3F3; color: var(--c-muted); border: 1px solid var(--c-border); }
@@ -199,6 +235,15 @@ body {
 .rice-formula-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--c-muted-2); }
 .rice-formula-expr { font-size: 13px; color: var(--c-muted); font-family: 'JetBrains Mono', 'Menlo', 'Consolas', monospace; font-variant-numeric: tabular-nums; }
 .rice-formula-expr strong { color: var(--c-text); }
+.rice-discrepancies { margin-top: .75rem; background: #FFFAF0; border: 1px solid #F4D9A6; border-radius: var(--r-md); padding: .875rem 1rem; }
+.rice-discrepancies-head { font-size: 12px; font-weight: 700; color: #8A5C00; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+.rice-discrepancies-sub { font-size: 12px; color: var(--c-muted); line-height: 1.5; margin-bottom: 10px; }
+.rice-discrepancy-item { display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 8px 0; border-top: 1px solid #F0E0BD; align-items: start; }
+.rice-discrepancy-item:first-of-type { border-top: none; padding-top: 4px; }
+.rice-discrepancy-dim { font-size: 11px; font-weight: 700; color: #8A5C00; letter-spacing: .04em; padding-top: 1px; }
+.rice-discrepancy-body { font-size: 12.5px; color: var(--c-text); line-height: 1.5; }
+.rice-discrepancy-body strong { color: var(--c-muted); font-weight: 600; }
+.rice-discrepancy-why { color: var(--c-muted); font-style: italic; margin-top: 4px; font-size: 12px; }
 .acc-box { background: var(--c-warn-bg); border: 1px solid #F0DC8A; border-radius: var(--r-md); padding: .875rem 1rem; font-size: 13px; color: var(--c-warn); margin-top: .75rem; line-height: 1.55; }
 
 /* Wireframe — present as a real deliverable, not a sketch */
@@ -579,6 +624,9 @@ body {
     </div>
     <div class="header-spacer"></div>
     <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
+    <a class="icon-btn" id="submissionsBtn" href="../submissions" title="View submitted ideas" aria-label="View submitted ideas">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h12v2H3v-2z"/></svg>
+    </a>
     <a class="icon-btn" id="adminBtn" href="../admin" title="Edit config" aria-label="Edit config">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
     </a>
@@ -734,13 +782,17 @@ body {
         <input type="text" id="f-team-unit" placeholder="e.g. Screening Services, Regional Digital Team, Nearform">
       </div>
     </div>
+    <div id="draft-check-results"></div>
     <div class="btn-row">
-      <div style="display:flex;gap:8px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-ghost" onclick="loadSample()">Load sample idea</button>
         <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
         <button class="btn btn-ghost" type="button" onclick="triggerCsvImport()">Import from CSV</button>
       </div>
-      <button class="btn btn-primary" onclick="goTo(1)">Next: who it's for →</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" id="checkDraftBtn" onclick="runCheckDraft()" title="AI looks at your draft and asks 2 to 3 sharpening questions before you continue">Check my draft</button>
+        <button class="btn btn-primary" onclick="goTo(1)">Next: who it's for →</button>
+      </div>
     </div>
     <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none">
     <div class="import-note">Accepts CSV exports from Angela's Microsoft Form or any spreadsheet with matching column headers.</div>
@@ -903,14 +955,17 @@ let state = {
   personaDone: false, riceDone: false, wfDone: false, briefDone: false,
   personaData: null, riceData: null, mdOutput: null, briefMarkdown: null,
   aiAssist: false, providerConfigured: false, provider: null, model: null,
-  primaryPersonaName: null, primaryPersonaReason: null
+  embedProvider: null, embedModel: null,
+  primaryPersonaName: null, primaryPersonaReason: null,
+  intakeId: null, intakePersisted: false, lastPersistedBrief: null
 };
 
 let sidebarState = {
   title: '', audience: '',
   personaName: null, personaReason: null, personaBadge: null,
   riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-  jpdReady: false, briefReady: false, briefLoading: false
+  jpdReady: false, briefReady: false, briefLoading: false,
+  submitState: 'idle', submitError: null
 };
 let _sidebarTitleTimer = null;
 
@@ -956,15 +1011,19 @@ function loadSample() {
 
   syncEffortUI();
 
-  state = { personaDone: false, riceDone: false, wfDone: false, briefDone: false,
-            personaData: null, briefMarkdown: null,
-            primaryPersonaName: null, primaryPersonaReason: null };
+  Object.assign(state, {
+    personaDone: false, riceDone: false, wfDone: false, briefDone: false,
+    personaData: null, riceData: null, mdOutput: null, briefMarkdown: null,
+    primaryPersonaName: null, primaryPersonaReason: null,
+    intakeId: null, intakePersisted: false, lastPersistedBrief: null
+  });
   sidebarState = {
     title: document.getElementById('f-title').value.trim(),
     audience: document.getElementById('f-audience').value,
     personaName: null, personaReason: null, personaBadge: null,
     riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-    jpdReady: false, briefReady: false, briefLoading: false
+    jpdReady: false, briefReady: false, briefLoading: false,
+    submitState: 'idle', submitError: null
   };
   renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
@@ -972,6 +1031,7 @@ function loadSample() {
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
   hideBriefCard();
   clearCsvMessages();
+  dismissDraftCheck();
   saveIntakeDraft();
 }
 
@@ -992,14 +1052,18 @@ function clearForm() {
   document.querySelectorAll('.outcomes-grid input[type=checkbox]').forEach(cb => cb.checked = false);
   selectedPillars = [];
   document.querySelectorAll('.pillar-btn').forEach(btn => btn.classList.remove('on'));
-  state = { personaDone: false, riceDone: false, wfDone: false, briefDone: false,
-            personaData: null, briefMarkdown: null,
-            primaryPersonaName: null, primaryPersonaReason: null };
+  Object.assign(state, {
+    personaDone: false, riceDone: false, wfDone: false, briefDone: false,
+    personaData: null, riceData: null, mdOutput: null, briefMarkdown: null,
+    primaryPersonaName: null, primaryPersonaReason: null,
+    intakeId: null, intakePersisted: false, lastPersistedBrief: null
+  });
   sidebarState = {
     title: '', audience: '',
     personaName: null, personaReason: null, personaBadge: null,
     riceScore: null, riceReach: null, riceImpact: null, riceConfidence: null, riceEffort: null,
-    jpdReady: false, briefReady: false, briefLoading: false
+    jpdReady: false, briefReady: false, briefLoading: false,
+    submitState: 'idle', submitError: null
   };
   renderSidebar();
   document.getElementById('persona-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Matching personas...</div>';
@@ -1007,6 +1071,7 @@ function clearForm() {
   document.getElementById('wf-results').innerHTML = '<div class="loading"><div class="dots"><span></span><span></span><span></span></div>Compiling JPD summary...</div>';
   hideBriefCard();
   clearCsvMessages();
+  dismissDraftCheck();
   clearIntakeDraft();
 }
 
@@ -1332,8 +1397,10 @@ async function loadConfigs() {
       state.providerConfigured = !!s.providerConfigured;
       state.provider = s.provider || null;
       state.model = s.model || null;
+      state.embedProvider = s.embedProvider || null;
+      state.embedModel = s.embedModel || null;
     }
-  } catch (_) { /* non-fatal — stays in deterministic mode */ }
+  } catch (_) { /* non-fatal — stays in offline fallback mode */ }
 
   updateModePill();
 }
@@ -1348,13 +1415,13 @@ function updateModePill() {
   if (activeMode() === 'ai') {
     pill.className = 'mode-pill ai';
     pill.innerHTML = `<span class="dot"></span>AI assist on · ${escHtml(state.provider || 'llm')}`;
-    pill.title = `AI assist is enabled. Model: ${state.model || 'unknown'}. Change this in the admin panel.`;
+    pill.title = `AI assist is enabled (default). Model: ${state.model || 'unknown'}. Toggle off in the admin panel to use the offline rules engine.`;
   } else {
     pill.className = 'mode-pill';
     const reason = state.aiAssist && !state.providerConfigured
-      ? 'AI assist is on in admin, but no LLM provider is configured on the server — falling back to deterministic mode.'
-      : 'Deterministic mode: results come from the rules in your config files. Turn on AI assist in the admin panel to use a language model instead.';
-    pill.innerHTML = '<span class="dot"></span>Deterministic mode';
+      ? 'AI assist is on by default, but no LLM provider is configured on this server. Set ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, or OLLAMA_ENABLED=1 to enable it. The tool is running in offline deterministic mode in the meantime.'
+      : 'Offline mode: AI assist is turned off in the admin panel, so the tool is using the rules-based fallback engine. Turn AI assist back on for higher-quality output.';
+    pill.innerHTML = '<span class="dot"></span>Offline mode';
     pill.title = reason;
   }
 }
@@ -1490,6 +1557,330 @@ document.getElementById('f-external-dependency').addEventListener('change', func
   if (!showDetail) document.getElementById('f-external-dependency-detail').value = '';
 });
 
+/* ----- Embeddings + similar-ideas detection ----- */
+
+const SIMILARITY_THRESHOLD = 0.78;
+const SIMILARITY_TOP_K = 3;
+
+async function fetchEmbedding(text) {
+  const res = await fetch('/api/embed', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text })
+  });
+  if (!res.ok) {
+    let err = '';
+    try { err = (await res.json()).error || ''; } catch { try { err = await res.text(); } catch {} }
+    throw new Error(`${res.status} ${String(err).slice(0, 300)}`);
+  }
+  return await res.json();
+}
+
+async function fetchPriorIntakes() {
+  const res = await fetch('/api/intakes', { cache: 'no-store' });
+  if (!res.ok) throw new Error(`${res.status} ${(await res.text()).slice(0, 200)}`);
+  const d = await res.json();
+  return Array.isArray(d.intakes) ? d.intakes : [];
+}
+
+function cosineSim(a, b) {
+  if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length || !a.length) return 0;
+  let dot = 0, na = 0, nb = 0;
+  for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
+  if (!na || !nb) return 0;
+  return dot / (Math.sqrt(na) * Math.sqrt(nb));
+}
+
+async function findSimilarIntakes(f) {
+  const text = [f.title, f.problem].filter(Boolean).join('\n\n');
+  if (text.length < 40) return { matches: [], reason: 'too-short' };
+  let embedRes;
+  try { embedRes = await fetchEmbedding(text); }
+  catch (e) { return { matches: [], reason: 'embed-failed', error: e.message }; }
+  let priors;
+  try { priors = await fetchPriorIntakes(); }
+  catch (e) { return { matches: [], reason: 'fetch-failed', error: e.message }; }
+  if (!priors.length) return { matches: [], reason: 'no-prior' };
+
+  const myEmbedding = embedRes.embedding || [];
+  const myDim = myEmbedding.length;
+  const scored = priors
+    .filter(p => Array.isArray(p.embedding) && p.embedding.length === myDim)
+    .map(p => ({
+      id: p.id,
+      ts: p.ts,
+      title: p.title || '(untitled)',
+      problem_excerpt: p.problem_excerpt || '',
+      persona_primary: p.persona_primary || null,
+      rice_total: p.rice_total != null ? p.rice_total : null,
+      similarity: cosineSim(myEmbedding, p.embedding)
+    }))
+    .filter(p => p.similarity >= SIMILARITY_THRESHOLD)
+    .sort((a, b) => b.similarity - a.similarity)
+    .slice(0, SIMILARITY_TOP_K);
+
+  return { matches: scored, reason: scored.length ? 'ok' : 'below-threshold' };
+}
+
+function shortDate(iso) {
+  if (!iso) return '';
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-IE', { month: 'short', year: 'numeric' });
+  } catch { return ''; }
+}
+
+// User-triggered: posts the completed intake (title, persona, RICE, JPD,
+// brief, optional embedding) to /api/intakes so the team's submissions table
+// can list it. Driven by the "Add to submissions" CTA on the Step 4 sidebar —
+// nothing is saved automatically.
+async function submitToSubmissions() {
+  if (state.intakePersistInFlight) return;
+  if (!state.briefDone || !state.briefMarkdown) return;
+  const f = getForm();
+  if (!f.title || !f.problem) {
+    sidebarState.submitError = 'Need a title and problem before submitting.';
+    renderSidebar();
+    return;
+  }
+
+  const briefSnapshot = state.briefMarkdown;
+  state.intakePersistInFlight = true;
+  sidebarState.submitState = 'submitting';
+  sidebarState.submitError = null;
+  renderSidebar();
+
+  try {
+    let embedding = [];
+    let embedModel = null;
+    if (state.embedProvider) {
+      try {
+        const text = `${f.title}\n\n${f.problem}`;
+        const embedRes = await fetchEmbedding(text);
+        if (embedRes && Array.isArray(embedRes.embedding) && embedRes.embedding.length) {
+          embedding = embedRes.embedding;
+          embedModel = embedRes.model || null;
+        }
+      } catch (_) { /* embedding is optional */ }
+    }
+    const id = (state.intakeId = state.intakeId || ('intake-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)));
+    const personaPrimary = state.personaData
+      ? ((state.personaData.matches || []).find(m => m.rank === 'primary') || (state.personaData.matches || [])[0])
+      : null;
+    const record = {
+      id,
+      ts: new Date().toISOString(),
+      title: f.title,
+      problem: f.problem,
+      embedding,
+      embed_model: embedModel,
+      persona_primary: personaPrimary ? personaPrimary.name : null,
+      rice_total: state.riceData && Number.isFinite(state.riceData.total) ? state.riceData.total : null,
+      jpd_markdown: state.mdOutput || '',
+      brief_markdown: briefSnapshot
+    };
+    const res = await fetch('/api/intakes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record)
+    });
+    if (!res.ok) {
+      const txt = await res.text().catch(() => '');
+      throw new Error(`${res.status} ${txt.slice(0, 120)}`);
+    }
+    state.intakePersisted = true;
+    state.lastPersistedBrief = briefSnapshot;
+    sidebarState.submitState = 'submitted';
+    saveIntakeDraft();
+  } catch (e) {
+    sidebarState.submitState = 'error';
+    sidebarState.submitError = (e && e.message) ? e.message : 'Unknown error';
+  } finally {
+    state.intakePersistInFlight = false;
+    renderSidebar();
+  }
+}
+window.submitToSubmissions = submitToSubmissions;
+
+/* ----- Step 1 draft coach (AI critique before persona match) ----- */
+
+const FIELD_LABELS = {
+  'f-title': 'Title',
+  'f-overview': 'Overview',
+  'f-problem': 'Problem',
+  'f-audience': 'Primary user',
+  'f-also-affects': 'Also affects',
+  'f-identified': 'How identified',
+  'f-evidence-detail': 'Evidence',
+  'f-evidence': 'Confidence',
+  'f-data': 'Data needs',
+  'f-compliance': 'Compliance',
+  'f-external-dependency': 'External dependency',
+  'general': 'General'
+};
+
+function focusDraftField(fieldId) {
+  if (!fieldId || fieldId === 'general') return;
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => { try { el.focus({ preventScroll: true }); } catch { el.focus(); } }, 350);
+}
+
+function dismissDraftCheck() {
+  const host = document.getElementById('draft-check-results');
+  if (host) host.innerHTML = '';
+}
+
+function renderDraftCheckCard(innerHtml) {
+  const host = document.getElementById('draft-check-results');
+  if (!host) return;
+  host.innerHTML = `
+    <div class="draft-check-card" role="region" aria-label="Draft check results">
+      <div class="draft-check-head">
+        <span class="draft-check-title">Draft check</span>
+        <button class="draft-check-dismiss" type="button" aria-label="Dismiss" onclick="dismissDraftCheck()">×</button>
+      </div>
+      ${innerHtml}
+    </div>`;
+}
+
+function renderSimilarSection(simResult) {
+  const matches = simResult && Array.isArray(simResult.matches) ? simResult.matches : [];
+  if (!matches.length) return '';
+  const items = matches.map(m => {
+    const pct = Math.round(m.similarity * 100);
+    const meta = [
+      shortDate(m.ts),
+      m.persona_primary ? 'Primary persona: ' + m.persona_primary : null,
+      m.rice_total != null ? 'RICE ' + m.rice_total : null
+    ].filter(Boolean).join(' · ');
+    return `<div class="draft-check-similar-item">
+      <div class="draft-check-similar-row">
+        <span class="draft-check-similar-pct">${pct}%</span>
+        <span class="draft-check-similar-title">${escHtml(m.title)}</span>
+      </div>
+      ${meta ? `<div class="draft-check-similar-meta">${escHtml(meta)}</div>` : ''}
+      ${m.problem_excerpt ? `<div class="draft-check-similar-excerpt">${escHtml(m.problem_excerpt)}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="draft-check-similar">
+    <div class="draft-check-similar-head">${matches.length} similar idea${matches.length === 1 ? '' : 's'} already captured</div>
+    <div class="draft-check-sub">Review these before you continue — combine, build on, or proceed if your idea is genuinely distinct.</div>
+    ${items}
+  </div>`;
+}
+
+function renderQuestionsSection(critiqueResult) {
+  const questions = Array.isArray(critiqueResult && critiqueResult.questions)
+    ? critiqueResult.questions.filter(q => q && q.question)
+    : [];
+  if (!questions.length) return '';
+  const items = questions.slice(0, 4).map(q => {
+    const label = FIELD_LABELS[q.field] || FIELD_LABELS['general'];
+    const fieldChip = `<button class="draft-check-q-field" type="button" onclick="focusDraftField('${escHtml(q.field || 'general')}')" title="Jump to this field">${escHtml(label)}</button>`;
+    return `<div class="draft-check-question">${fieldChip}<span class="draft-check-q-text">${escHtml(q.question)}</span>${q.why ? `<div class="draft-check-q-why">${escHtml(q.why)}</div>` : ''}</div>`;
+  }).join('');
+  return `<div class="draft-check-questions-block">
+    <div class="draft-check-section-title">Sharpening questions</div>
+    <div class="draft-check-sub">Suggestions only — none block proceeding. They're meant to lift the quality of every step that comes after.</div>
+    ${items}
+  </div>`;
+}
+
+async function runCheckDraft() {
+  const btn = document.getElementById('checkDraftBtn');
+  const host = document.getElementById('draft-check-results');
+  if (!host) return;
+
+  try { await configPromise; } catch { /* allow check even if config failed — the LLM doesn't need configs here */ }
+
+  if (activeMode() !== 'ai' && !state.embedProvider) {
+    renderDraftCheckCard(`<div class="draft-check-disabled">Draft check needs AI assist (for sharpening questions) or an embedding provider (for similar-idea detection). Configure one in the admin panel or via server env vars.</div>`);
+    return;
+  }
+
+  const f = getForm();
+  const filled = ['title', 'overview', 'problem'].filter(k => (f[k] || '').trim()).length;
+  if (filled < 2) {
+    renderDraftCheckCard(`<div class="draft-check-empty">Add a title, overview, and problem statement first — there's not enough draft yet to give useful feedback.</div>`);
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  renderDraftCheckCard(`<div class="draft-check-empty"><span class="dots"><span></span><span></span><span></span></span> Reading your draft, looking for sharpening questions and similar prior ideas…</div>`);
+
+  // Run critique and similarity in parallel — neither is fatal to the other.
+  const critiquePromise = activeMode() === 'ai'
+    ? runDraftCheckAi(f).catch(e => ({ __error: e.message }))
+    : Promise.resolve(null);
+  const similarPromise = state.embedProvider
+    ? findSimilarIntakes(f).catch(e => ({ matches: [], reason: 'embed-failed', error: e.message }))
+    : Promise.resolve({ matches: [], reason: 'no-embed-provider' });
+
+  try {
+    const [critiqueResult, simResult] = await Promise.all([critiquePromise, similarPromise]);
+
+    const similarHtml = renderSimilarSection(simResult);
+    const questionsHtml = renderQuestionsSection(critiqueResult && !critiqueResult.__error ? critiqueResult : null);
+    const critiqueErrorHtml = (critiqueResult && critiqueResult.__error)
+      ? `<div class="draft-check-error">Sharpening questions unavailable: ${escHtml(critiqueResult.__error)}</div>`
+      : '';
+
+    if (!similarHtml && !questionsHtml && !critiqueErrorHtml) {
+      renderDraftCheckCard(`<div class="draft-check-sub">The draft looks solid — no sharpening questions and no similar prior ideas. You're good to proceed to persona matching.</div>`);
+      return;
+    }
+    renderDraftCheckCard(`${similarHtml}${questionsHtml}${critiqueErrorHtml}`);
+  } catch (e) {
+    renderDraftCheckCard(`<div class="draft-check-error"><strong>Couldn't run the draft check.</strong> ${escHtml(e.message)}</div>`);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Check my draft'; }
+  }
+}
+
+async function runDraftCheckAi(f) {
+  const system = "You are a senior product analyst reviewing a feature intake draft for the HSE Health App. Your job is to suggest 2 to 4 specific, plain-English sharpening questions that would meaningfully improve the next steps (persona matching, RICE scoring, JPD summary, design brief). Only flag things that are genuinely vague, missing, or inconsistent — never invent issues. If the draft is already strong, return fewer questions or an empty array.";
+
+  const prompt = `Read this feature intake draft and return sharpening questions.
+
+DRAFT:
+Title: ${f.title || '(empty)'}
+Feature overview: ${f.overview || '(empty)'}
+Problem being solved: ${f.problem || '(empty)'}
+Primary user (selection): ${f.audience || '(not selected)'}
+Also affects: ${f.alsoAffects || '(empty)'}
+How need was identified: ${f.identified || '(not selected)'}
+Supporting evidence: ${f.evidenceDetail || '(empty)'}
+Evidence confidence: ${f.evidence ? f.evidence + '%' : '(not selected)'}
+Data / integration needs: ${f.data || '(empty)'}
+Regulatory / compliance: ${f.compliance || '(empty)'}
+External dependency: ${f.externalDependency || '(default)'}${f.externalDependencyDetail ? ' — ' + f.externalDependencyDetail : ''}
+
+Look for issues like:
+- Vague or generic problem statements (e.g. "patients have issues" → which patients, what specifically?)
+- Missing scale information (how many people are affected? what cohort?)
+- Vague evidence (mentions research without naming it, or "feedback" without source)
+- Audience selection inconsistent with the prose (e.g. "Patient" selected but the prose describes a clinical workflow)
+- Hints in the prose that suggest data, integration, or regulatory complexity not captured in the structured fields
+- Confidence selection that doesn't match the strength of the evidence described
+
+Return ONLY this JSON, no markdown fences, no preamble:
+{
+  "questions": [
+    {
+      "field": "f-title" | "f-overview" | "f-problem" | "f-audience" | "f-also-affects" | "f-identified" | "f-evidence-detail" | "f-evidence" | "f-data" | "f-compliance" | "f-external-dependency" | "general",
+      "question": "the specific sharpening question, phrased to the submitter",
+      "why": "1 short sentence on why this matters for the persona match, RICE score, or design brief"
+    }
+  ]
+}
+
+Return at most 4 questions. Prefer 2 to 3 well-chosen questions over a long list. Empty array is acceptable when the draft is genuinely strong.`;
+
+  return await callLLMJson(prompt, { system, max_tokens: 900 });
+}
+
 async function callLLM(prompt, opts = {}) {
   const res = await fetch(LLM_URL, {
     method: 'POST',
@@ -1543,20 +1934,29 @@ async function runPersonas() {
     renderPersonas(el, r);
     saveIntakeDraft();
   } catch (e) {
-    el.innerHTML = `<div class="error"><strong>Persona matching failed.</strong> ${escHtml(e.message)}<br><br>Check the feature title and problem have enough detail, then go back and try again. You can also turn off AI assist in the admin panel to use deterministic matching.</div>`;
+    el.innerHTML = `<div class="error"><strong>Persona matching failed.</strong> ${escHtml(e.message)}<br><br>Check the feature title and problem have enough detail, then go back and try again. You can also turn off AI assist in the admin panel to fall back to the offline rules-based matcher.</div>`;
   }
 }
 
 function renderPersonas(el, r) {
   const modeTag = activeMode() === 'ai'
     ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
-    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+    : `<span class="mode-pill"><span class="dot"></span>Offline</span>`;
   let html = `<div style="display:flex;justify-content:flex-end;margin-bottom:8px">${modeTag}</div>`;
-  html += (r.matches || []).map(m => `
+  html += (r.matches || []).map(m => {
+    const evidence = Array.isArray(m.evidence) ? m.evidence.filter(e => e && e.bullet) : [];
+    const evidenceHtml = evidence.length
+      ? `<details class="persona-evidence"><summary>Why this match (${evidence.length} ${evidence.length === 1 ? 'bullet' : 'bullets'})</summary>${
+          evidence.map(e => `<div class="persona-evidence-item"><span class="persona-evidence-section">${escHtml(e.section || 'Persona content')}</span><span class="persona-evidence-bullet">${escHtml(e.bullet)}</span></div>`).join('')
+        }</details>`
+      : '';
+    return `
     <div class="persona-card" data-rank="${m.rank === 'primary' ? 'primary' : 'secondary'}">
       <h3>${escHtml(m.name)}<span class="badge ${m.rank === 'primary' ? 'badge-p' : 'badge-s'}">${escHtml(m.rank)}</span></h3>
       <p>${escHtml(m.reason)}</p>
-    </div>`).join('');
+      ${evidenceHtml}
+    </div>`;
+  }).join('');
   if (r.accessibility_flag) {
     html += `<div class="acc-box"><strong>Accessibility consideration:</strong> ${escHtml(r.accessibility_flag)}</div>`;
   }
@@ -1564,24 +1964,45 @@ function renderPersonas(el, r) {
 }
 
 async function runPersonasAi(f) {
-  const prompt = `You are a UX analyst for the HSE Health App. Analyse this feature and identify the most relevant user personas. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+  const system = "You are a UX research analyst for the HSE Health App. You match incoming feature ideas against the canonical persona library by reading actual persona content (jobs to be done, key challenges, relevant app features) and citing the specific bullets the feature touches. Be conservative: do not invent personas, do not over-stretch matches, and prefer fewer high-quality matches over many weak ones.";
 
-PERSONAS:
+  const prompt = `Match this feature against the personas. Return ONLY valid JSON, no markdown fences, no preamble, no trailing text.
+
+PERSONAS (this is the source of truth — only match against personas defined here):
 ${CONFIG.personas || ''}
 
 FEATURE:
 Title: ${f.title || 'Not provided'}
-Problem: ${f.problem || 'Not provided'}
-Audience: ${f.audience || 'Not specified'}
-Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
-Compliance: ${f.compliance || 'none'}
-Data needs: ${f.data || 'none'}
+Overview: ${f.overview || 'Not provided'}
+Problem being solved: ${f.problem || 'Not provided'}
+Primary user (form selection): ${f.audience || 'Not specified'}
+Also affects: ${f.alsoAffects || 'Not specified'}
+Supporting evidence: ${f.evidenceDetail || 'None provided'}
+Compliance / regulatory: ${f.compliance || 'None'}
+Data / integration needs: ${f.data || 'None'}
 
-Return exactly this structure:
-{"matches":[{"name":"persona name","rank":"primary","reason":"2-3 sentences on why this persona is directly impacted by this feature"},{"name":"persona name","rank":"secondary","reason":"2-3 sentences on why this persona is secondarily relevant"}],"accessibility_flag":"1-2 sentences on accessibility considerations for this feature — reference Shane or other personas if relevant, or note low risk if applicable"}
+Return exactly this JSON structure:
+{
+  "matches": [
+    {
+      "name": "Persona name exactly as it appears in the personas file",
+      "rank": "primary" | "secondary",
+      "reason": "2 to 3 sentences in plain English explaining why this persona is impacted by this feature. Refer to the persona by name and to specific aspects of their context.",
+      "evidence": [
+        { "section": "Jobs to be done" | "Key challenges" | "Relevant app features", "bullet": "verbatim quote of the persona bullet that supports this match" }
+      ]
+    }
+  ],
+  "accessibility_flag": "1 to 2 sentences. If accessibility-relevant content was detected (literacy, language, assistive tech, mobility, sensory, cognitive), name the relevant personas and give the specific consideration. Otherwise, give a brief reminder of standard HSE accessibility requirements (WCAG 2.2 AA, plain English, keyboard and screen-reader support)."
+}
 
-Include 2-4 matches total, ranked primary or secondary. Only include genuinely relevant personas.`;
-  return await callLLMJson(prompt);
+Rules:
+- Include 1 to 4 matches. The first must be ranked primary; the rest are secondary.
+- Only include personas you can cite at least one supporting bullet for. If no persona has any cited bullet, return a single primary match with the strongest plausible audience fit and an empty evidence array.
+- Each evidence bullet must be a verbatim quote from the personas file — do not paraphrase, summarise, or invent bullets. If a bullet is long you may truncate with an ellipsis ("…") but the surviving text must still be exact.
+- Do not match on the persona's research references — only Jobs to be done, Key challenges, and Relevant app features count as evidence.
+- Persona names must match the file exactly, including casing and trailing descriptors.`;
+  return await callLLMJson(prompt, { system, max_tokens: 1800 });
 }
 
 async function calcRice() {
@@ -1650,7 +2071,23 @@ function shortNote(note, type) {
 function renderRice(el, r, f) {
   const modeTag = activeMode() === 'ai'
     ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
-    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+    : `<span class="mode-pill"><span class="dot"></span>Offline</span>`;
+  const discrepancies = Array.isArray(r.discrepancies) ? r.discrepancies.filter(d => d && d.dimension) : [];
+  const discrepancyHtml = discrepancies.length
+    ? `<div class="rice-discrepancies">
+        <div class="rice-discrepancies-head">Worth a second look</div>
+        <div class="rice-discrepancies-sub">The numbers above come from your form selections. The AI flagged where the feature description suggests something different — review and adjust the form if needed.</div>
+        ${discrepancies.map(d => `
+          <div class="rice-discrepancy-item">
+            <div class="rice-discrepancy-dim">${escHtml((d.dimension || '').toString().toUpperCase())}</div>
+            <div class="rice-discrepancy-body">
+              <div><strong>Form says:</strong> ${escHtml(d.form_value || '')}</div>
+              <div><strong>Description suggests:</strong> ${escHtml(d.prose_suggests || '')}</div>
+              ${d.explanation ? `<div class="rice-discrepancy-why">${escHtml(d.explanation)}</div>` : ''}
+            </div>
+          </div>`).join('')}
+      </div>`
+    : '';
   el.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       ${modeTag}
@@ -1691,41 +2128,76 @@ function renderRice(el, r, f) {
       <div class="rice-formula-label">How this score was calculated</div>
       <div class="rice-formula-expr">(Reach × Impact × Confidence) ÷ Effort = Score</div>
       <div class="rice-formula-expr">(<strong>${Math.round(r.reach.score).toLocaleString()}</strong> × <strong>${r.impact.score}</strong> × <strong>${r.confidence.score}%</strong>) ÷ <strong>${f.effort}</strong> = <strong>${r.total}</strong></div>
-    </div>`;
+    </div>
+    ${discrepancyHtml}`;
 }
 
+// Hybrid RICE: numbers are computed deterministically from the form selections
+// using the rules in config/rice-config.md (via Engines.computeRice). The LLM
+// only enriches the rationale text and flags any discrepancy between the
+// form-derived inputs and what the feature prose actually suggests.
 async function runRiceAi(f) {
-  const outcomesCount = f.outcomes.length;
-  const prompt = `You are a product analyst for the HSE Health App. Calculate a RICE score for this feature. Return ONLY valid JSON with no markdown fences, no preamble, no trailing text.
+  const baseline = Engines.computeRice(f, CONFIG.riceConfig || '');
+  const reachStr = Number.isFinite(f.reach) && f.reach > 0
+    ? Math.round(f.reach).toLocaleString() + ' users/month'
+    : 'not provided';
+
+  const system = "You are a product analyst for the HSE Health App. The RICE score numbers are computed deterministically from the form fields and the rules in rice-config.md. Your job is to read the feature prose and (a) write rich, plain-English rationale for each RICE dimension that connects the number to the actual feature, and (b) flag any discrepancy where the prose strongly suggests a different value than the form selections produced. You never invent or change the numbers — only the commentary.";
+
+  const prompt = `Read the feature and the form-derived RICE numbers below, then return enriched commentary. Return ONLY valid JSON, no markdown fences, no preamble, no trailing text.
+
+FORM-DERIVED RICE (already computed deterministically — do not change these numbers):
+- Reach: ${reachStr} (manual estimate; source: ${f.reachSource || 'not provided'})
+- Impact: ${baseline.impact.score}x (rule: ${f.outcomes.length} outcomes selected)
+- Confidence: ${baseline.confidence.score}% (rule: ${f.evidence ? f.evidence + '% from form selection' : 'no selection — defaulted'})
+- Effort: ${baseline.effort.score} person-months (manual estimate)
+- Total: ${baseline.total}
 
 FEATURE:
 Title: ${f.title || 'Not provided'}
+Overview: ${f.overview || 'Not provided'}
 Problem: ${f.problem || 'Not provided'}
 Audience: ${f.audience || 'Not specified'}
-Manual reach estimate (users per month): ${Number.isFinite(f.reach) && f.reach > 0 ? Math.round(f.reach).toLocaleString() : 'not provided'}
-Reach source: ${f.reachSource || 'not provided'}
-Expected outcomes: ${f.outcomes.join(', ') || 'none selected'}
-Expected outcomes count: ${outcomesCount}
+Also affects: ${f.alsoAffects || 'Not specified'}
+Expected outcomes (${f.outcomes.length}): ${f.outcomes.join(', ') || 'none selected'}
 Digital for Care pillars: ${f.pillars.join(', ') || 'none selected'}
-Evidence confidence: ${f.evidence ? f.evidence + '%' : 'not specified'}
-Data / integration needs: ${f.data || 'none'}
-Compliance: ${f.compliance || 'none'}
+Supporting evidence: ${f.evidenceDetail || 'None provided'}
+Data / integration needs: ${f.data || 'None'}
+Regulatory / compliance: ${f.compliance || 'None'}
 External dependency: ${f.externalDependency || 'No external dependency'}${f.externalDependencyDetail ? ' — ' + f.externalDependencyDetail : ''}
-Effort estimate: ${f.effort} person-months
 
-RICE scoring guide:
+INTERPRETATION GUIDANCE (from rice-config.md — use this for the summary):
 ${CONFIG.riceConfig || ''}
 
-Impact scoring rule (apply exactly from outcomes count, do not infer):
-- 8 to 10 outcomes = 3
-- 5 to 7 outcomes = 2
-- 3 to 4 outcomes = 1
-- 2 outcomes = 0.5
-- 1 outcome = 0.25
+Return exactly this JSON shape:
+{
+  "impact_note": "1 to 2 sentences. Reference the outcomes count and tie the impact rating to the specific feature, not just the rule.",
+  "confidence_note": "1 to 2 sentences. Reference the evidence the submitter provided and tie the confidence rating to it.",
+  "effort_note": "1 sentence describing what ${f.effort} person-months typically buys for this kind of work. Note any obvious risks to that estimate from the data / dependency fields.",
+  "reach_note": "1 sentence on the reach figure and what cohort it represents based on the prose.",
+  "summary": "1 sentence on what this RICE score (${baseline.total}) suggests for prioritisation, using the rice-config.md interpretation ranges to ground the language.",
+  "discrepancies": [
+    { "dimension": "impact" | "confidence" | "effort" | "reach", "form_value": "what the form/numbers say", "prose_suggests": "what the prose implies instead", "explanation": "why this is worth a second look" }
+  ]
+}
 
-Return exactly this structure:
-{"impact":{"score":number,"note":"must reference outcomes count and the exact applied scale"},"confidence":{"score":number,"note":"brief rationale based on evidence provided"},"effort":{"score":${f.effort},"note":"as provided — confirm if this seems reasonable"},"total":number,"summary":"1 sentence on what this RICE score suggests for prioritisation relative to a typical feature"}`;
-  return await callLLMJson(prompt);
+Discrepancy rules:
+- Only flag a discrepancy when the prose materially contradicts the form-derived value (e.g. prose describes life-or-death safety impact but only 2 outcomes were selected; prose mentions completed evaluative testing but confidence is 30%).
+- Empty array if everything reasonably aligns. Do not invent discrepancies.
+- Never recommend changing the number — only flag for human review.`;
+
+  const ai = await callLLMJson(prompt, { system, max_tokens: 1200 });
+
+  const reachNote = ai && ai.reach_note ? ai.reach_note : baseline.reach.note;
+  return {
+    reach:      { score: baseline.reach.score, note: reachNote },
+    impact:     { score: baseline.impact.score, note: (ai && ai.impact_note) || baseline.impact.note },
+    confidence: { score: baseline.confidence.score, note: (ai && ai.confidence_note) || baseline.confidence.note },
+    effort:     { score: baseline.effort.score, note: (ai && ai.effort_note) || baseline.effort.note },
+    total:      baseline.total,
+    summary:    (ai && ai.summary) || baseline.summary,
+    discrepancies: Array.isArray(ai && ai.discrepancies) ? ai.discrepancies : []
+  };
 }
 
 async function runWireframe() {
@@ -1746,7 +2218,7 @@ async function runWireframe() {
 
     const modeTag = activeMode() === 'ai'
       ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
-      : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+      : `<span class="mode-pill"><span class="dot"></span>Offline</span>`;
     el.innerHTML = `
       <div class="copy-bar">
         <span>Ready to paste into JPD ${modeTag}</span>
@@ -1757,6 +2229,15 @@ async function runWireframe() {
   } catch (e) {
     el.innerHTML = `<div class="error"><strong>Summary generation failed.</strong> ${escHtml(e.message)}</div>`;
   }
+}
+
+// When true, JPD and design brief generation runs a second critique-and-revise
+// pass for higher fidelity to the template guidance. Disable to halve LLM cost
+// per submission if that becomes a concern at scale.
+const TWO_PASS_AI = true;
+
+function stripMarkdownFences(text) {
+  return String(text || '').replace(/```markdown\s*/gi, '').replace(/```\s*$/gm, '').replace(/^```\s*/gm, '').trim();
 }
 
 async function runJpdAi(f) {
@@ -1770,11 +2251,9 @@ async function runJpdAi(f) {
     : 'Not yet calculated — complete the RICE score step first.';
   const riceSummary = state.riceData && state.riceData.summary ? state.riceData.summary : '';
   const confidencePct = state.riceData && state.riceData.confidence ? Number(state.riceData.confidence.score) : Number(f.evidence || 0);
+  const generatedDate = new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  const prompt = `You are a product analyst writing a feature submission for the HSE Health App Jira Product Discovery (JPD) system. Write a clean markdown document that follows the exact JPD template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
-
-FEATURE DATA:
-Title: ${f.title || 'Not provided'}
+  const sourceData = `Title: ${f.title || 'Not provided'}
 Feature overview: ${f.overview || 'Not provided'}
 Problem being solved: ${f.problem || 'Not provided'}
 Primary user: ${f.audience || 'Not specified'}
@@ -1797,23 +2276,56 @@ Requestor: ${f.requestor || 'Not provided'}
 Clinical / service owner sponsor: ${f.sponsor || 'Not provided'}
 Email address: ${f.email || 'Not provided'}
 Team / Unit / Area / Group: ${f.teamUnit || 'Not provided'}
-Confidence for recommendation logic: ${confidencePct || 0}%
+Confidence for recommendation logic: ${confidencePct || 0}%`;
 
-Write the JPD ticket using this exact structure. Use plain English. Keep each section tight and factual. Use hyphens for list items. Where information was not provided, write 'Not provided' rather than leaving blank or inventing detail.
-Use the heading "RICE score (guide)" and format that section as a markdown table with rows for Reach, Impact, Confidence, Effort, Total score, and a final Notes row.
-The Notes row must follow exactly this structure: "Reach: [reach source]. Confidence based on [confidence level selected]. Effort to be confirmed with delivery team."
+  const system = "You are a product analyst writing JPD (Jira Product Discovery) tickets for the HSE Health App. You write plain, factual English. You follow the JPD template's section structure exactly and use the guidance under each heading to decide what belongs in that section. You never invent facts: when source data is missing, you write 'Not provided'. You preserve numbers, names, and dates verbatim from the source.";
 
-Important recommendation rule:
-- If confidence is 60% or below, append a final paragraph at the end of the output:
-"Confidence is currently [X%]. Recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness."
-- If confidence is above 60%, do not append this recommendation.
+  const draftPrompt = `Write the first draft of the JPD ticket markdown using the template below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
 
+FEATURE DATA:
+${sourceData}
+
+TEMPLATE (follow H2 headings exactly, in order; use the guidance under each heading to decide what belongs there):
 ${CONFIG.jpdTemplate || ''}
 
----
-*Generated: ${new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}*`;
-  const text = await callLLM(prompt, { max_tokens: 2000 });
-  return text.replace(/```markdown\s*/gi, '').replace(/```\s*/g, '').trim();
+Formatting rules:
+- Each H2 from the template appears once, in order.
+- Plain English. Tight, factual sentences. Hyphens for list items.
+- Where source data is missing, write 'Not provided' — never invent.
+- Use the heading "RICE score (guide)" for the RICE section, and render it as a markdown table with rows for Reach, Impact, Confidence, Effort, Total score, and a final Notes row.
+- The Notes row must follow exactly: "Reach: [reach source]. Confidence based on [confidence level selected]. Effort to be confirmed with delivery team."
+- If confidence is 60% or below, append a final paragraph at the end: "Confidence is currently [X%]. Recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness." Otherwise omit it.
+- End with: \`---\` then \`*Generated: ${generatedDate}*\`.`;
+
+  const draft = stripMarkdownFences(await callLLM(draftPrompt, { max_tokens: 2000, system }));
+  if (!TWO_PASS_AI) return draft;
+
+  const critiquePrompt = `Below is a draft JPD ticket and the template that defined it. Critique the draft against the template's per-section guidance text, then return a revised, final markdown ticket.
+
+Critique focus:
+- For each H2 in the template, does the draft section actually do what the template's guidance text asks?
+- Has anything been padded with filler or fabricated detail not present in the source data?
+- Has anything important from the source data been omitted from the section it belongs in?
+- Are facts (numbers, names, dates, persona names, RICE values) preserved exactly from the source?
+- Is the language plain English, factual, and tight?
+
+Source data takes precedence over the draft for any factual conflict.
+
+Return ONLY the revised markdown — no critique notes, no preamble, no fences.
+
+TEMPLATE (with per-section guidance):
+${CONFIG.jpdTemplate || ''}
+
+SOURCE DATA:
+${sourceData}
+
+DRAFT:
+${draft}
+
+End the revised markdown with: \`---\` then \`*Generated: ${generatedDate}*\`.`;
+
+  const revised = stripMarkdownFences(await callLLM(critiquePrompt, { max_tokens: 2400, system }));
+  return revised || draft;
 }
 
 function escHtml(s) {
@@ -1855,7 +2367,7 @@ function showBriefCard(md) {
   if (!card || !results) return;
   const modeTag = activeMode() === 'ai'
     ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
-    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+    : `<span class="mode-pill"><span class="dot"></span>Offline</span>`;
   results.innerHTML = `
     <div class="copy-bar">
       <span>Design brief markdown ${modeTag}</span>
@@ -1943,15 +2455,16 @@ async function runDesignBriefAi(f) {
     '5': 'Secure foundations',           '6': 'Data driven services'
   };
   const pillarsText = (f.pillars || []).map(p => `${p}. ${pillarNames[p] || ''}`.trim()).join('; ') || 'None selected';
+  const generatedDate = new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  const system = "You are a design lead at HSE Digital. You write design briefs for the HSE Health App that the design team can act on. The intake form has already been turned into a JPD summary. Your job is to translate that into a working design brief that uses the JPD ticket as its source of truth — same facts, but reframed in the design team's voice and structured for design action.";
+  // Design tokens live in the system prompt so they stay sticky across the
+  // draft and critique passes without being repeated in the user message.
+  const system = `You are a design lead at HSE Digital. You write design briefs for the HSE Health App that the design team can act on. The intake form has already been turned into a JPD summary. Translate that into a working design brief that uses the JPD ticket as its source of truth — same facts, but reframed in the design team's voice and structured for design action. Plain English, active voice, decisions to be made. Never invent facts. When you reference visual treatment in the indicative wireframe, use the HSE design system token names below (e.g. hse-green-500 for primary CTAs, hse-grey-50 card surfaces, hse-heading-xs section labels) rather than generic colour or size descriptions.
 
-  const prompt = `Generate a design brief in markdown using the template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
+HSE DESIGN SYSTEM TOKENS:
+${CONFIG.designTokens || '(tokens unavailable)'}`;
 
-DESIGN BRIEF TEMPLATE (follow these H2 headings exactly, in this order, including the guidance text intent):
-${CONFIG.designBriefTemplate || ''}
-
-JPD SUMMARY (already generated — treat this as the source of truth for facts and language):
+  const sourceContext = `JPD SUMMARY (source of truth for facts and language):
 ${state.mdOutput || 'Not generated.'}
 
 FORM DATA:
@@ -1979,30 +2492,64 @@ ${personaCtx}
 
 ACCESSIBILITY FLAG: ${accessibilityNote}
 
-RICE: ${riceCtx}
+RICE: ${riceCtx}`;
 
-HSE DESIGN SYSTEM TOKENS (use these names in the Indicative wireframe section, e.g. hse-green-500 for the primary CTA, hse-grey-50 card backgrounds, hse-heading-xs section labels):
-${CONFIG.designTokens || ''}
-
-Writing instructions:
-- Follow the design brief template H2 headings EXACTLY (order, wording). Plain English, design team voice — active, decisions to be made.
+  const writingRules = `Writing rules:
+- Follow the design brief template H2 headings EXACTLY (order, wording).
 - For "JPD location": the JPD link is not known by the tool. Write "To be created — paste link once available" unless the form provides one.
 - For "Project overview": pull from feature overview and problem. 3 to 5 sentences. State what a user can do that they cannot today.
-- For "Why is this work necessary": connect problem to evidence, persona, strategic alignment, and any deadline. This maps from the JPD "What is the problem being solved" + "How was this need identified" + "Supporting evidence" + "Strategic alignment" sections.
-- For "Stakeholders and team": render a markdown table with rows: Project manager (leave value blank if unknown), Requestor, Clinical / service owner sponsor, Team / unit. Add additional rows only when names are known.
-- For "User value": describe what the user gets. Reference the primary persona by name and at least one of their jobs to be done or key challenges. If accessibility implications were flagged, summarise the impact for those users here.
-- For "Internal HSE value": map "Strategic alignment / Digital for Care 2030 pillars" by their names (not just numbers), efficiency, cost, safety, regulatory.
-- For "Problems to solve": 3 to 5 DISCRETE design problems the team needs to tackle, derived from the user's problem statement. NOT a single restatement. Each item must be sketchable against — for example: "How do we let a user opt in or out of notifications without burying the control?" rather than "Notifications".
-- For "Team dependencies and involvement": which teams need to be involved (clinical, content, research, data, integrations, programme), what they provide, sequencing.
+- For "Why is this work necessary": connect problem to evidence, persona, strategic alignment, and any deadline.
+- For "Stakeholders and team": render a markdown table with rows: Project manager (leave value blank if unknown), Requestor, Clinical / service owner sponsor, Team / unit.
+- For "User value": describe what the user gets. Reference the primary persona by name and at least one of their jobs to be done or key challenges. If accessibility implications were flagged, summarise the impact here.
+- For "Internal HSE value": map Digital for Care 2030 pillars by their names (not just numbers), plus efficiency, cost, safety, regulatory.
+- For "Problems to solve": 3 to 5 DISCRETE design problems the team needs to tackle, each sketchable against (e.g. "How do we let a user opt in or out of notifications without burying the control?" — not just "Notifications").
+- For "Team dependencies and involvement": which teams need to be involved, what they provide, sequencing.
 - For "References": pull from supporting evidence and the persona research references implied by the persona match. Preserve URLs as-is.
-- For "Timeline": indicative timing. ${confidencePct > 0 && confidencePct <= 60 ? 'Confidence is ' + confidencePct + '% — recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness.' : 'Note any deadline or programme milestone explicitly.'}
+- For "Timeline": ${confidencePct > 0 && confidencePct <= 60 ? 'Confidence is ' + confidencePct + '% — recommend a lightweight discovery sprint before full evaluation to strengthen the evidence base across data quality, user research, and technical readiness.' : 'Note any deadline or programme milestone explicitly.'}
 - For "Challenges": risks, constraints, technical or regulatory dependencies, and accessibility considerations as bullets.
-- For "Indicative wireframe": describe 1 to 3 screens with the rough shape (header, navigation, key content area, primary CTA, supporting text) using HSE design tokens by name (e.g. hse-green-500 for primary CTA, hse-grey-50 cards, hse-heading-xs section labels). Keep it as text — no ASCII art.
+- For "Indicative wireframe": describe 1 to 3 screens with the rough shape (header, navigation, key content area, primary CTA, supporting text) using HSE design tokens by name. Keep it as text — no ASCII art.
 
-End with a single line: \`---\` then \`*Generated: ${new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'long', year: 'numeric' })}*\`.`;
+End with a single line: \`---\` then \`*Generated: ${generatedDate}*\`.`;
 
-  const text = await callLLM(prompt, { max_tokens: 2200, system });
-  return text.replace(/```markdown\s*/gi, '').replace(/```\s*/g, '').trim();
+  const draftPrompt = `Generate a design brief in markdown using the template structure below. Return ONLY the raw markdown — no JSON wrapper, no code fences, no preamble.
+
+DESIGN BRIEF TEMPLATE (follow these H2 headings exactly, in this order, including the guidance text intent):
+${CONFIG.designBriefTemplate || ''}
+
+${sourceContext}
+
+${writingRules}`;
+
+  const draft = stripMarkdownFences(await callLLM(draftPrompt, { max_tokens: 2200, system }));
+  if (!TWO_PASS_AI) return draft;
+
+  const critiquePrompt = `Below is a draft design brief. Critique it against the design brief template's guidance text and against the source data, then return a revised final brief.
+
+Critique focus:
+- For each H2 in the template, does the draft section actually deliver what the template's guidance text describes?
+- Is "Problems to solve" 3 to 5 DISCRETE, sketchable problems — or has it collapsed into one general restatement?
+- Does "User value" name the primary persona and tie back to at least one of their jobs to be done or key challenges?
+- Does "Indicative wireframe" use HSE design system token names (e.g. hse-green-500, hse-grey-50, hse-heading-xs) rather than generic colours or sizes?
+- Has anything been padded with filler or fabricated detail not present in the source?
+- Are persona names, RICE numbers, and dates preserved exactly from the source?
+- Is the language plain English, design team voice, active?
+
+Source takes precedence over the draft for any factual conflict.
+
+Return ONLY the revised markdown — no critique notes, no preamble, no fences.
+
+DESIGN BRIEF TEMPLATE:
+${CONFIG.designBriefTemplate || ''}
+
+${sourceContext}
+
+DRAFT:
+${draft}
+
+End the revised markdown with: \`---\` then \`*Generated: ${generatedDate}*\`.`;
+
+  const revised = stripMarkdownFences(await callLLM(critiquePrompt, { max_tokens: 2600, system }));
+  return revised || draft;
 }
 
 /* ----- Sidebar (JPD preview + design brief CTA) ----- */
@@ -2107,6 +2654,48 @@ function renderSidebar() {
   }
   html += `</div>`;
 
+  // 6. Submission — only meaningful once a brief exists
+  if (briefReady) {
+    const submitState = sidebarState.submitState || 'idle';
+    const submitError = sidebarState.submitError || '';
+    const dirty = state.intakePersisted
+      && state.lastPersistedBrief
+      && state.briefMarkdown
+      && state.lastPersistedBrief !== state.briefMarkdown;
+
+    html += `<div class="sb-section"><div class="sb-section-label"><span>Submission</span></div>`;
+
+    if (submitState === 'submitting') {
+      html += `<div class="sb-cta-loading"><div class="dots"><span></span><span></span><span></span></div>Adding to submissions...</div>`;
+    } else if (submitState === 'submitted' && !dirty) {
+      html += `
+        <div class="sb-ready-row">
+          <div class="sb-ready-icon">✓</div>
+          <span class="sb-ready-label">Submitted</span>
+        </div>
+        <a class="sb-secondary-link" href="../submissions" target="_blank" rel="noopener" style="display:block;text-align:center">View submissions →</a>`;
+    } else if (submitState === 'submitted' && dirty) {
+      html += `
+        <div class="sb-ready-row">
+          <div class="sb-ready-icon" style="background:var(--c-muted-2)">!</div>
+          <span class="sb-ready-label" style="color:var(--c-muted)">Submitted (older version)</span>
+        </div>
+        <div class="sb-cta-sub">The brief has changed since the last submission. Update so the team sees the latest version.</div>
+        <button class="sb-cta-btn" id="sbSubmitBtn" onclick="submitToSubmissions()">Update submission</button>
+        <a class="sb-secondary-link" href="../submissions" target="_blank" rel="noopener" style="display:block;text-align:center">View submissions →</a>`;
+    } else if (submitState === 'error') {
+      html += `
+        <button class="sb-cta-btn" id="sbSubmitBtn" onclick="submitToSubmissions()">Try submitting again</button>
+        <div class="sb-error" style="margin-top:8px"><strong>Submission failed.</strong> ${escHtml(submitError)}</div>`;
+    } else {
+      html += `
+        <div class="sb-cta-sub">Post this idea to the team's submissions list. Product and design review from there.</div>
+        <button class="sb-cta-btn" id="sbSubmitBtn" onclick="submitToSubmissions()">Add to submissions →</button>`;
+    }
+
+    html += `</div>`;
+  }
+
   inner.innerHTML = html;
 }
 
@@ -2157,7 +2746,10 @@ function collectIntakeDraft() {
     wfDone: state.wfDone,
     mdOutput: state.mdOutput,
     briefDone: state.briefDone,
-    briefMarkdown: state.briefMarkdown
+    briefMarkdown: state.briefMarkdown,
+    intakeId: state.intakeId,
+    intakePersisted: state.intakePersisted,
+    lastPersistedBrief: state.lastPersistedBrief || null
   };
 }
 
@@ -2198,7 +2790,7 @@ function renderStoredJpdSummary(md) {
   if (!el || md == null) return;
   const modeTag = activeMode() === 'ai'
     ? `<span class="mode-pill ai"><span class="dot"></span>AI · ${escHtml(state.provider || '')}</span>`
-    : `<span class="mode-pill"><span class="dot"></span>Deterministic</span>`;
+    : `<span class="mode-pill"><span class="dot"></span>Offline</span>`;
   el.innerHTML = `
     <div class="copy-bar">
       <span>Ready to paste into JPD ${modeTag}</span>
@@ -2263,6 +2855,9 @@ function restoreIntakeDraft() {
     state.mdOutput = d.mdOutput != null ? d.mdOutput : null;
     state.briefDone = !!d.briefDone;
     state.briefMarkdown = d.briefMarkdown != null ? d.briefMarkdown : null;
+    state.intakeId = d.intakeId || null;
+    state.intakePersisted = !!d.intakePersisted;
+    state.lastPersistedBrief = d.lastPersistedBrief || null;
 
     if (state.personaDone && state.personaData) {
       renderPersonas(document.getElementById('persona-results'), state.personaData);
@@ -2311,6 +2906,8 @@ function restoreIntakeDraft() {
     sidebarState.jpdReady = !!state.wfDone;
     sidebarState.briefReady = !!state.briefDone;
     sidebarState.briefLoading = false;
+    sidebarState.submitState = state.intakePersisted ? 'submitted' : 'idle';
+    sidebarState.submitError = null;
     renderSidebar();
   } finally {
     intakeRestoring = false;

@@ -376,7 +376,7 @@
       icon('✦'),
       el('div', { class: 'nav-main' }, [
         el('div', null, 'AI assist'),
-        el('div', { class: 'nav-desc' }, state.ai.aiAssist ? 'On · optional' : 'Off · optional')
+        el('div', { class: 'nav-desc' }, state.ai.aiAssist ? 'On · default' : 'Off · using offline fallback')
       ])
     ]);
     nav.appendChild(aiBtn);
@@ -490,10 +490,10 @@
   function describe(key) {
     switch (key) {
       case 'rice': return 'Controls how the tool estimates Reach, Impact, Confidence and Effort. This is the file to edit when the total app user base changes, or when audience reach ranges need updating.';
-      case 'personas': return 'The HSE Health App personas used for Step 2 persona matching. Used by both the deterministic matcher and, when AI assist is on, the language model.';
+      case 'personas': return 'The HSE Health App personas used for Step 2 persona matching. The language model receives the full file when AI assist is on; the offline fallback engine reads it directly when AI assist is off.';
       case 'jpd': return 'Section structure used for the Step 4 JPD markdown summary. Keep section headings in sync with the JPD form in Jira Product Discovery.';
       case 'formFields': return 'Reference document describing every intake form field.';
-      case 'tokens': return 'Colour, typography and spacing tokens from the HSE Design System. Used when generating wireframe sketches (AI assist required).';
+      case 'tokens': return 'Colour, typography and spacing tokens from the HSE Design System. Sent to the model when generating the indicative wireframe section of the design brief.';
       default: return '';
     }
   }
@@ -506,7 +506,7 @@
     content.appendChild(el('div', { class: 'content-head' }, [
       el('div', null, [
         el('h1', null, 'AI assist'),
-        el('p', { class: 'subtitle' }, 'Optional. Turn this on to have a language model produce the persona match, RICE score and JPD summary, and to generate the wireframe sketch. When off, the tool uses deterministic rules based on the config files — which is the default and works without any API keys or external calls.')
+        el('p', { class: 'subtitle' }, 'On by default. The language model produces the persona match, RICE score, JPD summary, and design brief, and unlocks the indicative wireframe. Turn it off to fall back to the offline rules-based engine — useful for local development without an API key, or as a sanity check against the AI output.')
       ]),
       el('div', { class: 'spacer' })
     ]));
@@ -534,7 +534,7 @@
       style: { display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '14px', fontWeight: '500' }
     }, [
       cb,
-      el('span', null, 'Use AI assist for persona matching, RICE scoring and JPD summary')
+      el('span', null, 'AI assist on (default) — drives persona matching, RICE inputs, JPD summary, design brief, and wireframe')
     ]));
     const statusSpan = el('span', { id: 'aiStatusLine', class: 'status-line' });
     updateAiStatusSpan(statusSpan);
@@ -545,7 +545,7 @@
       el('div', { class: 'card-body' }, [
         toggleRow,
         el('div', { class: 'section-help', style: { marginTop: '12px', marginBottom: '0' } },
-          'When on: the tool sends your prompt to the LLM provider configured on the server (shown above) for each step. When off: the tool scores results using the rules in the RICE config, keyword overlap against personas, and a template fill from the JPD template. The wireframe sketch step only runs when AI assist is on.'
+          'On (default): each step sends a structured prompt to the LLM provider shown above. The language model produces the persona match, derives the RICE inputs, and writes the JPD summary, design brief, and indicative wireframe. Off (fallback): the tool reverts to the offline rules engine — keyword-based persona matching, ranges-based RICE, and template-fill JPD/brief. The wireframe step is unavailable in offline mode.'
         )
       ])
     ]);
@@ -597,8 +597,8 @@
     host.innerHTML = '';
     if (!state.ai.provider) {
       host.appendChild(el('div', { class: 'banner warn', style: { marginBottom: '0' } }, [
-        el('strong', null, 'No provider configured.'),
-        ' The tool works in deterministic mode either way. To add an LLM provider, see "Configuring a provider" below.'
+        el('strong', null, 'No provider configured. '),
+        'The tool will run in offline fallback mode until a provider is set up. To enable AI assist, follow "Configuring a provider" below and restart the server.'
       ]));
       return;
     }
@@ -685,23 +685,26 @@
       '<pre style="background:#FAFCFB;border:1px solid var(--c-border);border-radius:6px;padding:10px;font-family:Menlo,Consolas,monospace;font-size:12px;margin-bottom:14px;overflow:auto">',
       '# one-time setup\n',
       'brew install ollama          # or download from https://ollama.com\n',
-      'ollama pull llama3.1         # ~4 GB — or qwen2.5:14b for better quality\n\n',
+      'ollama pull llama3.1         # ~4 GB — or qwen2.5:14b for better quality\n',
+      'ollama pull nomic-embed-text # for similar-ideas detection\n\n',
       '# every time you run the intake tool\n',
       'ollama serve &\n',
       'OLLAMA_ENABLED=1 npm start',
       '</pre>',
       '<p style="font-size:13px;color:var(--c-text);line-height:1.6;margin-bottom:8px"><strong>Option B — Hosted provider (one of these)</strong></p>',
-      '<pre style="background:#FAFCFB;border:1px solid var(--c-border);border-radius:6px;padding:10px;font-family:Menlo,Consolas,monospace;font-size:12px;margin-bottom:0;overflow:auto">',
-      '# Anthropic Claude\n',
+      '<pre style="background:#FAFCFB;border:1px solid var(--c-border);border-radius:6px;padding:10px;font-family:Menlo,Consolas,monospace;font-size:12px;margin-bottom:14px;overflow:auto">',
+      '# Anthropic Claude (chat only — pair with OpenAI/Gemini/Ollama for embeddings)\n',
       'export ANTHROPIC_API_KEY=sk-ant-...\n',
       'npm start\n\n',
-      '# OpenAI\n',
+      '# OpenAI (chat + embeddings)\n',
       'export OPENAI_API_KEY=sk-...\n',
       'npm start\n\n',
-      '# Google Gemini (free tier available)\n',
+      '# Google Gemini (chat + embeddings, free tier available)\n',
       'export GEMINI_API_KEY=...\n',
       'npm start',
-      '</pre>'
+      '</pre>',
+      '<p style="font-size:13px;color:var(--c-text);line-height:1.6;margin-bottom:8px"><strong>Similar-ideas detection</strong></p>',
+      '<p style="font-size:12.5px;color:var(--c-muted);line-height:1.55;margin-bottom:0">The "Check my draft" button on Step 1 surfaces previously-submitted feature ideas that overlap with the current draft. This needs an embedding provider — OpenAI, Gemini, or Ollama. Anthropic is for the language model only and does not provide embeddings; an Anthropic-led setup needs one of the others alongside it for this feature.</p>'
     ].join('');
   }
 

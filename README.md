@@ -2,7 +2,7 @@
 
 A form-to-design-brief tool for the HSE Health App 2027 roadmap and Innovation Week. It guides anyone with a feature idea through a structured process and produces two outputs: a JPD-ready markdown summary (intermediate) and a working **design brief** the design team can act on. Persona match, RICE score, and an indicative wireframe are folded into the brief.
 
-Built with plain HTML/CSS/JS. Uses the Anthropic Claude API (or any configured LLM provider) for persona matching, RICE scoring, JPD summary, and design brief generation. A deterministic engine is used when no LLM is configured.
+Built with plain HTML/CSS/JS. AI assist is on by default and is the recommended path: an LLM (Anthropic Claude, OpenAI, Gemini, or local Ollama) drives persona matching, JPD summary, design brief, and the indicative wireframe; for RICE the LLM extracts the inputs from prose and a deterministic scoring step computes the final number. An offline rules-based engine ships alongside as a fallback for local development without an API key, demos in air-gapped environments, and as a sanity check against the AI output.
 
 ---
 
@@ -139,7 +139,7 @@ Update if the product team changes how they score features. Key values to keep c
 Update if the JPD template in Jira Product Discovery changes. The section headings in this file are used to structure the generated output. Keep headings and guidance text in sync with the live JPD form.
 
 ### design-brief-template.md
-Update to change the structure of the design brief produced from the right-hand sidebar on Step 4. Each H2 heading becomes a section in the brief, and the guidance text under each heading is fed to the language model (and the deterministic engine) to decide what content belongs there.
+Update to change the structure of the design brief produced from the right-hand sidebar on Step 4. Each H2 heading becomes a section in the brief, and the guidance text under each heading is fed to the language model (and the offline fallback engine) to decide what content belongs there.
 
 ### form-fields.md
 Update to add, remove, or relabel fields in the intake form. Each field has a type, label, placeholder, and required flag. The admin panel will eventually allow this to be done without editing the file directly.
