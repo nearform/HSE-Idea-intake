@@ -398,8 +398,8 @@ tbody td.actions-cell { text-align: right; white-space: nowrap; }
     <p>All intakes captured by the tool. Copy the JPD summary or design brief from any row.</p>
   </div>
   <div class="grow"></div>
-  <a class="header-btn" href="/admin">Admin</a>
-  <a class="header-btn primary" href="/src/hse-feature-intake.html">+ New idea</a>
+  <a class="header-btn" id="adminLink" href="/admin">Admin</a>
+  <a class="header-btn primary" href="hse-feature-intake.html">+ New idea</a>
 </header>
 
 <main class="page">
@@ -432,7 +432,13 @@ tbody td.actions-cell { text-align: right; white-space: nowrap; }
   <div id="emptyState" class="empty" style="display:none">
     <h3>No submissions yet</h3>
     <p>Submitted ideas appear here once someone completes an intake all the way through to the design brief. Start a new one to populate the table.</p>
-    <a class="empty-cta" href="/src/hse-feature-intake.html">+ Start an intake</a>
+    <a class="empty-cta" href="hse-feature-intake.html">+ Start an intake</a>
+  </div>
+
+  <div id="noBackendState" class="empty" style="display:none">
+    <h3>This view needs the team's server</h3>
+    <p>You're looking at the static demo of the intake tool. Submitted ideas live behind the team's Node server &mdash; on this static deployment there's nowhere to read them from. The intake form, JPD summary, and design brief still work; they just can't be saved to a shared list from here.</p>
+    <a class="empty-cta" href="hse-feature-intake.html">Open the intake tool</a>
   </div>
 
   <div id="tableWrap" class="table-wrap" style="display:none">
@@ -467,11 +473,22 @@ tbody td.actions-cell { text-align: right; white-space: nowrap; }
     count: document.getElementById('countLabel'),
     loading: document.getElementById('loadingState'),
     empty: document.getElementById('emptyState'),
+    noBackend: document.getElementById('noBackendState'),
+    adminLink: document.getElementById('adminLink'),
     tableWrap: document.getElementById('tableWrap'),
     tbody: document.getElementById('tbody'),
     noMatches: document.getElementById('noMatches'),
     toastStack: document.getElementById('toastStack')
   };
+
+  function showNoBackend() {
+    els.loading.style.display = 'none';
+    els.empty.style.display = 'none';
+    els.toolbar.style.display = 'none';
+    els.tableWrap.style.display = 'none';
+    if (els.adminLink) els.adminLink.style.display = 'none';
+    els.noBackend.style.display = 'block';
+  }
 
   let intakes = [];
 
@@ -666,7 +683,14 @@ tbody td.actions-cell { text-align: right; white-space: nowrap; }
   async function load() {
     try {
       const res = await fetch('/api/intakes', { cache: 'no-store' });
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+      const ct = (res.headers.get('content-type') || '').toLowerCase();
+      // GH Pages / static hosts return HTML (their nginx error page) for any
+      // request to /api/* — detect that and degrade gracefully instead of
+      // showing a raw "405 Not Allowed" to the user.
+      if (!res.ok || !ct.includes('application/json')) {
+        showNoBackend();
+        return;
+      }
       const data = await res.json();
       intakes = Array.isArray(data.intakes) ? data.intakes : [];
       els.loading.style.display = 'none';
@@ -678,9 +702,8 @@ tbody td.actions-cell { text-align: right; white-space: nowrap; }
       els.tableWrap.style.display = 'block';
       render();
     } catch (e) {
-      els.loading.style.display = 'none';
-      els.err.style.display = 'block';
-      els.err.textContent = 'Failed to load submissions: ' + (e.message || 'unknown error');
+      // Network failure also means no backend reachable from here.
+      showNoBackend();
     }
   }
 

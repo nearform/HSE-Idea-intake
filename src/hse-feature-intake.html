@@ -624,7 +624,7 @@ body {
     </div>
     <div class="header-spacer"></div>
     <span class="mode-pill" id="modePill" title="Loading…"><span class="dot"></span>Loading…</span>
-    <a class="icon-btn" id="submissionsBtn" href="../submissions" title="View submitted ideas" aria-label="View submitted ideas">
+    <a class="icon-btn" id="submissionsBtn" href="submissions.html" title="View submitted ideas" aria-label="View submitted ideas" style="display:none">
       <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h12v2H3v-2z"/></svg>
     </a>
     <a class="icon-btn" id="adminBtn" href="../admin" title="Edit config" aria-label="Edit config">
@@ -957,7 +957,11 @@ let state = {
   aiAssist: false, providerConfigured: false, provider: null, model: null,
   embedProvider: null, embedModel: null,
   primaryPersonaName: null, primaryPersonaReason: null,
-  intakeId: null, intakePersisted: false, lastPersistedBrief: null
+  intakeId: null, intakePersisted: false, lastPersistedBrief: null,
+  // backendAvailable becomes true only when /api/status returns a real JSON
+  // response. On static-only deployments (e.g. GitHub Pages) it stays false
+  // and the team-submissions UI hides itself accordingly.
+  backendAvailable: false
 };
 
 let sidebarState = {
@@ -1391,7 +1395,8 @@ async function loadConfigs() {
 
   try {
     const r = await fetch('/api/status', { cache: 'no-store' });
-    if (r.ok) {
+    const ct = (r.headers.get('content-type') || '').toLowerCase();
+    if (r.ok && ct.includes('application/json')) {
       const s = await r.json();
       state.aiAssist = !!s.aiAssist;
       state.providerConfigured = !!s.providerConfigured;
@@ -1399,10 +1404,21 @@ async function loadConfigs() {
       state.model = s.model || null;
       state.embedProvider = s.embedProvider || null;
       state.embedModel = s.embedModel || null;
+      state.backendAvailable = true;
     }
   } catch (_) { /* non-fatal — stays in offline fallback mode */ }
 
   updateModePill();
+  updateBackendUI();
+}
+
+// Hide team-submissions UI when there's no Node backend (static deployment).
+// The intake → JPD → brief flow itself still works fully client-side.
+function updateBackendUI() {
+  const submissionsBtn = document.getElementById('submissionsBtn');
+  if (submissionsBtn) submissionsBtn.style.display = state.backendAvailable ? '' : 'none';
+  // Re-render the sidebar so the Submission section appears/disappears in step.
+  if (typeof renderSidebar === 'function') renderSidebar();
 }
 
 function activeMode() {
@@ -2654,8 +2670,10 @@ function renderSidebar() {
   }
   html += `</div>`;
 
-  // 6. Submission — only meaningful once a brief exists
-  if (briefReady) {
+  // 6. Submission — only meaningful once a brief exists AND a backend is
+  // reachable. On GH Pages / static hosts we hide the section entirely; the
+  // intake → brief flow still works, it just can't post to a team list.
+  if (briefReady && state.backendAvailable) {
     const submitState = sidebarState.submitState || 'idle';
     const submitError = sidebarState.submitError || '';
     const dirty = state.intakePersisted
